@@ -1,0 +1,11 @@
+one:
+  ingredient_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  name: Gin
+  locale: en
+  normalized_name: gin
+
+two:
+  ingredient_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+  name: Ice
+  locale: en
+  normalized_name: ice

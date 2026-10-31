@@ -1,0 +1,12 @@
+<%= render @user_cocktail %>
+
+<div>
+  <% if policy(@user_cocktail).edit? %>
+    <%= link_to "Edit this cocktail", edit_user_cocktail_path(@user_cocktail) %> |
+  <% end %>
+  <%= link_to "Back to cocktails", user_cocktails_path %>
+
+  <% if policy(@user_cocktail).destroy? %>
+    <%= button_to "Destroy this cocktail", @user_cocktail, method: :delete %>
+  <% end %>
+</div>

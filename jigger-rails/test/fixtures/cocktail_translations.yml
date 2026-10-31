@@ -1,0 +1,5 @@
+margarita:
+  cocktail_id: <%= ActiveRecord::FixtureSet.identify(:margarita) %>
+  name: Margarita
+  locale: en
+  normalized_name: margarita

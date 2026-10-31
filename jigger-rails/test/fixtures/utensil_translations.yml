@@ -1,0 +1,5 @@
+jigger:
+  utensil_id: <%= ActiveRecord::FixtureSet.identify(:jigger) %>
+  name: Jigger
+  locale: en
+  normalized_name: jigger

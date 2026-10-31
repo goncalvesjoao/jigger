@@ -1,0 +1,13 @@
+one:
+  user_cocktail: one
+  ingredient: one
+  submitted_text: Gin
+  language: en
+  quantity: 0.5
+  measuring_unit: oz
+
+two:
+  user_cocktail: two
+  ingredient: two
+  submitted_text: Ice
+  language: en

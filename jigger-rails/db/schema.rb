@@ -10,39 +10,80 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_30_122404) do
-  create_table "cocktail_ingredients", force: :cascade do |t|
+ActiveRecord::Schema[8.1].define(version: 2026_10_30_122702) do
+  create_table "cocktail_aliases", force: :cascade do |t|
     t.integer "cocktail_id", null: false
-    t.integer "ingredient_id", null: false
-    t.integer "quantity"
-    t.string "measuring_unit"
+    t.string "name", null: false
+    t.string "language", null: false
+    t.string "normalized_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cocktail_id"], name: "index_cocktail_ingredients_on_cocktail_id"
-    t.index ["ingredient_id"], name: "index_cocktail_ingredients_on_ingredient_id"
+    t.index ["cocktail_id", "language", "normalized_name"], name: "idx_on_cocktail_id_language_normalized_name_bd539623b7", unique: true
+    t.index ["language", "normalized_name"], name: "index_cocktail_aliases_on_language_and_normalized_name"
+    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "cocktail_aliases_nonblank_names"
+  end
+
+  create_table "cocktail_translations", force: :cascade do |t|
+    t.integer "cocktail_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.text "description"
+    t.text "history"
+    t.string "normalized_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cocktail_id", "locale"], name: "index_cocktail_translations_on_cocktail_id_and_locale", unique: true
+    t.index ["locale", "normalized_name"], name: "index_cocktail_translations_on_locale_and_normalized_name"
+    t.check_constraint "length(trim(locale)) > 0", name: "cocktail_translations_locale"
+    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "cocktail_translations_english_name"
+    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "cocktail_translations_normalized_name"
   end
 
   create_table "cocktails", force: :cascade do |t|
-    t.string "name"
-    t.text "steps"
-    t.integer "preparation_time_seconds"
-    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_cocktails_on_user_id"
   end
 
-  create_table "cocktails_users", id: false, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "cocktail_id", null: false
-    t.index ["cocktail_id", "user_id"], name: "index_cocktails_users_on_cocktail_id_and_user_id"
-    t.index ["user_id", "cocktail_id"], name: "index_cocktails_users_on_user_id_and_cocktail_id"
+  create_table "ingredient_aliases", force: :cascade do |t|
+    t.integer "ingredient_id", null: false
+    t.string "name", null: false
+    t.string "language", null: false
+    t.string "normalized_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id", "language", "normalized_name"], name: "idx_on_ingredient_id_language_normalized_name_cb083c300b", unique: true
+    t.index ["language", "normalized_name"], name: "index_ingredient_aliases_on_language_and_normalized_name"
+    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "ingredient_aliases_nonblank_names"
+  end
+
+  create_table "ingredient_translations", force: :cascade do |t|
+    t.integer "ingredient_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.text "description"
+    t.string "normalized_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id", "locale"], name: "index_ingredient_translations_on_ingredient_id_and_locale", unique: true
+    t.index ["locale", "normalized_name"], name: "index_ingredient_translations_on_locale_and_normalized_name"
+    t.check_constraint "length(trim(locale)) > 0", name: "ingredient_translations_locale"
+    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "ingredient_translations_english_name"
+    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "ingredient_translations_normalized_name"
   end
 
   create_table "ingredients", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "recipe_steps", force: :cascade do |t|
+    t.integer "user_cocktail_id", null: false
+    t.integer "position", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_cocktail_id", "position"], name: "index_recipe_steps_on_user_cocktail_id_and_position", unique: true
+    t.check_constraint "position >= 0", name: "recipe_steps_position"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -54,6 +95,73 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122404) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "step_mentions", force: :cascade do |t|
+    t.integer "recipe_step_id", null: false
+    t.integer "ingredient_id"
+    t.integer "utensil_id"
+    t.integer "start_offset", null: false
+    t.integer "end_offset", null: false
+    t.text "quoted_text", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id"], name: "index_step_mentions_on_ingredient_id"
+    t.index ["recipe_step_id", "start_offset", "end_offset"], name: "idx_on_recipe_step_id_start_offset_end_offset_4bc8b67b0a", unique: true
+    t.index ["utensil_id"], name: "index_step_mentions_on_utensil_id"
+    t.check_constraint "(ingredient_id IS NOT NULL AND utensil_id IS NULL) OR (ingredient_id IS NULL AND utensil_id IS NOT NULL)", name: "step_mentions_one_identity"
+    t.check_constraint "start_offset >= 0 AND end_offset > start_offset", name: "step_mentions_offsets"
+  end
+
+  create_table "user_cocktail_ingredients", force: :cascade do |t|
+    t.integer "user_cocktail_id", null: false
+    t.integer "ingredient_id", null: false
+    t.text "submitted_text", null: false
+    t.string "language", null: false
+    t.decimal "quantity", precision: 12, scale: 4
+    t.string "measuring_unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id"], name: "index_user_cocktail_ingredients_on_ingredient_id"
+    t.index ["user_cocktail_id", "ingredient_id"], name: "idx_on_user_cocktail_id_ingredient_id_b9244a9808"
+    t.check_constraint "quantity IS NULL OR quantity > 0", name: "user_cocktail_ingredients_positive_quantity"
+  end
+
+  create_table "user_cocktail_utensils", force: :cascade do |t|
+    t.integer "user_cocktail_id", null: false
+    t.integer "utensil_id", null: false
+    t.text "submitted_text", null: false
+    t.string "language", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_cocktail_id", "utensil_id"], name: "idx_on_user_cocktail_id_utensil_id_1670add4a6", unique: true
+    t.index ["utensil_id"], name: "index_user_cocktail_utensils_on_utensil_id"
+  end
+
+  create_table "user_cocktails", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "language", default: "und", null: false
+    t.integer "cocktail_id"
+    t.integer "preparation_time_seconds"
+    t.integer "user_id", null: false
+    t.string "visibility", default: "private", null: false
+    t.string "publication_state", default: "draft", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cocktail_id"], name: "index_user_cocktails_on_cocktail_id"
+    t.index ["user_id"], name: "index_user_cocktails_on_user_id"
+    t.index ["visibility", "publication_state"], name: "index_user_cocktails_on_visibility_and_publication_state"
+    t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "user_cocktails_preparation_time"
+    t.check_constraint "publication_state != 'published' OR (cocktail_id IS NOT NULL AND length(trim(name)) > 0 AND language != 'und')", name: "user_cocktails_published_identity"
+    t.check_constraint "publication_state IN ('draft', 'published')", name: "user_cocktails_publication_state"
+    t.check_constraint "visibility IN ('private', 'public')", name: "user_cocktails_visibility"
+  end
+
+  create_table "user_cocktails_users", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "user_cocktail_id", null: false
+    t.index ["user_cocktail_id", "user_id"], name: "index_user_cocktails_users_on_user_cocktail_id_and_user_id"
+    t.index ["user_id", "user_cocktail_id"], name: "index_user_cocktails_users_on_user_id_and_user_cocktail_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -62,8 +170,53 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122404) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_foreign_key "cocktail_ingredients", "cocktails"
-  add_foreign_key "cocktail_ingredients", "ingredients"
-  add_foreign_key "cocktails", "users"
+  create_table "utensil_aliases", force: :cascade do |t|
+    t.integer "utensil_id", null: false
+    t.string "name", null: false
+    t.string "language", null: false
+    t.string "normalized_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language", "normalized_name"], name: "index_utensil_aliases_on_language_and_normalized_name"
+    t.index ["utensil_id", "language", "normalized_name"], name: "idx_on_utensil_id_language_normalized_name_312696a526", unique: true
+    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "utensil_aliases_nonblank_names"
+  end
+
+  create_table "utensil_translations", force: :cascade do |t|
+    t.integer "utensil_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.text "description"
+    t.string "normalized_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["locale", "normalized_name"], name: "index_utensil_translations_on_locale_and_normalized_name"
+    t.index ["utensil_id", "locale"], name: "index_utensil_translations_on_utensil_id_and_locale", unique: true
+    t.check_constraint "length(trim(locale)) > 0", name: "utensil_translations_locale"
+    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "utensil_translations_english_name"
+    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "utensil_translations_normalized_name"
+  end
+
+  create_table "utensils", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "cocktail_aliases", "cocktails"
+  add_foreign_key "cocktail_translations", "cocktails"
+  add_foreign_key "ingredient_aliases", "ingredients"
+  add_foreign_key "ingredient_translations", "ingredients"
+  add_foreign_key "recipe_steps", "user_cocktails"
   add_foreign_key "sessions", "users"
+  add_foreign_key "step_mentions", "ingredients"
+  add_foreign_key "step_mentions", "recipe_steps"
+  add_foreign_key "step_mentions", "utensils"
+  add_foreign_key "user_cocktail_ingredients", "ingredients"
+  add_foreign_key "user_cocktail_ingredients", "user_cocktails"
+  add_foreign_key "user_cocktail_utensils", "user_cocktails"
+  add_foreign_key "user_cocktail_utensils", "utensils"
+  add_foreign_key "user_cocktails", "cocktails"
+  add_foreign_key "user_cocktails", "users"
+  add_foreign_key "utensil_aliases", "utensils"
+  add_foreign_key "utensil_translations", "utensils"
 end

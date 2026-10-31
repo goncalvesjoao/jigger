@@ -68,3 +68,5 @@ end
 gem "vite_rails", ">= 3.11.1"
 
 gem "pundit", "~> 2.5"
+
+gem "globalize", "~> 7.1.3"
