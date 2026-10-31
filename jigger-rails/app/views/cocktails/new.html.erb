@@ -1,0 +1,11 @@
+<% content_for :title, "New cocktail" %>
+
+<h1>New cocktail</h1>
+
+<%= render "form", cocktail: @cocktail %>
+
+<br>
+
+<div>
+  <%= link_to "Back to cocktails", cocktails_path %>
+</div>
