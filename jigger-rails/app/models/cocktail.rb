@@ -3,6 +3,7 @@ class Cocktail < ApplicationRecord
   has_many :user_cocktails, dependent: :restrict_with_error
 
   include CanonicalTranslations
+  include CanonicalPhoto
   translates :history
 
   def self.lookup(text, language:)

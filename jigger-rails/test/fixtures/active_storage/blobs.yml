@@ -1,0 +1,3 @@
+<% %w[cocktail_margarita ingredient_one ingredient_two utensil_jigger].each do |label| %>
+<%= label %>: <%= ActiveStorage::FixtureSet.blob(filename: "photo.png", service_name: "test", metadata: { analyzed: true, identified: true, width: 640, height: 480 }) %>
+<% end %>

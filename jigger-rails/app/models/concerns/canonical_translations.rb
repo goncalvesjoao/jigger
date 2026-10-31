@@ -5,7 +5,7 @@ module CanonicalTranslations
     translates :name, :description, fallbacks_for_empty_translations: true
     translation_class.include CanonicalTranslation
     validate :requires_english_name
-    scope :usable, -> { where(id: translation_class.where(locale: "en").where.not(normalized_name: nil).select(translation_options[:foreign_key])) }
+    scope :usable, -> { with_required_image.where(id: translation_class.where(locale: "en").where.not(normalized_name: nil).select(translation_options[:foreign_key])) }
   end
 
   def display_name
@@ -13,11 +13,15 @@ module CanonicalTranslations
   end
 
   def usable?
-    Globalize.with_locale(:en) { name.present? } && !translation_for(:en, false)&.marked_for_destruction?
+    english_name? && required_photo?
   end
 
   private
+    def english_name?
+      Globalize.with_locale(:en) { name.present? } && !translation_for(:en, false)&.marked_for_destruction?
+  end
+
     def requires_english_name
-      errors.add(:name, "needs an English translation") unless usable?
+      errors.add(:name, "needs an English translation") unless english_name?
     end
 end

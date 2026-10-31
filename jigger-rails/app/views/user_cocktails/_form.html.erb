@@ -36,6 +36,15 @@
   </div>
 
   <div>
+    <%= form.label :image, "Photo" %>
+    <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp", aria: { describedby: "image-help" } %>
+    <p id="image-help">Optional JPEG, PNG or WebP photo. Maximum 10 MB and 25 megapixels. Choose a new photo to replace the current one.</p>
+    <% if user_cocktail.persisted? && user_cocktail.image.attached? %>
+      <%= image_tag user_cocktail_image_path(user_cocktail, size: :card), alt: "Current photo of #{user_cocktail.name}", loading: "lazy" %>
+    <% end %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

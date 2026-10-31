@@ -1,6 +1,8 @@
 require "test_helper"
+require_relative "../test_helpers/photo_test_helper"
 
 class CanonicalTranslationsTest < ActiveSupport::TestCase
+  include PhotoTestHelper
   def identity_types
     [ [ Ingredient, :ingredient_aliases ], [ Utensil, :utensil_aliases ], [ Cocktail, :cocktail_aliases ] ]
   end
@@ -9,10 +11,10 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
     identity_types.each do |type, association|
       assert_not type.new.valid?
       assert_no_difference([ type.name + ".count", type.translation_class.name + ".count" ]) do
-        assert_raises(ActiveRecord::RecordInvalid) { type.create!(name: " ") }
-        assert_raises(ActiveRecord::RecordInvalid) { Globalize.with_locale(:ja) { type.create!(name: "ジン") } }
+        assert_raises(ActiveRecord::RecordInvalid) { type.create!(image: photo_upload, name: " ") }
+        assert_raises(ActiveRecord::RecordInvalid) { Globalize.with_locale(:ja) { type.create!(image: photo_upload, name: "ジン") } }
       end
-      identity = type.create!(name: "  ＧＩＮ  ", description: "English description")
+      identity = type.create!(image: photo_upload, name: "  ＧＩＮ  ", description: "English description")
       assert identity.usable?
       assert_equal "  ＧＩＮ  ", identity.reload.name
       assert_equal "gin", identity.translations.sole.normalized_name
@@ -27,7 +29,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
 
   test "localized fields fall back to English independently without affecting exact locale lookup" do
     identity_types.each do |type, _association|
-      identity = type.create!(name: "Gin", description: "English description")
+      identity = type.create!(image: photo_upload, name: "Gin", description: "English description")
       Globalize.with_locale(:ja) do
         assert_equal "Gin", identity.name
         assert_equal "English description", identity.description
@@ -52,7 +54,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
 
   test "optional descriptions can be absent and empty localized names fall back" do
     identity_types.each do |type, _association|
-      identity = type.create!(name: "Gin")
+      identity = type.create!(image: photo_upload, name: "Gin")
       assert_nil identity.description
       Globalize.with_locale(:ja) do
         identity.update!(name: "", description: "Only a description")
@@ -64,7 +66,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
 
   test "saving multiple locales is atomic and failed English validation saves neither locale" do
     identity_types.each do |type, _association|
-      identity = type.new(name: "First")
+      identity = type.new(image: photo_upload, name: "First")
       Globalize.with_locale(:ja) { identity.name = "最初" }
       identity.save!
       assert_equal 2, identity.reload.translations.count
@@ -74,7 +76,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
       assert_equal "First", identity.reload.name
       assert_equal 2, identity.translations.count
       assert_not identity.translations.exists?(locale: "pt")
-      broken = type.new(name: "English")
+      broken = type.new(image: photo_upload, name: "English")
       Globalize.with_locale(:"") { broken.name = "Invalid locale" }
       assert_no_difference([ type.name + ".count", type.translation_class.name + ".count" ]) do
         assert_raises(ActiveRecord::RecordInvalid) { broken.save! }
@@ -84,7 +86,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
 
   test "locale uniqueness and identity references are enforced by models and database" do
     identity_types.each do |type, _association|
-      identity = type.create!(name: "Gin")
+      identity = type.create!(image: photo_upload, name: "Gin")
       english = identity.translations.sole
       duplicate = english.dup
       assert_not duplicate.valid?
@@ -141,7 +143,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
       assert_not type.new.respond_to?(:history)
       assert_not type.translation_class.column_names.include?("history")
     end
-    cocktail = Cocktail.create!(name: "Margarita")
+    cocktail = Cocktail.create!(image: photo_upload, name: "Margarita")
     assert_nil cocktail.history
     cocktail.update!(history: "English history")
     Globalize.with_locale(:ja) do

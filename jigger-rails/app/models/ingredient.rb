@@ -5,6 +5,7 @@ class Ingredient < ApplicationRecord
   has_many :step_mentions, dependent: :restrict_with_error
 
   include CanonicalTranslations
+  include CanonicalPhoto
 
   def self.lookup(text, language:)
     normalized = LookupName.normalize(text)

@@ -7,6 +7,8 @@ class UserCocktail < ApplicationRecord
   has_many :utensils, through: :user_cocktail_utensils
   has_many :recipe_steps, -> { order(:position) }, dependent: :destroy, autosave: true
 
+  include PhotoAttachment
+
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
   validates :language, presence: true

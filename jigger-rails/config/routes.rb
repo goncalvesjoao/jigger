@@ -2,7 +2,21 @@ Rails.application.routes.draw do
   resource :registration, only: %i[ new create ]
   resource :session
   resources :passwords, param: :token
-  resources :user_cocktails
+  resources :user_cocktails do
+    resource :image, only: :show, controller: "user_cocktail_images"
+  end
+  resources :cocktails, only: [] do
+    resource :image, only: :show, controller: "cocktail_images"
+  end
+  resources :ingredients, only: [] do
+    resource :image, only: :show, controller: "ingredient_images"
+  end
+  resources :utensils, only: [] do
+    resource :image, only: :show, controller: "utensil_images"
+  end
+  scope ActiveStorage.routes_prefix do
+    get "/disk/:encoded_key/*filename", to: "active_storage/disk#show", as: :rails_disk_service
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

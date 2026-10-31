@@ -1,4 +1,7 @@
 <div id="<%= dom_id user_cocktail %>">
+  <% if user_cocktail.image.attached? %>
+    <%= image_tag user_cocktail_image_path(user_cocktail, size: local_assigns.fetch(:image_size, :card)), alt: "Photo of #{user_cocktail.name}", loading: "lazy", style: "max-width: 100%; height: auto;" %>
+  <% end %>
   <div>
     <strong>Name:</strong>
     <%= user_cocktail.name %>

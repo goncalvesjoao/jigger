@@ -10,6 +10,8 @@ module Jigger
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
+    config.active_storage.draw_routes = false
+    config.active_storage.variant_processor = :vips
     config.i18n.default_locale = :en
     config.i18n.fallbacks = [ :en ]
 

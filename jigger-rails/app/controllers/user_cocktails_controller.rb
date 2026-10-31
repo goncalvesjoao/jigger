@@ -7,11 +7,15 @@ class UserCocktailsController < ApplicationController
 
   # GET /user_cocktails or /user_cocktails.json
   def index
-    @user_cocktails = UserCocktail.readable_by(Current.user).includes(:recipe_steps)
+    @user_cocktails = UserCocktail.readable_by(Current.user).with_attached_image.includes(:recipe_steps)
   end
 
   # GET /user_cocktails/1 or /user_cocktails/1.json
   def show
+    ActiveRecord::Associations::Preloader.new(records: [ @user_cocktail ], associations: {
+      user_cocktail_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
+      user_cocktail_utensils: { utensil: [ :translations, { image_attachment: :blob } ] }
+    }).call
   end
 
   # GET /user_cocktails/new
@@ -74,6 +78,12 @@ class UserCocktailsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_cocktail_params
-      params.expect(user_cocktail: [ :name, :language, :steps, :preparation_time_seconds ])
+      permitted = params.expect(user_cocktail: [ :name, :language, :steps, :preparation_time_seconds, :image ])
+      if permitted[:image].blank?
+        permitted.delete(:image)
+      elsif !permitted[:image].is_a?(ActionDispatch::Http::UploadedFile)
+        raise ActionController::BadRequest, "image must be an uploaded file"
+      end
+      permitted
     end
 end

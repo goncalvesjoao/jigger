@@ -1,0 +1,19 @@
+cocktail_margarita:
+  name: image
+  record: margarita (Cocktail)
+  blob: cocktail_margarita
+
+ingredient_one:
+  name: image
+  record: one (Ingredient)
+  blob: ingredient_one
+
+ingredient_two:
+  name: image
+  record: two (Ingredient)
+  blob: ingredient_two
+
+utensil_jigger:
+  name: image
+  record: jigger (Utensil)
+  blob: utensil_jigger
