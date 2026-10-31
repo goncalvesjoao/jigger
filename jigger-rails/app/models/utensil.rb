@@ -1,0 +1,2 @@
+class Utensil < ApplicationRecord
+end
