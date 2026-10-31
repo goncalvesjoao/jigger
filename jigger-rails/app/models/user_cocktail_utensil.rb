@@ -1,4 +1,9 @@
 class UserCocktailUtensil < ApplicationRecord
+  enum :role, {
+    preparation: "preparation",
+    serving: "serving"
+  }, validate: true
+
   belongs_to :user_cocktail
   belongs_to :utensil
 

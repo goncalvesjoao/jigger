@@ -78,7 +78,7 @@ class UserCocktailsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_cocktail_params
-      permitted = params.expect(user_cocktail: [ :name, :language, :steps, :preparation_time_seconds, :image ])
+      permitted = params.expect(user_cocktail: [ :name, :description, :language, :steps, :preparation_time_seconds, :servings, :preparation_method, :source_reference, :image ])
       if permitted[:image].blank?
         permitted.delete(:image)
       elsif !permitted[:image].is_a?(ActionDispatch::Http::UploadedFile)

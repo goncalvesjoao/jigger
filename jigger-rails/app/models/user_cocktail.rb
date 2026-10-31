@@ -1,7 +1,14 @@
 class UserCocktail < ApplicationRecord
+  enum :preparation_method, {
+    shaken: "shaken",
+    stirred: "stirred",
+    built: "built",
+    blended: "blended"
+  }, validate: { allow_nil: true }
+
   belongs_to :user
   belongs_to :cocktail, optional: true
-  has_many :user_cocktail_ingredients, dependent: :destroy
+  has_many :user_cocktail_ingredients, -> { order(:position, :id) }, dependent: :destroy
   has_many :ingredients, through: :user_cocktail_ingredients
   has_many :user_cocktail_utensils, dependent: :destroy
   has_many :utensils, through: :user_cocktail_utensils
@@ -9,10 +16,13 @@ class UserCocktail < ApplicationRecord
 
   include PhotoAttachment
 
+  before_validation :refresh_published_at
+
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
   validates :language, presence: true
   validates :preparation_time_seconds, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :servings, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validate :publication_requirements, if: -> { publication_state == "published" }
 
   scope :marketplace, -> {
@@ -22,11 +32,12 @@ class UserCocktail < ApplicationRecord
       .where(id: RecipeStep.select(:user_cocktail_id))
       .where.not(id: UserCocktailIngredient.where.not(ingredient_id: Ingredient.usable.select(:id)).select(:user_cocktail_id))
       .where.not(id: UserCocktailUtensil.where.not(utensil_id: Utensil.usable.select(:id)).select(:user_cocktail_id))
+      .order(published_at: :desc, created_at: :desc)
   }
   scope :readable_by, ->(user) { user ? marketplace.or(where(user_id: user.id)) : marketplace }
 
   def self.makeable_with(ingredient_ids:, utensil_ids:)
-    missing_ingredients = UserCocktailIngredient.where.not(ingredient_id: ingredient_ids).select(:user_cocktail_id)
+    missing_ingredients = UserCocktailIngredient.where(optional: false).where.not(ingredient_id: ingredient_ids).select(:user_cocktail_id)
     missing_utensils = UserCocktailUtensil.where.not(utensil_id: utensil_ids).select(:user_cocktail_id)
     marketplace.where.not(id: missing_ingredients).where.not(id: missing_utensils)
   end
@@ -55,6 +66,12 @@ class UserCocktail < ApplicationRecord
   validate { errors.add(:steps, "must be edited through recipe_steps for a multi-step recipe") if @multi_step_edit }
 
   private
+    def refresh_published_at
+      return unless will_save_change_to_publication_state? && publication_state == "published"
+
+      self.published_at = Time.current
+    end
+
     def complete?
       name.present? && language.present? && language != "und" && cocktail&.usable? &&
         user_cocktail_ingredients.any? && user_cocktail_ingredients.all? { |line| line.ingredient&.usable? } &&

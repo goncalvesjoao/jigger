@@ -12,14 +12,31 @@ class UserCocktailTest < ActiveSupport::TestCase
     assert_equal "Changed", recipe.reload.recipe_steps.sole.body
   end
 
-  test "all requirements must be available and extras and duplicates are harmless" do
+  test "description servings preparation method and source reference are persisted with constraints" do
+    recipe = user_cocktails(:one)
+    assert recipe.update(
+      description: "A brighter split-base variation.",
+      servings: 2,
+      preparation_method: :shaken,
+      source_reference: "Difford's Guide"
+    )
+    recipe.reload
+    assert_equal "A brighter split-base variation.", recipe.description
+    assert_equal 2, recipe.servings
+    assert_equal "shaken", recipe.preparation_method
+    assert_equal "Difford's Guide", recipe.source_reference
+    assert_not recipe.update(servings: 0)
+  end
+
+  test "required ingredients and utensils must be available while optional ingredients may be missing" do
     recipe = user_cocktails(:one)
     ingredient = ingredients(:one)
     utensil = utensils(:jigger)
     recipe.user_cocktail_ingredients.create!(ingredient: ingredient, submitted_text: "gin garnish", language: "en")
-    recipe.user_cocktail_ingredients.create!(ingredient: ingredients(:two), submitted_text: "ice", language: "en")
-    assert_not_includes UserCocktail.makeable_with(ingredient_ids: [ ingredient.id ], utensil_ids: [ utensil.id ]), recipe
+    recipe.user_cocktail_ingredients.create!(ingredient: ingredients(:two), submitted_text: "ice", language: "en", optional: true)
+    assert_not_includes UserCocktail.makeable_with(ingredient_ids: [ ingredients(:two).id ], utensil_ids: [ utensil.id ]), recipe
     assert_not_includes UserCocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: []), recipe
+    assert_includes UserCocktail.makeable_with(ingredient_ids: [ ingredient.id ], utensil_ids: [ utensil.id ]), recipe
     assert_includes UserCocktail.makeable_with(ingredient_ids: Ingredient.ids * 2, utensil_ids: Utensil.ids * 2), recipe
     assert_empty UserCocktail.makeable_with(ingredient_ids: [], utensil_ids: [])
     assert_includes UserCocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), user_cocktails(:two)
@@ -51,6 +68,22 @@ class UserCocktailTest < ActiveSupport::TestCase
   test "database rejects invalid publication and visibility states" do
     assert_raises(ActiveRecord::StatementInvalid) { user_cocktails(:one).update_columns(visibility: "friends") }
     assert_raises(ActiveRecord::StatementInvalid) { user_cocktails(:one).update_columns(publication_state: "ready") }
+  end
+  test "publishing stamps published_at and marketplace is ordered by latest publication first" do
+    older = user_cocktails(:one)
+    newer = user_cocktails(:two)
+
+    older.update!(publication_state: "draft")
+    newer.update!(publication_state: "draft")
+    older.update!(publication_state: "published")
+    travel 1.second do
+      newer.update!(publication_state: "published")
+    end
+
+    assert_not_nil older.reload.published_at
+    assert_not_nil newer.reload.published_at
+    assert_operator newer.published_at, :>, older.published_at
+    assert_equal newer, UserCocktail.marketplace.first
   end
   test "new complete variations publish with structured requirements and steps" do
     recipe = UserCocktail.new(user: users(:one), cocktail: cocktails(:margarita), name: "  マイ・マルガリータ ", language: "ja", visibility: "public", publication_state: "published")

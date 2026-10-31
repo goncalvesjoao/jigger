@@ -1,4 +1,25 @@
 class Ingredient < ApplicationRecord
+  enum :category, {
+    spirit: "spirit",
+    liqueur: "liqueur",
+    wine: "wine",
+    beer: "beer",
+    mixer: "mixer",
+    juice: "juice",
+    syrup: "syrup",
+    fruit: "fruit",
+    dairy: "dairy",
+    herb: "herb",
+    spice: "spice",
+    ice: "ice",
+    other: "other"
+  }, validate: true
+  enum :alcohol_status, {
+    alcoholic: "alcoholic",
+    non_alcoholic: "non_alcoholic",
+    unknown: "unknown"
+  }, validate: true
+
   has_many :ingredient_aliases, dependent: :destroy, autosave: true, inverse_of: :ingredient
   has_many :user_cocktail_ingredients, dependent: :restrict_with_error
 
@@ -6,6 +27,8 @@ class Ingredient < ApplicationRecord
 
   include CanonicalTranslations
   include CanonicalPhoto
+
+  validates :alcohol_by_volume, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
 
   def self.lookup(text, language:)
     normalized = LookupName.normalize(text)

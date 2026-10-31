@@ -1,4 +1,12 @@
 class Utensil < ApplicationRecord
+  enum :category, {
+    glassware: "glassware",
+    mixing: "mixing",
+    measuring: "measuring",
+    straining: "straining",
+    other: "other"
+  }, validate: true
+
   has_many :utensil_aliases, dependent: :destroy, autosave: true, inverse_of: :utensil
   has_many :user_cocktail_utensils, dependent: :restrict_with_error
 
@@ -6,6 +14,8 @@ class Utensil < ApplicationRecord
 
   include CanonicalTranslations
   include CanonicalPhoto
+
+  validates :capacity_milliliters, numericality: { greater_than: 0 }, allow_nil: true
 
   def self.lookup(text, language:)
     normalized = LookupName.normalize(text)

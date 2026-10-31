@@ -17,6 +17,11 @@
   </div>
 
   <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
     <%= form.label :language, style: "display: block" %>
     <%= form.text_field :language %>
   </div>
@@ -33,6 +38,21 @@
   <div>
     <%= form.label :preparation_time_seconds, style: "display: block" %>
     <%= form.number_field :preparation_time_seconds %>
+  </div>
+
+  <div>
+    <%= form.label :servings, style: "display: block" %>
+    <%= form.number_field :servings, min: 1, step: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :preparation_method, style: "display: block" %>
+    <%= form.select :preparation_method, options_for_select([ [ "", nil ] ] + UserCocktail.preparation_methods.keys.map { |value| [ value.humanize, value ] }, user_cocktail.preparation_method) %>
+  </div>
+
+  <div>
+    <%= form.label :source_reference, style: "display: block" %>
+    <%= form.text_field :source_reference %>
   </div>
 
   <div>

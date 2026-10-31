@@ -100,8 +100,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
   end
 
   create_table "ingredients", force: :cascade do |t|
+    t.string "category", default: "other", null: false
+    t.string "alcohol_status", default: "unknown", null: false
+    t.decimal "alcohol_by_volume", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.check_constraint "alcohol_by_volume IS NULL OR (alcohol_by_volume >= 0 AND alcohol_by_volume <= 100)", name: "ingredients_alcohol_by_volume_range"
+    t.check_constraint "alcohol_status IN ('alcoholic', 'non_alcoholic', 'unknown')", name: "ingredients_alcohol_status"
+    t.check_constraint "category IN ('spirit', 'liqueur', 'wine', 'beer', 'mixer', 'juice', 'syrup', 'fruit', 'dairy', 'herb', 'spice', 'ice', 'other')", name: "ingredients_category"
   end
 
   create_table "recipe_steps", force: :cascade do |t|
@@ -144,13 +150,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.integer "ingredient_id", null: false
     t.text "submitted_text", null: false
     t.string "language", null: false
+    t.integer "position", null: false
+    t.boolean "optional", default: false, null: false
+    t.string "role", default: "mixing", null: false
+    t.text "preparation_note"
     t.decimal "quantity", precision: 12, scale: 4
     t.string "measuring_unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ingredient_id"], name: "index_user_cocktail_ingredients_on_ingredient_id"
     t.index ["user_cocktail_id", "ingredient_id"], name: "idx_on_user_cocktail_id_ingredient_id_b9244a9808"
+    t.index ["user_cocktail_id", "position"], name: "index_user_cocktail_ingredients_on_cocktail_and_position", unique: true
+    t.check_constraint "position >= 0", name: "user_cocktail_ingredients_position"
     t.check_constraint "quantity IS NULL OR quantity > 0", name: "user_cocktail_ingredients_positive_quantity"
+    t.check_constraint "role IN ('mixing', 'garnish', 'rim')", name: "user_cocktail_ingredients_role"
   end
 
   create_table "user_cocktail_utensils", force: :cascade do |t|
@@ -158,10 +171,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.integer "utensil_id", null: false
     t.text "submitted_text", null: false
     t.string "language", null: false
+    t.string "role", default: "preparation", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_cocktail_id", "utensil_id"], name: "idx_on_user_cocktail_id_utensil_id_1670add4a6", unique: true
     t.index ["utensil_id"], name: "index_user_cocktail_utensils_on_utensil_id"
+    t.check_constraint "role IN ('preparation', 'serving')", name: "user_cocktail_utensils_role"
   end
 
   create_table "user_cocktails", force: :cascade do |t|
@@ -169,17 +184,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.string "language", default: "und", null: false
     t.integer "cocktail_id"
     t.integer "preparation_time_seconds"
+    t.text "description"
+    t.integer "servings"
+    t.string "preparation_method"
+    t.string "source_reference"
+    t.datetime "published_at"
     t.integer "user_id", null: false
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cocktail_id"], name: "index_user_cocktails_on_cocktail_id"
+    t.index ["published_at"], name: "index_user_cocktails_on_published_at"
     t.index ["user_id"], name: "index_user_cocktails_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_user_cocktails_on_visibility_and_publication_state"
+    t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "user_cocktails_preparation_method"
     t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "user_cocktails_preparation_time"
     t.check_constraint "publication_state != 'published' OR (cocktail_id IS NOT NULL AND length(trim(name)) > 0 AND language != 'und')", name: "user_cocktails_published_identity"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "user_cocktails_publication_state"
+    t.check_constraint "servings IS NULL OR servings > 0", name: "user_cocktails_positive_servings"
     t.check_constraint "visibility IN ('private', 'public')", name: "user_cocktails_visibility"
   end
 
@@ -226,8 +249,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
   end
 
   create_table "utensils", force: :cascade do |t|
+    t.string "category", default: "other", null: false
+    t.decimal "capacity_milliliters", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.check_constraint "capacity_milliliters IS NULL OR capacity_milliliters > 0", name: "utensils_positive_capacity_milliliters"
+    t.check_constraint "category IN ('glassware', 'mixing', 'measuring', 'straining', 'other')", name: "utensils_category"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

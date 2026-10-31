@@ -5,6 +5,11 @@ class CreateUserCocktails < ActiveRecord::Migration[8.1]
       t.string :language, null: false, default: "und"
       t.references :cocktail, foreign_key: true
       t.integer :preparation_time_seconds
+      t.text :description
+      t.integer :servings
+      t.string :preparation_method
+      t.string :source_reference
+      t.datetime :published_at
       t.references :user, null: false, foreign_key: true
       t.string :visibility, null: false, default: "private"
       t.string :publication_state, null: false, default: "draft"
@@ -13,7 +18,10 @@ class CreateUserCocktails < ActiveRecord::Migration[8.1]
     add_check_constraint :user_cocktails, "visibility IN ('private', 'public')", name: "user_cocktails_visibility"
     add_check_constraint :user_cocktails, "publication_state IN ('draft', 'published')", name: "user_cocktails_publication_state"
     add_check_constraint :user_cocktails, "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "user_cocktails_preparation_time"
+    add_check_constraint :user_cocktails, "servings IS NULL OR servings > 0", name: "user_cocktails_positive_servings"
+    add_check_constraint :user_cocktails, "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "user_cocktails_preparation_method"
     add_check_constraint :user_cocktails, "publication_state != 'published' OR (cocktail_id IS NOT NULL AND length(trim(name)) > 0 AND language != 'und')", name: "user_cocktails_published_identity"
     add_index :user_cocktails, [ :visibility, :publication_state ]
+    add_index :user_cocktails, :published_at
   end
 end
