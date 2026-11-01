@@ -7,12 +7,13 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).update!(cocktail: @cocktail, name: "Dry sour")
   end
 
-  test "marketplace search lives in the navbar and badges overlay card images" do
+  test "marketplace search lives above results and retains selections and image badges" do
     get root_url, params: { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids, makeable: "1" }
     assert_response :success
     assert_select "section.discovery-heading", count: 0
-    assert_select "nav .navbar-search[action=?]", cocktails_path do
-      assert_select "label[for=navbar-query]", text: "Search cocktails"
+    assert_select "nav .marketplace-search", count: 0
+    assert_select "main .marketplace-search[action=?]", cocktails_path do
+      assert_select "label[for=marketplace-query]", text: "Search cocktails"
       assert_select "input[type=search][name=q][value=margarita]"
       assert_select "input[type=checkbox][name='ingredient_ids[]'][checked]", count: Ingredient.count
     end
@@ -234,7 +235,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".recipe-grid article", count: 24
     assert_select ".recipe-count", text: "2", count: 1
-    assert_select ".section-heading span", text: "25 cocktails"
+    assert_select ".marketplace-results h2", text: "25 cocktails"
     next_url = css_select("turbo-frame#cocktails_page_2[loading='lazy']").sole["src"]
     query = Rack::Utils.parse_nested_query(URI.parse(next_url).query)
     assert_equal "margarita", query["q"]

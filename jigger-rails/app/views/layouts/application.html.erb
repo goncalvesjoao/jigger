@@ -42,7 +42,7 @@
         <%= link_to root_path do %>
           <strong class="wordmark">Jigger<span aria-hidden="true">.</span></strong>
         <% end %>
-        <%= render "shared/marketplace_search" %>
+        <%= link_to "Discover cocktails", cocktails_path, class: "marketplace-nav-link" unless controller_name == "cocktails" && action_name == "index" %>
         <ul>
           <% if authenticated? %>
             <% if Current.user.admin? %><li><%= link_to "Admin", admin_root_path %></li><% end %>

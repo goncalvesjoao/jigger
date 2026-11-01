@@ -1,34 +1,45 @@
-<%= form_with url: cocktails_path, method: :get, class: "navbar-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss" } do |form| %>
-  <%= form.label :q, "Search cocktails", for: "navbar-query", class: "navbar-search-label" %>
-  <div role="search">
-    <%= form.search_field :q, id: "navbar-query", value: params[:q], placeholder: "Search cocktails…", data: { action: "focus->marketplace-search#open" } %>
-    <%= form.submit "Search" %>
-  </div>
-  <details class="search-panel" data-marketplace-search-target="panel" data-action="toggle->marketplace-search#sync" <%= "open" if params[:makeable] == "1" || Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any? %>>
-    <summary>Ingredients &amp; utensils</summary>
-    <div class="search-filters">
-      <p>Find recipes containing every selected item.</p>
-      <div class="search-filter-columns">
-        <% { ingredient_ids: ["Ingredients", Ingredient], utensil_ids: ["Utensils", Utensil] }.each do |key, (label, model)| %>
-          <details class="search-picker" data-marketplace-search-target="picker">
-            <summary><%= label %></summary>
-            <label for="search-<%= key %>">Find <%= label.downcase %></label>
-            <input type="search" id="search-<%= key %>" placeholder="Type to filter…" data-action="input->marketplace-search#filter">
-            <div class="search-options">
-              <% model.usable.includes(:translations).sort_by { |item| item.display_name.downcase }.each do |item| %>
-                <label data-search-option>
-                  <%= check_box_tag "#{key}[]", item.id, Array(params[key]).map(&:to_s).include?(item.id.to_s), id: "search-#{key}-#{item.id}", data: { action: "change->marketplace-search#selections", marketplace_search_target: "choice", label: item.display_name } %>
-                  <span><%= item.display_name %></span>
-                </label>
-              <% end %>
-            </div>
-          </details>
-        <% end %>
-      </div>
-      <div class="search-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>
-      <label class="search-mode"><%= check_box_tag :makeable, "1", params[:makeable] == "1" %> Only show recipes I can make</label>
-      <p class="search-help">With this enabled, select all ingredients and utensils you have. Recipes needing anything else are excluded; optional ingredients are ignored.</p>
-      <div class="search-actions"><%= form.submit "Search" %> <%= link_to "Clear filters", cocktails_path %></div>
+<%= form_with url: cocktails_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss" } do |form| %>
+  <div class="marketplace-search-bar" role="search" aria-label="Find cocktails">
+    <div class="marketplace-query">
+      <%= form.label :q, "Search cocktails", for: "marketplace-query" %>
+      <%= form.search_field :q, id: "marketplace-query", value: params[:q], placeholder: "Try Negroni, sour, highball…" %>
     </div>
-  </details>
+    <% { ingredient_ids: ["Ingredients", Ingredient], utensil_ids: ["Utensils", Utensil] }.each do |key, (label, model)| %>
+      <% items = model.usable.includes(:translations).sort_by { |item| item.display_name.downcase } %>
+      <details class="marketplace-picker" data-marketplace-search-target="picker" data-action="toggle->marketplace-search#sync">
+        <summary aria-controls="picker-<%= key %>">
+          <span><strong><%= label %></strong><small data-picker-count><%= Array(params[key]).reject(&:blank?).size.positive? ? "#{Array(params[key]).reject(&:blank?).size} selected" : "Add #{label.downcase}" %></small></span>
+        </summary>
+        <div class="marketplace-popover" id="picker-<%= key %>">
+          <label class="navbar-search-label" for="search-<%= key %>">Find <%= label.downcase %></label>
+          <input type="search" id="search-<%= key %>" placeholder="Find <%= label.downcase %>…" data-action="input->marketplace-search#filter">
+          <p class="picker-help">Select <%= label.downcase %> to refine your results.</p>
+          <div class="marketplace-options">
+            <% items.each do |item| %>
+              <label data-search-option>
+                <%= check_box_tag "#{key}[]", item.id, Array(params[key]).map(&:to_s).include?(item.id.to_s), id: "search-#{key}-#{item.id}", data: { action: "change->marketplace-search#selections", marketplace_search_target: "choice", label: item.display_name } %>
+                <span><%= item.display_name %></span>
+              </label>
+            <% end %>
+          </div>
+          <p class="picker-empty" data-picker-empty hidden>No matching <%= label.downcase %>. Try another name.</p>
+          <div class="picker-actions">
+            <button type="button" class="search-text-button" data-action="marketplace-search#clearPicker">Clear</button>
+            <button type="button" data-action="marketplace-search#done">Done</button>
+          </div>
+        </div>
+      </details>
+    <% end %>
+    <%= form.submit "Search", class: "marketplace-submit" %>
+  </div>
+  <fieldset class="marketplace-mode" aria-describedby="marketplace-mode-help">
+    <legend class="navbar-search-label">How to match your selections</legend>
+    <label><%= radio_button_tag :makeable, "0", params[:makeable] != "1", data: { action: "change->marketplace-search#mode" } %> Contains selected items</label>
+    <label><%= radio_button_tag :makeable, "1", params[:makeable] == "1", data: { action: "change->marketplace-search#mode" } %> I can make it</label>
+  </fieldset>
+  <p id="marketplace-mode-help" class="marketplace-help" data-marketplace-search-target="help"><%= params[:makeable] == "1" ? "Select everything you have, including ice and tools. Recipes needing anything else are excluded; optional ingredients are ignored." : "Find recipes containing every selected ingredient and utensil. Other items may also be needed." %></p>
+  <div class="marketplace-selection-row">
+    <div class="marketplace-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>
+    <%= link_to "Clear all", cocktails_path, class: "marketplace-clear" %>
+  </div>
 <% end %>
