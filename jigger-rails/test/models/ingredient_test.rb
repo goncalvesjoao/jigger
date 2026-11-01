@@ -26,7 +26,9 @@ class IngredientTest < ActiveSupport::TestCase
       [ Utensil, utensils(:jigger), :utensil_aliases ],
       [ Recipe, recipes(:margarita), :recipe_aliases ] ].each do |type, identity, association|
       identity.public_send(association).create!(name: "  ジガー  ", language: "ja")
-      other = type.create!(image: photo_upload, name: "Other")
+      attributes = { image: photo_upload, name: "Other" }
+      attributes[:user] = users(:one) if type == Recipe
+      other = type.create!(attributes)
       other.public_send(association).create!(name: "ジガー", language: "ja")
       assert_equal [ identity.id, other.id ].sort, type.lookup("ジガー", language: "ja").ids.sort
       assert_equal [ identity.id ], type.lookup(identity.display_name.upcase, language: "en").ids

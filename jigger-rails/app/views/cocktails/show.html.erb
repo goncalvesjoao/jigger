@@ -16,6 +16,7 @@
       <% if @cocktail.source_date_note.present? %><p class="submitted-prose"><%= @cocktail.source_date_note %></p><% end %>
     </section>
   <% end %>
+  <%= render partial: "recipes/details", collection: @official_recipes, as: :recipe, locals: { embedded: true } %>
   <% if policy(@cocktail).edit? %><p><%= link_to "Edit cocktail", edit_admin_cocktail_path(@cocktail) %></p><% end %>
 </article>
 <% if @filtered %>
@@ -30,13 +31,13 @@
   </section>
 <% end %>
 <section id="matching-recipes" aria-labelledby="recipes-heading">
-  <h2 id="recipes-heading"><%= @filtered ? "Matching recipes" : "Recipes" %> (<%= @recipes.size %>)</h2>
-  <% if @recipes.empty? %><p>No recipes match these filters.</p><% end %>
+  <h2 id="recipes-heading">Community recipes (<%= @recipes.size %>)</h2>
+  <% if @recipes.empty? %><p><%= @official_recipes.any? ? "No community recipes listed." : "No community recipes match these filters." %></p><% end %>
   <div class="auto-grid recipe-grid"><%= render @recipes %></div>
 </section>
 <% if @filtered && @other_recipes.any? %>
   <details id="other-recipes" class="other-recipes">
-    <summary>Other recipes (<%= @other_recipes.size %>)</summary>
+    <summary>Other community recipes (<%= @other_recipes.size %>)</summary>
     <p>These public recipes do not match your current filters.</p>
     <div class="auto-grid recipe-grid"><%= render @other_recipes %></div>
   </details>

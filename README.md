@@ -10,7 +10,7 @@ Users create accounts and add their own cocktail recipes. Different users can ha
 
 Recipes have separate visibility and publication readiness states. Visibility is private or public. Publication readiness is draft or published; drafts are recipes that are not ready to publish.
 
-Landing-page searches filter complete, public, published recipes, then group matches by canonical cocktail. Each cocktail card shows the number of matching recipes; unassigned recipes appear individually with a count of one. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace.
+Landing-page searches filter complete, public, published recipes, then group matches by canonical cocktail. Each cocktail card counts matching non-official recipes and hides the counter when it is zero; unassigned recipes appear individually with a count of one. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace. Public, published official recipes always appear in full within the cocktail details, regardless of search or availability filters. They are excluded from matching counts and both community recipe-card lists. Each cocktail can have at most one official recipe, across all visibility and publication states. Every non-official recipe must belong to a user.
 
 ## Search by availability
 
@@ -24,7 +24,7 @@ The marketplace returns public, published recipe variations whose required ingre
 | --- | --- |
 | Cocktail | A canonical drink identity shared by recipes, with names, aliases, description and history. |
 | Recipe | A particular way to make a drink, optionally assigned to a cocktail and optionally owned by a user. |
-| Official recipe | A recipe curated and endorsed by Jigger, independently of its owner. |
+| Official recipe | A recipe presented as Jigger’s reference recipe, independently of its owner. For now, userless TheCocktailDB seed imports are official. |
 | Canonical ingredient | A stable, unique ingredient identity shared across recipes. Ice is an ingredient. |
 | Utensil | An explicit domain object with its own database table or equivalent persistent collection. Utensils include jiggers, glasses and other glassware, and other cocktail equipment. |
 | Mention | Text in a preparation step associated with a system object, such as a canonical ingredient or utensil. The association preserves the submitted prose. |

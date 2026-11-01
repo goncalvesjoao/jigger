@@ -6,7 +6,7 @@
 <%= turbo_frame_tag "cocktails_page_#{@pagination.current_page}", target: "_top" do %>
   <div id="cocktails_<%= @pagination.current_page %>" class="auto-grid recipe-grid">
     <% @groups.each do |identity, recipes| %>
-      <%= render "recipes/recipe", recipe: recipes.first, identity: identity, matching_count: recipes.size %>
+      <%= render "recipes/recipe", recipe: recipes.find(&:official?) || recipes.first, identity: identity, matching_count: matching_recipe_count(identity, recipes) %>
     <% end %>
   </div>
   <% if @pagination.next_page %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_01_090000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -198,9 +198,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cocktail_id"], name: "index_recipes_on_cocktail_id"
+    t.index ["cocktail_id"], name: "index_recipes_one_official_per_cocktail", unique: true, where: "official = 1"
     t.index ["published_at"], name: "index_recipes_on_published_at"
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_recipes_on_visibility_and_publication_state"
+    t.check_constraint "official = 1 OR user_id IS NOT NULL", name: "recipes_require_owner_unless_official"
     t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "recipes_preparation_method"
     t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "recipes_preparation_time"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "recipes_publication_state"

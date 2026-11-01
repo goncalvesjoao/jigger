@@ -53,6 +53,69 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  test "matching official recipes appear in full in cocktail details without duplicate cards" do
+    recipe = recipes(:one)
+    recipe.update!(official: true, servings: 2, source_reference: "Official source")
+    get cocktail_url(@cocktail), params: { q: "margarita" }
+    assert_response :success
+    assert_select ".cocktail-details #recipe_#{recipe.id}", count: 1 do
+      assert_select "h2", text: "Bright sour"
+      assert_select "#ingredients_recipe_#{recipe.id} .ingredient-list li", count: recipe.recipe_ingredients.count
+      assert_select "#preparation_recipe_#{recipe.id} .step-body", text: recipe.recipe_steps.first.body
+      assert_select "dd", text: "2"
+      assert_select "p", text: "Official source"
+    end
+    assert_select "#matching-recipes h2", text: "Community recipes (1)"
+    assert_select "#matching-recipes #recipe_#{recipe.id}", count: 0
+    assert_select "#matching-recipes #recipe_#{recipes(:two).id}"
+    get cocktail_url(@cocktail, format: :json)
+    assert_equal [ recipe.id ], response.parsed_body["official_recipes"].map { |entry| entry["id"] }
+    assert_equal [ recipes(:two).id ], response.parsed_body["recipes"].map { |entry| entry["id"] }
+    assert_equal 1, response.parsed_body["matching_recipe_count"]
+  end
+
+  test "official recipes ignore filters in cocktail details and never bypass public eligibility" do
+    recipes(:one).update!(official: true)
+    [ { q: "dry" }, { ingredient_ids: [ ingredients(:two).id ] }, { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" } ].each do |filters|
+      get cocktail_url(@cocktail), params: filters
+      assert_select ".cocktail-details #recipe_#{recipes(:one).id}", count: 1
+      assert_select "#matching-recipes #recipe_#{recipes(:one).id}", count: 0
+      assert_select "#other-recipes #recipe_#{recipes(:one).id}", count: 0
+      get cocktail_url(@cocktail, format: :json), params: filters
+      assert_equal [ recipes(:one).id ], response.parsed_body["official_recipes"].map { |entry| entry["id"] }
+      assert_not_includes response.parsed_body["recipes"].map { |entry| entry["id"] }, recipes(:one).id
+      assert_not_includes response.parsed_body["other_recipes"].map { |entry| entry["id"] }, recipes(:one).id
+      assert_equal(filters[:makeable] == "1" ? 0 : 1, response.parsed_body["matching_recipe_count"])
+    end
+    users(:one).update!(admin: true)
+    sign_in_as(users(:one))
+    [ { visibility: "private" }, { visibility: "public", publication_state: "draft" } ].each do |state|
+      recipes(:one).update!(state)
+      get cocktail_url(@cocktail)
+      assert_select "#recipe_#{recipes(:one).id}", count: 0
+    end
+  end
+
+  test "marketplace excludes matching official recipes from counters and hides zero counters" do
+    recipes(:one).update!(official: true)
+    get root_url
+    assert_select ".recipe-count", text: "1", count: 1
+    assert_select ".eyebrow", text: "Official Jigger recipe"
+    get cocktails_url(format: :json)
+    assert_equal 1, response.parsed_body.sole["matching_recipe_count"]
+    get root_url, params: { q: "bright" }
+    assert_select "h3 a[href=?]", cocktail_path(@cocktail, q: "bright")
+    assert_select ".recipe-count", count: 0
+    get cocktails_url(format: :json), params: { q: "bright" }
+    assert_equal 0, response.parsed_body.sole["matching_recipe_count"]
+    get root_url, params: { q: "dry" }
+    assert_select ".recipe-count", text: "1", count: 1
+    recipes(:one).update!(cocktail: nil)
+    get root_url, params: { q: "bright" }
+    assert_select ".recipe-count", text: "1", count: 1
+  end
+
+
   test "ingredient and utensil filters count only makeable recipes" do
     recipes(:two).recipe_ingredients.update_all(ingredient_id: ingredients(:two).id)
     filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: Utensil.ids, makeable: "1" }
@@ -109,10 +172,10 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".search-context strong", text: "bright"
     assert_select ".search-context a[href=?]", cocktail_path(@cocktail), text: "Show all recipes"
     assert_select "a.back-link[href=?]", cocktails_path(q: "bright")
-    assert_select "#matching-recipes h2", text: "Matching recipes (1)"
+    assert_select "#matching-recipes h2", text: "Community recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     assert_select "details#other-recipes:not([open])" do
-      assert_select "summary", text: "Other recipes (1)"
+      assert_select "summary", text: "Other community recipes (1)"
       assert_select "#recipe_#{recipes(:two).id}"
       assert_select "#recipe_#{recipes(:one).id}", count: 0
     end
@@ -121,7 +184,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   test "unfiltered and blank searches show all public recipes without collapsed alternatives" do
     [ {}, { q: " " } ].each do |filters|
       get cocktail_url(@cocktail), params: filters
-      assert_select "#matching-recipes h2", text: "Recipes (2)"
+      assert_select "#matching-recipes h2", text: "Community recipes (2)"
       assert_select "#matching-recipes article", count: 2
       assert_select "details#other-recipes", count: 0
       assert_select ".search-context", count: 0
@@ -133,8 +196,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "zero matching recipes still offers collapsed alternatives and names availability filters" do
     get cocktail_url(@cocktail), params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" }
-    assert_select "#matching-recipes h2", text: "Matching recipes (0)"
-    assert_select "#matching-recipes p", text: "No recipes match these filters."
+    assert_select "#matching-recipes h2", text: "Community recipes (0)"
+    assert_select "#matching-recipes p", text: "No community recipes match these filters."
     assert_select ".search-context p", text: "Available ingredients: None"
     assert_select ".search-context p", text: /Available utensils:/
     assert_select "details#other-recipes:not([open]) article", count: 2
@@ -160,7 +223,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "marketplace paginates whole groups with lazy frames and preserves filters" do
     24.times do |index|
-      recipe = Recipe.create!(name: "Margarita variation #{index}", language: "en", steps: "Stir.")
+      recipe = Recipe.create!(user: users(:one), name: "Margarita variation #{index}", language: "en", steps: "Stir.")
       recipe.recipe_ingredients.create!(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
       recipe.update!(visibility: "public", publication_state: "published")
     end

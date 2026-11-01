@@ -1,5 +1,6 @@
 margarita:
   language: en
+  user: one
 
 one:
   language: en

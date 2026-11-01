@@ -110,6 +110,39 @@ class RecipeTest < ActiveSupport::TestCase
 end
 
 class UnifiedRecipeTest < ActiveSupport::TestCase
+  test "non official recipes require a user in the model and database" do
+    recipe = recipes(:one)
+    assert_not recipe.update(user: nil)
+    assert_includes recipe.errors[:user], "can't be blank"
+    recipe.reload
+    assert_raises(ActiveRecord::StatementInvalid) { recipe.update_columns(user_id: nil) }
+    assert Recipe.new(user: users(:one)).valid?
+    assert Recipe.new(official: true).valid?
+    assert_not Recipe.new.valid?
+  end
+
+  test "a cocktail has at most one official recipe including private drafts" do
+    cocktail = Cocktail.create!(name: "Reference cocktail")
+    official = recipes(:one)
+    community = recipes(:two)
+    official.update!(cocktail: cocktail, official: true)
+    community.update!(cocktail: cocktail)
+    assert_not community.update(official: true)
+    assert_includes community.errors[:cocktail_id], "already has an official recipe"
+    community.reload
+    assert_raises(ActiveRecord::RecordNotUnique) { community.update_columns(official: true) }
+    official.update!(publication_state: "draft", visibility: "private")
+    assert_not community.update(official: true)
+    assert official.reload.valid?
+    other = Cocktail.create!(name: "Another cocktail")
+    assert community.update(cocktail: other, official: true)
+    assert_not community.update(cocktail: cocktail)
+    community.reload.update!(cocktail: nil)
+    official.update!(cocktail: nil)
+    assert_nil community.reload.cocktail_id
+    assert_nil official.reload.cocktail_id
+  end
+
   test "official recipes can be system managed without a cocktail assignment" do
     recipe = recipes(:one)
     recipe.update!(user: nil, cocktail: nil, official: true, source_reference: "Reference book")
@@ -118,7 +151,9 @@ class UnifiedRecipeTest < ActiveSupport::TestCase
     assert_nil recipe.user
     assert_nil recipe.cocktail
     assert recipe.official?
-    recipe.update!(official: false)
+    assert_not recipe.update(official: false)
+    assert_includes recipe.errors[:user], "can't be blank"
+    recipe.reload.update!(official: false, user: users(:one))
     assert recipe.marketplace?
     assert_not recipe.official?
   end

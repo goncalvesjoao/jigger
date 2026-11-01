@@ -25,6 +25,10 @@ class Recipe < ApplicationRecord
 
   validates :source_url, format: { with: /\Ahttps?:\/\/[^\s]+\z/i }, allow_blank: true
 
+  validates :user, presence: true, unless: :official?
+  validates :cocktail_id, uniqueness: { conditions: -> { where(official: true) }, message: "already has an official recipe" },
+    if: -> { official? && cocktail_id.present? }
+
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
   validates :language, presence: true

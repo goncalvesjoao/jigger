@@ -42,6 +42,7 @@ module TheCocktailDbSeeder
       Recipe.transaction do
         recipe.publication_state = "draft"
         recipe.language = "en"
+        recipe.official = true
         Globalize.with_locale(:en) { recipe.name = name }
         recipe.source_reference = "TheCocktailDB"
         recipe.source_url = source_url

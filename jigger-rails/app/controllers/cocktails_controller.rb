@@ -20,10 +20,16 @@ class CocktailsController < ApplicationController
   end
 
   def show
-    @recipes = matching_recipes.where(cocktail: @cocktail)
+    @recipes = matching_recipes.where(cocktail: @cocktail, official: false)
+    @official_recipes = Recipe.marketplace.where(cocktail: @cocktail, official: true)
+      .with_attached_image.includes(:translations, :recipe_steps).to_a
+    ActiveRecord::Associations::Preloader.new(records: @official_recipes, associations: {
+      recipe_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
+      recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] }
+    }).call
     @filtered = params[:q].present? || params[:makeable] == "1" || Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any?
     if @filtered
-      @other_recipes = Recipe.marketplace.where(cocktail: @cocktail)
+      @other_recipes = Recipe.marketplace.where(cocktail: @cocktail, official: false)
         .where.not(id: @recipes.except(:includes, :order).select(:id))
         .with_attached_image.includes(:translations)
       if params.key?(:ingredient_ids) || params.key?(:utensil_ids)

@@ -1,11 +1,11 @@
 require "test_helper"
 
 class RecipeSeedTest < ActiveSupport::TestCase
-  test "cached imports publish complete system recipes and repeat without duplication or endorsement" do
+  test "cached imports publish complete system recipes and repeat without duplication or overwriting curation" do
     load Rails.root.join("db/seeds.rb")
     imported = Recipe.where(source_reference: "TheCocktailDB")
     assert_operator imported.marketplace.count, :>, 0
-    assert imported.all? { |recipe| recipe.user_id.nil? && !recipe.official? }
+    assert imported.all? { |recipe| recipe.user_id.nil? && recipe.official? }
     recipe = imported.marketplace.first
     assert recipe.cocktail.present?
     assert imported.all? { |entry| entry.cocktail.image.attached? }
@@ -37,6 +37,21 @@ class RecipeSeedTest < ActiveSupport::TestCase
     recipe.update!(official: true, name: "Curated recipe")
     TheCocktailDbSeeder.seed!
     assert_equal "Curated recipe", recipe.reload.name
+  end
+
+  test "seeds preserve official imports and leave user owned recipes unchanged" do
+    load Rails.root.join("db/seeds.rb")
+    imported = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/11007")
+    owned = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/12198")
+    owned.update!(user: users(:one), official: false, name: "Personal variation")
+
+    TheCocktailDbSeeder.seed!
+    assert imported.reload.official?
+    assert_nil imported.user_id
+    assert_equal "TheCocktailDB", imported.source_reference
+    assert_not owned.reload.official?
+    assert_equal users(:one), owned.user
+    assert_equal "Personal variation", owned.name
   end
 
   test "canonical content backfills curated imports in English and preserves admin content and citations" do

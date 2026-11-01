@@ -203,9 +203,10 @@ class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
     admin.update!(admin: true)
     sign_in_as(admin)
     patch recipe_url(recipe), params: { recipe: { name: "Curated", official: false } }
-    assert_redirected_to recipe_url(recipe)
-    assert_equal "Curated", recipe.reload.name
-    assert_not recipe.official?
+    assert_response :unprocessable_content
+    assert recipe.reload.official?
+    assert_nil recipe.user
+    assert_not_equal "Curated", recipe.name
   end
 
   test "homepage searches public recipes and hides private recipes" do

@@ -41,11 +41,11 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select "progress[max='2'][aria-label='Preparation progress']"
   end
 
-  test "cards distinguish ownerless recipes from community recipes" do
+  test "cards distinguish official system recipes from community recipes" do
     recipe = recipes(:one)
-    recipe.update!(user: nil)
+    recipe.update!(user: nil, official: true)
     get recipes_url
-    assert_select "#recipe_#{recipe.id} .eyebrow", text: "From our collection"
+    assert_select "#recipe_#{recipe.id} .eyebrow", text: "Official Jigger recipe"
     assert_select "#recipe_#{recipes(:two).id} .eyebrow", text: "Community recipe"
   end
 
