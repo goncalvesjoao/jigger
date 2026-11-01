@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "/user_cocktails/:id", to: "cocktails#legacy"
-  get "/user_cocktails", to: redirect("/cocktails")
   resource :registration, only: %i[ new create ]
   resource :session
   resources :passwords, param: :token

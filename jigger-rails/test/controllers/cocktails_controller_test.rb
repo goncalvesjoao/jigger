@@ -230,15 +230,7 @@ class UnifiedCocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "historical recipe URLs redirect to their migrated record" do
-    recipe = cocktails(:one)
-    recipe.update!(legacy_user_cocktail_id: 42)
-    get "/user_cocktails/42"
-    assert_redirected_to cocktail_url(recipe)
-    recipe.update!(visibility: "private")
-    get "/user_cocktails/42"
-    assert_response :forbidden
-  end
+
 end
 
 class LocalizedCocktailsControllerTest < ActionDispatch::IntegrationTest

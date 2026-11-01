@@ -1,16 +1,10 @@
 class CocktailsController < ApplicationController
-  allow_unauthenticated_access only: %i[ index show legacy ]
+  allow_unauthenticated_access only: %i[ index show ]
   before_action :set_cocktail, only: %i[ show edit update destroy ]
 
-  before_action :authorize_cocktail, except: :legacy
-  after_action :verify_authorized, except: :legacy
+  before_action :authorize_cocktail
+  after_action :verify_authorized
   around_action :with_recipe_language, only: %i[ create edit update ]
-
-  def legacy
-    cocktail = Cocktail.find_by!(legacy_user_cocktail_id: params[:id])
-    authorize cocktail, :show?
-    redirect_to cocktail, status: :moved_permanently
-  end
 
   # GET /cocktails or /cocktails.json
   def index

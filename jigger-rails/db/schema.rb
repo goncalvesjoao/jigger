@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -65,11 +65,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cocktail_id", "ingredient_id"], name: "index_cocktail_ingredients_on_cocktail_id_and_ingredient_id"
-    t.index ["cocktail_id", "position"], name: "index_user_cocktail_ingredients_on_cocktail_and_position", unique: true
+    t.index ["cocktail_id", "position"], name: "index_cocktail_ingredients_on_cocktail_and_position", unique: true
     t.index ["ingredient_id"], name: "index_cocktail_ingredients_on_ingredient_id"
-    t.check_constraint "position >= 0", name: "user_cocktail_ingredients_position"
-    t.check_constraint "quantity IS NULL OR quantity > 0", name: "user_cocktail_ingredients_positive_quantity"
-    t.check_constraint "role IN ('mixing', 'garnish', 'rim')", name: "user_cocktail_ingredients_role"
+    t.check_constraint "position >= 0", name: "cocktail_ingredients_position"
+    t.check_constraint "quantity IS NULL OR quantity > 0", name: "cocktail_ingredients_positive_quantity"
+    t.check_constraint "role IN ('mixing', 'garnish', 'rim')", name: "cocktail_ingredients_role"
   end
 
   create_table "cocktail_translations", force: :cascade do |t|
@@ -97,16 +97,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
     t.datetime "updated_at", null: false
     t.index ["cocktail_id", "utensil_id"], name: "index_cocktail_utensils_on_cocktail_id_and_utensil_id", unique: true
     t.index ["utensil_id"], name: "index_cocktail_utensils_on_utensil_id"
-    t.check_constraint "role IN ('preparation', 'serving')", name: "user_cocktail_utensils_role"
+    t.check_constraint "role IN ('preparation', 'serving')", name: "cocktail_utensils_role"
   end
 
   create_table "cocktails", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "parent_cocktail_id"
     t.boolean "official", default: false, null: false
-    t.integer "legacy_user_cocktail_id"
     t.string "language", default: "und", null: false
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
@@ -118,7 +115,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
     t.date "source_published_on"
     t.text "source_date_note"
     t.datetime "published_at"
-    t.index ["legacy_user_cocktail_id"], name: "index_cocktails_on_legacy_user_cocktail_id", unique: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["parent_cocktail_id"], name: "index_cocktails_on_parent_cocktail_id"
     t.index ["published_at"], name: "index_cocktails_on_published_at"
     t.index ["user_id"], name: "index_cocktails_on_user_id"
@@ -214,9 +212,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
+    t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "admin", default: false, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

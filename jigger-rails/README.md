@@ -8,13 +8,9 @@ A missing owner means Jigger manages the recipe. A missing parent means the reci
 
 `CocktailPolicy` permits public reads of complete, public, published recipes. Owners can read their own drafts and private recipes and edit their non-official recipes. Admins can read and manage every recipe, including official and system-managed recipes. Set `User#admin` through trusted model/console access; public registration cannot set it. The authoring endpoint always assigns new recipes to the signed-in user. Create ownerless recipes through seeds or trusted model access.
 
-## Migration
+## Database setup
 
-Run `bin/rails db:migrate`. The unification migration preserves canonical cocktail IDs, translations, aliases, and images. It copies each former user recipe into `cocktails`, preserving its owner, original name and description, publication metadata, ingredients, utensils, steps, mentions, likes, and photo. Its former canonical cocktail becomes its parent. Former canonical identities start as private system-managed drafts until their recipes are completed.
-
-The data migration is irreversible through Rails rollback because splitting newly created unified content would lose information. Back up the database and storage together before applying it to another environment. A local database copy from before this change is in ignored `tmp/backups/development-before-unify.sqlite3`.
-
-`GET /user_cocktails/:id` resolves the preserved legacy ID, authorizes the recipe, and redirects to its new URL. Browsing and authoring now use `/cocktails`, `cocktail_path`, and the `cocktail` request parameter. JSON includes `parent_cocktail_id` and `official`.
+The migrations create the unified cocktail schema directly. Recreate existing local databases after this migration rewrite with `bin/rails db:reset`. This deletes existing data and loads the schema and seeds. Use `bin/rails db:migrate` to build an empty database from the migrations.
 
 ## Marketplace and sources
 
