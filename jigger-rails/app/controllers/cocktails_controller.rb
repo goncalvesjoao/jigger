@@ -5,7 +5,18 @@ class CocktailsController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @groups = matching_recipes.includes(cocktail: :translations).group_by { |recipe| recipe.cocktail || recipe }
+    matches = matching_recipes
+    @pagination = matches.except(:includes, :order)
+      .select("MIN(recipes.id) AS id, recipes.cocktail_id")
+      .group(:cocktail_id, Arel.sql("CASE WHEN recipes.cocktail_id IS NULL THEN recipes.id END"))
+      .order(Arel.sql("MAX(recipes.published_at) DESC, MAX(recipes.created_at) DESC, MIN(recipes.id) DESC"))
+      .page(params[:page]).per(24)
+    groups = @pagination.to_a
+    cocktail_ids = groups.filter_map(&:cocktail_id)
+    standalone_ids = groups.reject(&:cocktail_id).map(&:id)
+    @groups = matches.where(cocktail_id: cocktail_ids).or(matches.where(id: standalone_ids))
+      .order(id: :desc).includes(cocktail: :translations).group_by { |recipe| recipe.cocktail || recipe }
+    @groups = @groups.sort_by { |identity, _| groups.index { |group| identity.is_a?(Cocktail) ? group.cocktail_id == identity.id : group.cocktail_id.nil? && group.id == identity.id } }.to_h
   end
 
   def show

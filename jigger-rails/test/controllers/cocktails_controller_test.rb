@@ -64,6 +64,45 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".recipe-count", count: 0
   end
 
+  test "marketplace paginates whole groups with lazy frames and preserves filters" do
+    24.times do |index|
+      recipe = Recipe.create!(name: "Margarita variation #{index}", language: "en", steps: "Stir.")
+      recipe.recipe_ingredients.create!(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
+      recipe.update!(visibility: "public", publication_state: "published")
+    end
+    recipes(:one).update!(published_at: 1.day.from_now)
+    filters = { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
+
+    get root_url, params: filters
+    assert_response :success
+    assert_select ".recipe-grid article", count: 24
+    assert_select ".recipe-count", text: "2", count: 1
+    assert_select ".section-heading span", text: "25 cocktails"
+    next_url = css_select("turbo-frame#cocktails_page_2[loading='lazy']").sole["src"]
+    query = Rack::Utils.parse_nested_query(URI.parse(next_url).query)
+    assert_equal "margarita", query["q"]
+    assert_equal Ingredient.ids.map(&:to_s), query["ingredient_ids"]
+    assert_equal Utensil.ids.map(&:to_s), query["utensil_ids"]
+    first_ids = css_select(".recipe-grid article").map { |card| card["id"] }
+    assert_select "a[href=?]", next_url, text: "Load more cocktails"
+
+    get next_url, headers: { "Turbo-Frame" => "cocktails_page_2" }
+    assert_response :success
+    assert_select "turbo-frame#cocktails_page_2[target='_top']"
+    assert_select ".recipe-grid article", count: 1
+    assert_empty first_ids & css_select(".recipe-grid article").map { |card| card["id"] }
+    assert_select "turbo-frame[src]", count: 0
+
+    get cocktails_url(format: :json), params: filters.merge(page: 2)
+    assert_response :success
+    assert_equal 1, response.parsed_body.size
+
+    get cocktails_url, params: filters.merge(page: 3)
+    assert_response :success
+    assert_select ".recipe-grid article", count: 0
+    assert_select "turbo-frame[src]", count: 0
+  end
+
   test "only admins curate identities and assign recipes" do
     sign_in_as(users(:one))
     assert_no_difference("Cocktail.count") do
