@@ -7,21 +7,34 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).update!(cocktail: @cocktail, name: "Dry sour")
   end
 
+  test "marketplace search lives in the navbar and badges overlay card images" do
+    get root_url, params: { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
+    assert_response :success
+    assert_select "section.discovery-heading", count: 0
+    assert_select "nav .navbar-search[action=?]", cocktails_path do
+      assert_select "label[for=navbar-query]", text: "Search cocktails"
+      assert_select "input[type=search][name=q][value=margarita]"
+      assert_select "input[name='ingredient_ids[]']", count: Ingredient.count + 1
+    end
+    assert_select ".card-media .recipe-count[title='Matching recipe(s)'][aria-label='2 matching recipes']", text: "2"
+    assert_select ".card-copy .recipe-count", count: 0
+  end
+
   test "marketplace groups matching recipes and keeps unassigned creations discoverable" do
     get root_url
     assert_response :success
-    assert_select ".recipe-count", text: "2 matching recipes", count: 1
+    assert_select ".recipe-count", text: "2", count: 1
     assert_select "h3 a[href=?]", cocktail_path(@cocktail), text: "Margarita", count: 1
     recipes(:two).update!(cocktail: nil)
     get root_url
-    assert_select ".recipe-count", text: "1 matching recipe", count: 2
+    assert_select ".recipe-count", text: "1", count: 2
     assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "Dry sour"
     assert_no_difference("Cocktail.count") { recipes(:two).update!(name: "My original") }
   end
 
   test "counts and detail links preserve the current search and exclude private recipes" do
     get cocktails_url, params: { q: "bright" }
-    assert_select ".recipe-count", text: "1 matching recipe", count: 1
+    assert_select ".recipe-count", text: "1", count: 1
     assert_select "h3 a[href=?]", cocktail_path(@cocktail, q: "bright")
     get cocktail_url(@cocktail), params: { q: "bright" }
     assert_response :success
@@ -29,7 +42,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "#recipe_#{recipes(:two).id}", count: 0
     recipes(:two).update!(visibility: "private")
     get root_url, params: { q: "margarita" }
-    assert_select ".recipe-count", text: "1 matching recipe"
+    assert_select ".recipe-count", text: "1"
     get cocktail_url(@cocktail)
     assert_select "#recipe_#{recipes(:two).id}", count: 0
     recipes(:one).update!(publication_state: "draft")
@@ -43,7 +56,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).recipe_ingredients.update_all(ingredient_id: ingredients(:two).id)
     filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: Utensil.ids }
     get cocktails_url, params: filters
-    assert_select ".recipe-count", text: "1 matching recipe"
+    assert_select ".recipe-count", text: "1"
     get cocktail_url(@cocktail), params: filters
     assert_select "#recipe_#{recipes(:one).id}"
     assert_select "#recipe_#{recipes(:two).id}", count: 0
@@ -101,6 +114,6 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Recipe.count") { @cocktail.destroy! }
     assert_nil recipes(:one).reload.cocktail
     get root_url
-    assert_select ".recipe-count", text: "1 matching recipe", count: 2
+    assert_select ".recipe-count", text: "1", count: 2
   end
 end
