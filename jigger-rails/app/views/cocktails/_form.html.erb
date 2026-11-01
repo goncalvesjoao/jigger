@@ -1,6 +1,6 @@
-<%= form_with(model: cocktail) do |form| %>
+<%= form_with(model: cocktail, class: "recipe-form") do |form| %>
   <% if cocktail.errors.any? %>
-    <div style="color: red">
+    <div role="alert" class="text-danger">
       <h2><%= pluralize(cocktail.errors.count, "error") %> prohibited this cocktail from being saved:</h2>
 
       <ul>
@@ -12,17 +12,17 @@
   <% end %>
 
   <div>
-    <%= form.label :name, style: "display: block" %>
+    <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
 
   <div>
-    <%= form.label :description, style: "display: block" %>
+    <%= form.label :description %>
     <%= form.text_area :description %>
   </div>
 
   <div>
-    <%= form.label :language, style: "display: block" %>
+    <%= form.label :language %>
     <%= form.text_field :language %>
   </div>
 
@@ -31,27 +31,27 @@
   <% end %>
 
   <div>
-    <%= form.label :steps, style: "display: block" %>
+    <%= form.label :steps %>
     <%= form.textarea :steps, readonly: cocktail.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
   </div>
 
   <div>
-    <%= form.label :preparation_time_seconds, style: "display: block" %>
+    <%= form.label :preparation_time_seconds %>
     <%= form.number_field :preparation_time_seconds %>
   </div>
 
   <div>
-    <%= form.label :servings, style: "display: block" %>
+    <%= form.label :servings %>
     <%= form.number_field :servings, min: 1, step: 1 %>
   </div>
 
   <div>
-    <%= form.label :preparation_method, style: "display: block" %>
+    <%= form.label :preparation_method %>
     <%= form.select :preparation_method, options_for_select([ [ "", nil ] ] + Cocktail.preparation_methods.keys.map { |value| [ value.humanize, value ] }, cocktail.preparation_method) %>
   </div>
 
   <div>
-    <%= form.label :source_reference, style: "display: block" %>
+    <%= form.label :source_reference %>
     <%= form.text_field :source_reference %>
   </div>
 
@@ -82,6 +82,6 @@
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.submit class: "w-auto mt-3" %>
   </div>
 <% end %>

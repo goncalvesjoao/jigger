@@ -1,26 +1,32 @@
-<% if cocktail.cocktail_ingredients.any? %>
-  <h2>Ingredients</h2>
-  <ul>
-    <% cocktail.cocktail_ingredients.each do |line| %>
-      <li>
-        <span lang="<%= line.language %>"><%= line.submitted_text %></span>
-        <% if line.ingredient.image.attached? %>
-          <%= image_tag ingredient_image_path(line.ingredient, size: :card), alt: "Photo of #{line.ingredient.name}", loading: "lazy", style: "max-width: 100%; height: auto;" %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-<% if cocktail.cocktail_utensils.any? %>
-  <h2>Utensils</h2>
-  <ul>
-    <% cocktail.cocktail_utensils.each do |requirement| %>
-      <li>
-        <span lang="<%= requirement.language %>"><%= requirement.submitted_text %></span>
-        <% if requirement.utensil.image.attached? %>
-          <%= image_tag utensil_image_path(requirement.utensil, size: :card), alt: "Photo of #{requirement.utensil.name}", loading: "lazy", style: "max-width: 100%; height: auto;" %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
+<section id="ingredients" class="card recipe-panel mb-0">
+  <p class="eyebrow">01 / Gather</p><h2>Ingredients</h2>
+  <p class="text-muted">Check off each ingredient as you get ready.</p>
+  <% if cocktail.cocktail_ingredients.any? %>
+    <ul class="checklist ingredient-list">
+      <% cocktail.cocktail_ingredients.each do |line| %>
+        <li><label>
+          <input type="checkbox">
+          <span class="ingredient-copy">
+            <% if line.quantity.present? %><strong class="quantity"><%= number_with_precision(line.quantity, precision: 3, strip_insignificant_zeros: true) %> <%= line.measuring_unit %></strong><% end %>
+            <span class="submitted-prose" lang="<%= line.language %>"><%= line.submitted_text %></span>
+            <% if line.preparation_note.present? %><small><%= line.preparation_note %></small><% end %>
+            <% if line.optional? %><small>Optional</small><% end %>
+            <% unless line.mixing? %><small><%= line.role.humanize %></small><% end %>
+          </span>
+          <% if line.ingredient.image.attached? %><%= image_tag ingredient_image_path(line.ingredient, size: :card), alt: "Photo of #{line.ingredient.name}", loading: "lazy", class: "requirement-photo" %><% end %>
+        </label></li>
+      <% end %>
+    </ul>
+  <% else %><p>No ingredients listed.</p><% end %>
+  <% if cocktail.cocktail_utensils.any? %>
+    <h3>Utensils</h3>
+    <ul class="utensil-list">
+      <% cocktail.cocktail_utensils.each do |requirement| %>
+        <li><span class="submitted-prose" lang="<%= requirement.language %>"><%= requirement.submitted_text %></span>
+          <% if requirement.utensil.image.attached? %><%= image_tag utensil_image_path(requirement.utensil, size: :card), alt: "Photo of #{requirement.utensil.name}", loading: "lazy", class: "requirement-photo" %><% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <a href="#preparation" class="d-inline-block py-3 mt-3">Go to preparation →</a>
+</section>

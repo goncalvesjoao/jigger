@@ -1,22 +1,20 @@
-<% content_for :title, "Cocktails" %>
-
-<h1>Cocktails</h1>
-
-<%= form_with url: cocktails_path, method: :get do |form| %>
-  <%= form.label :q, "Search cocktails" %>
-  <%= form.search_field :q, value: params[:q] %>
-  <%= form.submit "Search" %>
-<% end %>
-
-<% if @cocktails.empty? %>
-  <p>No cocktails found.</p>
-<% end %>
-
-<div id="cocktails">
-  <% @cocktails.each do |cocktail| %>
-    <%= render cocktail %>
-    <p>
-      <%= link_to "Show this cocktail", cocktail %>
-    </p>
+<% content_for :title, "Discover cocktails · Jigger" %>
+<section class="discovery-heading">
+  <p class="eyebrow">The cocktail collection</p>
+  <h1>A little inspiration.<br>A great next drink.</h1>
+  <p>Find a recipe, gather your ingredients, make it your own.</p>
+  <%= form_with url: cocktails_path, method: :get, class: "search-form" do |form| %>
+    <%= form.label :q, "Search cocktails" %>
+    <div role="search">
+      <%= form.search_field :q, value: params[:q], placeholder: "Find your next cocktail…" %>
+      <%= form.submit "Search" %>
+    </div>
   <% end %>
+</section>
+<div class="section-heading"><h2 class="mb-0"><%= params[:q].present? ? "Search results" : "Discover the collection" %></h2><span><%= pluralize(@cocktails.size, "recipe") %></span></div>
+<% if @cocktails.empty? %>
+  <section class="empty-state"><h3>No cocktails found.</h3><p>Try a different name or explore the collection.</p><%= link_to "All cocktails", cocktails_path %></section>
+<% end %>
+<div id="cocktails" class="auto-grid cocktail-grid">
+  <%= render @cocktails %>
 </div>
