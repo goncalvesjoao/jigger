@@ -1,17 +1,5 @@
 <% content_for :title, "Discover cocktails · Jigger" %>
-<section class="discovery-heading">
-  <p class="eyebrow">The cocktail collection</p>
-  <h1>A little inspiration.<br>A great next drink.</h1>
-  <p>Find a recipe, gather your ingredients, make it your own.</p>
-  <%= form_with url: cocktails_path, method: :get, class: "search-form" do |form| %>
-    <%= form.label :q, "Search cocktails" %>
-    <% %i[ingredient_ids utensil_ids].each do |key| %>
-      <% if params.key?(key) %><%= hidden_field_tag "#{key}[]", "" %><% end %>
-      <% Array(params[key]).each do |id| %><%= hidden_field_tag "#{key}[]", id %><% end %>
-    <% end %>
-    <div role="search"><%= form.search_field :q, value: params[:q], placeholder: "Find your next cocktail…" %><%= form.submit "Search" %></div>
-  <% end %>
-</section>
+
 <div class="section-heading"><h2>Discover the collection</h2><span><%= pluralize(@pagination.total_count, "cocktail") %></span></div>
 <% if @groups.empty? %><section class="empty-state"><h3>No cocktails found.</h3><%= link_to "All cocktails", cocktails_path %></section><% end %>
 <% if policy(Cocktail).create? %><p><%= link_to "New canonical cocktail", new_admin_cocktail_path %></p><% end %>

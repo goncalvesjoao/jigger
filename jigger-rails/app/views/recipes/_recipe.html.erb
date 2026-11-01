@@ -2,6 +2,7 @@
 <% destination = identity.is_a?(Cocktail) ? cocktail_path(identity, request.query_parameters.slice("q", "ingredient_ids", "utensil_ids")) : recipe_path(recipe) %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" lang="<%= recipe.language %>">
+  <div class="card-media">
   <%= link_to destination, class: "card-image", tabindex: "-1", aria: { hidden: true } do %>
     <% if recipe.image.attached? %>
       <%= image_tag recipe_image_path(recipe, size: :card), alt: "", loading: "lazy", srcset: "#{recipe_image_path(recipe, size: :card)} 320w, #{recipe_image_path(recipe, size: :detail)} 1200w", sizes: "(max-width: 36rem) calc(100vw - 2rem), (max-width: 55rem) calc((100vw - 4.3rem) / 2), (max-width: 81rem) calc((100vw - 7rem) / 3), 25rem" %>
@@ -9,9 +10,10 @@
       <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
     <% end %>
   <% end %>
+  <% if local_assigns[:matching_count] %><span class="recipe-count" tabindex="0" title="Matching recipe(s)" aria-label="<%= pluralize(matching_count, "matching recipe") %>"><%= matching_count %></span><% end %>
+  </div>
   <div class="card-copy">
     <p class="eyebrow"><%= recipe.official? ? "Official Jigger recipe" : recipe.user_id.present? ? "Community recipe" : "From our collection" %></p>
-    <% if local_assigns[:matching_count] %><p class="recipe-count"><%= pluralize(matching_count, "matching recipe") %></p><% end %>
     <h3><%= link_to identity.display_name, destination %></h3>
     <% if identity.is_a?(Cocktail) && identity.description.present? %><p class="card-description"><%= identity.description %></p><% end %>
     <% if recipe.preparation_method.present? %>
