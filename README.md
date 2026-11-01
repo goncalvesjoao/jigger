@@ -47,3 +47,5 @@ Jev is optional. A sufficiently fast open-source alternative could serve the sam
 
 - How should ambiguous matches be resolved, and who confirms the intended identity?
 - What should happen when an ingredient, cocktail, or utensil mention has no match? When should Jigger create a new identity or leave a mention unresolved?
+
+Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace cocktails.

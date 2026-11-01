@@ -21,7 +21,7 @@ class CocktailsController < ApplicationController
 
   def show
     @recipes = matching_recipes.where(cocktail: @cocktail)
-    @filtered = params[:q].present? || params.key?(:ingredient_ids) || params.key?(:utensil_ids)
+    @filtered = params[:q].present? || params[:makeable] == "1" || Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any?
     if @filtered
       @other_recipes = Recipe.marketplace.where(cocktail: @cocktail)
         .where.not(id: @recipes.except(:includes, :order).select(:id))
@@ -39,10 +39,18 @@ class CocktailsController < ApplicationController
     end
 
     def matching_recipes
-      recipes = if params.key?(:ingredient_ids) || params.key?(:utensil_ids)
+      recipes = if params[:makeable] == "1"
         Recipe.makeable_with(ingredient_ids: Array(params[:ingredient_ids]).reject(&:blank?), utensil_ids: Array(params[:utensil_ids]).reject(&:blank?))
       else
         Recipe.marketplace
+      end
+      unless params[:makeable] == "1"
+        Array(params[:ingredient_ids]).reject(&:blank?).uniq.each do |id|
+          recipes = recipes.where(id: RecipeIngredient.where(ingredient_id: id).select(:recipe_id))
+        end
+        Array(params[:utensil_ids]).reject(&:blank?).uniq.each do |id|
+          recipes = recipes.where(id: RecipeUtensil.where(utensil_id: id).select(:recipe_id))
+        end
       end
       recipes.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps)
     end
