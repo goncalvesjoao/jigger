@@ -12,11 +12,19 @@
     <div role="search"><%= form.search_field :q, value: params[:q], placeholder: "Find your next cocktail…" %><%= form.submit "Search" %></div>
   <% end %>
 </section>
-<div class="section-heading"><h2>Discover the collection</h2><span><%= pluralize(@groups.size, "cocktail") %></span></div>
+<div class="section-heading"><h2>Discover the collection</h2><span><%= pluralize(@pagination.total_count, "cocktail") %></span></div>
 <% if @groups.empty? %><section class="empty-state"><h3>No cocktails found.</h3><%= link_to "All cocktails", cocktails_path %></section><% end %>
 <% if policy(Cocktail).create? %><p><%= link_to "New canonical cocktail", new_admin_cocktail_path %></p><% end %>
-<div id="cocktails" class="auto-grid recipe-grid">
-  <% @groups.each do |identity, recipes| %>
-    <%= render "recipes/recipe", recipe: recipes.first, identity: identity, matching_count: recipes.size %>
+<%= turbo_frame_tag "cocktails_page_#{@pagination.current_page}", target: "_top" do %>
+  <div id="cocktails_<%= @pagination.current_page %>" class="auto-grid recipe-grid">
+    <% @groups.each do |identity, recipes| %>
+      <%= render "recipes/recipe", recipe: recipes.first, identity: identity, matching_count: recipes.size %>
+    <% end %>
+  </div>
+  <% if @pagination.next_page %>
+    <% next_page_url = cocktails_path(request.query_parameters.merge("page" => @pagination.next_page)) %>
+    <%= turbo_frame_tag "cocktails_page_#{@pagination.next_page}", src: next_page_url, loading: :lazy, target: "_top" do %>
+      <p><%= link_to "Load more cocktails", next_page_url %></p>
+    <% end %>
   <% end %>
-</div>
+<% end %>
