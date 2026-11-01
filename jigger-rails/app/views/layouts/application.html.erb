@@ -42,17 +42,7 @@
         <%= link_to root_path do %>
           <strong class="wordmark">Jigger<span aria-hidden="true">.</span></strong>
         <% end %>
-        <%= form_with url: cocktails_path, method: :get, class: "navbar-search" do |form| %>
-          <%= form.label :q, "Search cocktails", for: "navbar-query", class: "navbar-search-label" %>
-          <% %i[ingredient_ids utensil_ids].each do |key| %>
-            <% if params.key?(key) %><%= hidden_field_tag "#{key}[]", "" %><% end %>
-            <% Array(params[key]).each do |id| %><%= hidden_field_tag "#{key}[]", id %><% end %>
-          <% end %>
-          <div role="search">
-            <%= form.search_field :q, id: "navbar-query", value: params[:q], placeholder: "Search cocktails…" %>
-            <%= form.submit "Search" %>
-          </div>
-        <% end %>
+        <%= render "shared/marketplace_search" %>
         <ul>
           <li><%= link_to "Discover", cocktails_path %></li>
           <li><%= link_to "New Recipe", new_recipe_path %></li>

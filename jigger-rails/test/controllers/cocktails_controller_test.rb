@@ -8,13 +8,13 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "marketplace search lives in the navbar and badges overlay card images" do
-    get root_url, params: { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
+    get root_url, params: { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids, makeable: "1" }
     assert_response :success
     assert_select "section.discovery-heading", count: 0
     assert_select "nav .navbar-search[action=?]", cocktails_path do
       assert_select "label[for=navbar-query]", text: "Search cocktails"
       assert_select "input[type=search][name=q][value=margarita]"
-      assert_select "input[name='ingredient_ids[]']", count: Ingredient.count + 1
+      assert_select "input[type=checkbox][name='ingredient_ids[]'][checked]", count: Ingredient.count
     end
     assert_select ".card-media .recipe-count[title='Matching recipe(s)'][aria-label='2 matching recipes']", text: "2"
     assert_select ".card-copy .recipe-count", count: 0
@@ -55,14 +55,38 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "ingredient and utensil filters count only makeable recipes" do
     recipes(:two).recipe_ingredients.update_all(ingredient_id: ingredients(:two).id)
-    filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: Utensil.ids }
+    filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: Utensil.ids, makeable: "1" }
     get cocktails_url, params: filters
     assert_select ".recipe-count", text: "1"
     get cocktail_url(@cocktail), params: filters
     assert_select "#recipe_#{recipes(:one).id}"
     assert_select "#matching-recipes #recipe_#{recipes(:two).id}", count: 0
     assert_select "#other-recipes #recipe_#{recipes(:two).id}"
-    get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids }
+    get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" }
+    assert_select ".recipe-count", count: 0
+  end
+
+  test "contains filters require every selection but allow additional items" do
+    recipes(:one).recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "Ice", language: "en", position: 1)
+    filters = { ingredient_ids: [ ingredients(:one).id ] }
+    get cocktails_url, params: filters
+    assert_select ".recipe-count", text: "1"
+    assert_select "h3 a[href=?]", cocktail_path(@cocktail, filters)
+    get cocktail_url(@cocktail), params: filters
+    assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
+    assert_select "#other-recipes #recipe_#{recipes(:two).id}"
+    assert_select ".search-context p", text: /Contains ingredients:/
+    get cocktails_url, params: filters.merge(makeable: "1", utensil_ids: Utensil.ids)
+    assert_select ".recipe-count", count: 0
+    get cocktails_url, params: { ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
+    assert_select ".recipe-count", text: "1"
+    get cocktails_url, params: { utensil_ids: Utensil.ids }
+    assert_select ".recipe-count", text: "1"
+    get cocktails_url, params: filters.merge(q: "dry")
+    assert_select ".recipe-count", count: 0
+    get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: [ "" ] }
+    assert_select ".recipe-count", text: "2"
+    get cocktails_url, params: { ingredient_ids: [ "999999999" ] }
     assert_select ".recipe-count", count: 0
   end
 
@@ -108,7 +132,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "zero matching recipes still offers collapsed alternatives and names availability filters" do
-    get cocktail_url(@cocktail), params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids }
+    get cocktail_url(@cocktail), params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" }
     assert_select "#matching-recipes h2", text: "Matching recipes (0)"
     assert_select "#matching-recipes p", text: "No recipes match these filters."
     assert_select ".search-context p", text: "Available ingredients: None"
@@ -141,7 +165,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       recipe.update!(visibility: "public", publication_state: "published")
     end
     recipes(:one).update!(published_at: 1.day.from_now)
-    filters = { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
+    filters = { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids, makeable: "1" }
 
     get root_url, params: filters
     assert_response :success
@@ -151,6 +175,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     next_url = css_select("turbo-frame#cocktails_page_2[loading='lazy']").sole["src"]
     query = Rack::Utils.parse_nested_query(URI.parse(next_url).query)
     assert_equal "margarita", query["q"]
+    assert_equal "1", query["makeable"]
     assert_equal Ingredient.ids.map(&:to_s), query["ingredient_ids"]
     assert_equal Utensil.ids.map(&:to_s), query["utensil_ids"]
     first_ids = css_select(".recipe-grid article").map { |card| card["id"] }
