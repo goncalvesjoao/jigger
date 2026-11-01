@@ -35,15 +35,15 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
     utensil = utensils(:jigger)
     ingredient.update!(image: photo_upload)
     utensil.update!(image: photo_upload)
-    recipe = cocktails(:one)
-    get cocktail_url(recipe)
+    recipe = recipes(:one)
+    get recipe_url(recipe)
     assert_response :success
     assert_select "img[src=?]", ingredient_image_path(ingredient, size: :card)
     assert_select "img[src=?]", utensil_image_path(utensil, size: :card)
-    assert_select "span[lang=en]", text: recipe.cocktail_ingredients.sole.submitted_text
-    assert_select "span[lang=en]", text: recipe.cocktail_utensils.sole.submitted_text
+    assert_select "span[lang=en]", text: recipe.recipe_ingredients.sole.submitted_text
+    assert_select "span[lang=en]", text: recipe.recipe_utensils.sole.submitted_text
     recipe.update!(visibility: "private")
-    get cocktail_url(recipe)
+    get recipe_url(recipe)
     assert_response :forbidden
     get ingredient_image_url(ingredient)
     assert_response :found
@@ -70,7 +70,7 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "malformed shared attachments cannot publish a private recipe blob through catalog routes" do
-    private_recipe = cocktails(:one)
+    private_recipe = recipes(:one)
     private_recipe.update!(visibility: "private", image: photo_upload)
     [ [ ingredients(:one), :ingredient_image_url ], [ utensils(:jigger), :utensil_image_url ] ].each do |catalog, route|
       # Simulate old/imported data bypassing the fresh-upload setter.
@@ -82,23 +82,15 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
       end
       attachment.delete
     end
-    get cocktail_image_url(private_recipe)
+    get recipe_image_url(private_recipe)
     assert_response :forbidden
     sign_in_as(users(:one))
-    get cocktail_image_url(private_recipe)
+    get recipe_image_url(private_recipe)
     assert_response :found
     follow_redirect!
     assert_response :success
     sign_out
     get "/rails/active_storage/blobs/redirect/#{private_recipe.image.blob.signed_id}/photo.png"
     assert_response :not_found
-  end
-  test "parent draft and missing parent photo do not hide complete variants" do
-    recipe = cocktails(:one)
-    parent = recipe.parent_cocktail
-    parent.image.detach
-    get cocktail_url(recipe)
-    assert_response :success
-    assert_select "a[href=?]", cocktail_path(parent), count: 0
   end
 end

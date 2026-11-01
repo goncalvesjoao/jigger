@@ -1,7 +1,6 @@
 class CocktailPolicy
   def initialize(user, cocktail)
-    @user = user
-    @cocktail = cocktail
+    @user, @cocktail = user, cocktail
   end
 
   def index?
@@ -9,19 +8,15 @@ class CocktailPolicy
   end
 
   def show?
-    (@user.present? && (@user.admin? || @cocktail.user_id == @user.id)) || @cocktail.marketplace?
+    @user&.admin? || @cocktail.recipes.marketplace.exists?
   end
 
   def create?
-    @user.present?
+    @user&.admin?
   end
 
   alias_method :new?, :create?
-
-  def update?
-    @user.present? && (@user.admin? || (@cocktail.user_id == @user.id && !@cocktail.official?))
-  end
-
-  alias_method :edit?, :update?
-  alias_method :destroy?, :update?
+  alias_method :edit?, :create?
+  alias_method :update?, :create?
+  alias_method :destroy?, :create?
 end

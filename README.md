@@ -10,7 +10,7 @@ Users create accounts and add their own cocktail recipes. Different users can ha
 
 Recipes have separate visibility and publication readiness states. Visibility is private or public. Publication readiness is draft or published; drafts are recipes that are not ready to publish.
 
-Landing-page searches return matching complete cocktail recipes that are both public and published. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace.
+Landing-page searches filter complete, public, published recipes, then group matches by canonical cocktail. Each cocktail card shows the number of matching recipes; unassigned recipes appear individually with a count of one. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace.
 
 ## Search by availability
 
@@ -22,9 +22,9 @@ The marketplace returns public, published recipe variations whose required ingre
 
 | Concept | Meaning |
 | --- | --- |
-| Cocktail | A complete recipe, optionally owned by a user, with ingredients and ordered preparation steps. |
-| Variant | A cocktail adapted from an optional parent cocktail. Both use the same recipe model. |
-| Official cocktail | A recipe curated and endorsed by Jigger, independently of its owner or parent. |
+| Cocktail | A canonical drink identity shared by recipes, with names, aliases, description and history. |
+| Recipe | A particular way to make a drink, optionally assigned to a cocktail and optionally owned by a user. |
+| Official recipe | A recipe curated and endorsed by Jigger, independently of its owner. |
 | Canonical ingredient | A stable, unique ingredient identity shared across recipes. Ice is an ingredient. |
 | Utensil | An explicit domain object with its own database table or equivalent persistent collection. Utensils include jiggers, glasses and other glassware, and other cocktail equipment. |
 | Mention | Text in a preparation step associated with a system object, such as a canonical ingredient or utensil. The association preserves the submitted prose. |
@@ -33,7 +33,7 @@ The marketplace returns public, published recipe variations whose required ingre
 
 Each recipe preserves every ingredient's exact submitted text and its language, including native-language names and misspellings. Internally, that text maps to a canonical ingredient identity shared across recipes. Matching must not replace or correct what the user wrote.
 
-A cocktail may link to another recipe as its parent. Independent originals need no parent. Sources and historical publication dates belong to the recipe.
+Original recipes need no canonical cocktail. Admins curate canonical identities and assignments; publishing does not automatically create a cocktail. Cocktails hold description, history, their sources and historical publication dates. Recipes retain optional source references and URLs crediting their quantities and instructions.
 
 Preparation steps remain ordered, free-text instructions. Jigger should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
 

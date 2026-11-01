@@ -1,0 +1,80 @@
+<%= form_with(model: recipe, class: "recipe-form") do |form| %>
+  <% if recipe.errors.any? %>
+    <div role="alert" class="text-danger">
+      <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+
+      <ul>
+        <% recipe.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :language %>
+    <%= form.text_field :language %>
+  </div>
+
+  <% if recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
+    <p>This recipe has multiple preparation steps. Editing them here is not supported yet.</p>
+  <% end %>
+
+  <div>
+    <%= form.label :steps %>
+    <%= form.textarea :steps, readonly: recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
+  </div>
+
+  <div>
+    <%= form.label :preparation_time_seconds %>
+    <%= form.number_field :preparation_time_seconds %>
+  </div>
+
+  <div>
+    <%= form.label :servings %>
+    <%= form.number_field :servings, min: 1, step: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :preparation_method %>
+    <%= form.select :preparation_method, options_for_select([ [ "", nil ] ] + Recipe.preparation_methods.keys.map { |value| [ value.humanize, value ] }, recipe.preparation_method) %>
+  </div>
+
+  <div>
+    <%= form.label :source_reference %>
+    <%= form.text_field :source_reference %>
+  </div>
+
+  <div>
+    <%= form.label :source_url %>
+    <%= form.url_field :source_url %>
+    <%= form.label :visibility %>
+    <%= form.select :visibility, %w[private public] %>
+    <%= form.label :publication_state %>
+    <%= form.select :publication_state, %w[draft published] %>
+    <% if Current.user&.admin? %>
+      <%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %>
+      <%= form.collection_select :cocktail_id, Cocktail.includes(:translations).to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %>
+      <%= form.label :official, "Official Jigger recipe" %>
+      <%= form.check_box :official %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :image, "Photo" %>
+    <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp", aria: { describedby: "image-help" } %>
+    <p id="image-help">Optional JPEG, PNG or WebP photo. Maximum 10 MB and 25 megapixels. Choose a new photo to replace the current one.</p>
+    <% if recipe.persisted? && recipe.image.attached? %>
+      <%= image_tag recipe_image_path(recipe, size: :card), alt: "Current photo of #{recipe.name}", loading: "lazy" %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit class: "w-auto mt-3" %>
+  </div>
+<% end %>

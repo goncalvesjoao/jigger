@@ -51,10 +51,10 @@ class CatalogImageTest < ActiveSupport::TestCase
   end
 
   test "existing blobs and signed IDs cannot be reassigned across any photo owners" do
-    source = cocktails(:one)
+    source = recipes(:one)
     source.update!(visibility: "private", image: photo_upload)
     blob = source.image.blob
-    [ cocktails(:margarita), ingredients(:one), utensils(:jigger), cocktails(:two) ].each do |target|
+    [ recipes(:margarita), ingredients(:one), utensils(:jigger), recipes(:two) ].each do |target|
       target.update!(image: photo_upload("small.png"))
       previous = target.image.blob.id
       [ blob, blob.signed_id, "invalid-signed-id", { io: blob, filename: "stolen.png" }, { blob: blob.id } ].each do |assignment|
@@ -84,11 +84,11 @@ class CatalogImageTest < ActiveSupport::TestCase
   end
 
   test "low-level purge removes canonical usability and recipe marketplace eligibility" do
-    recipe = cocktails(:one)
+    recipe = recipes(:one)
     [ ingredients(:one), utensils(:jigger) ].each do |catalog|
       catalog.update!(image: photo_upload)
       assert catalog.usable?
-      assert_includes Cocktail.marketplace, recipe
+      assert_includes Recipe.marketplace, recipe
       catalog.image.purge
       assert_not catalog.reload.image.attached?
       assert_not catalog.usable?
@@ -98,8 +98,8 @@ class CatalogImageTest < ActiveSupport::TestCase
       assert_empty catalog.class.lookup(catalog.name, language: "en")
       assert_not recipe.reload.valid?
       assert_not recipe.marketplace?
-      assert_not_includes Cocktail.marketplace, recipe
-      assert_not_includes Cocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), recipe
+      assert_not_includes Recipe.marketplace, recipe
+      assert_not_includes Recipe.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), recipe
       assert recipe.update(publication_state: "draft")
       catalog.update!(image: photo_upload)
       recipe.reload.update!(publication_state: "published")

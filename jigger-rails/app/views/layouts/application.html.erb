@@ -44,7 +44,7 @@
         <% end %>
         <ul>
           <li><%= link_to "Discover", cocktails_path %></li>
-          <li><%= link_to "New Cocktail", new_cocktail_path %></li>
+          <li><%= link_to "New Recipe", new_recipe_path %></li>
           <% if authenticated? %>
             <li><%= button_to "Log Out", session_path, method: :delete, class: "ghost" %></li>
           <% else %>

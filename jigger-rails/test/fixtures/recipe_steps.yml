@@ -1,9 +1,9 @@
 one:
-  cocktail: one
+  recipe: one
   position: 0
   body: MyText
 
 two:
-  cocktail: two
+  recipe: two
   position: 0
   body: MyText

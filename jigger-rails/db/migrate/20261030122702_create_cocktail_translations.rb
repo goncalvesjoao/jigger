@@ -3,10 +3,10 @@ class CreateCocktailTranslations < ActiveRecord::Migration[8.1]
     create_table :cocktail_translations do |t|
       t.references :cocktail, null: false, foreign_key: true, index: false
       t.string :locale, null: false
-      t.string :name
+      t.string :name, null: false
       t.text :description
       t.text :history
-      t.string :normalized_name
+      t.string :normalized_name, null: false
       t.timestamps
     end
     add_index :cocktail_translations, [ :cocktail_id, :locale ], unique: true

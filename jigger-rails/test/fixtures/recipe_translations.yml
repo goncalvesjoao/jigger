@@ -1,0 +1,17 @@
+margarita:
+  recipe_id: <%= ActiveRecord::FixtureSet.identify(:margarita) %>
+  name: Margarita
+  locale: en
+  normalized_name: margarita
+
+one:
+  recipe_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  locale: en
+  name: MyString
+  normalized_name: mystring
+
+two:
+  recipe_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+  locale: en
+  name: MyString
+  normalized_name: mystring

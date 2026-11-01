@@ -1,0 +1,15 @@
+<section class="card form-page">
+<p class="eyebrow">Your recipe book</p>
+<% content_for :title, "New recipe" %>
+
+<h1>New recipe</h1>
+
+<%= render "form", recipe: @recipe %>
+
+<br>
+
+<div>
+  <%= link_to "Back to recipes", recipes_path %>
+</div>
+
+</section>

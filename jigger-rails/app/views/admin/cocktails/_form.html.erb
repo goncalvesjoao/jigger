@@ -1,0 +1,11 @@
+<%= form_with model: [ :admin, cocktail ] do |form| %>
+  <% cocktail.errors.full_messages.each do |message| %><p role="alert"><%= message %></p><% end %>
+  <%= form.label :name %><%= form.text_field :name %>
+  <%= form.label :description %><%= form.text_area :description %>
+  <%= form.label :history %><%= form.text_area :history %>
+  <%= form.label :source_reference %><%= form.text_field :source_reference %>
+  <%= form.label :source_url %><%= form.url_field :source_url %>
+  <%= form.label :source_published_on, "Historical source publication date" %><%= form.date_field :source_published_on %>
+  <%= form.label :source_date_note, "Historical date notes" %><%= form.text_area :source_date_note %>
+  <%= form.submit %>
+<% end %>

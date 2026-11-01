@@ -8,7 +8,7 @@ class Utensil < ApplicationRecord
   }, validate: true
 
   has_many :utensil_aliases, dependent: :destroy, autosave: true, inverse_of: :utensil
-  has_many :cocktail_utensils, dependent: :restrict_with_error
+  has_many :recipe_utensils, dependent: :restrict_with_error
 
   has_many :step_mentions, dependent: :restrict_with_error
 

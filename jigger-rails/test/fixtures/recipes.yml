@@ -1,0 +1,16 @@
+margarita:
+  language: en
+
+one:
+  language: en
+  visibility: public
+  publication_state: published
+  preparation_time_seconds: 1
+  user: one
+
+two:
+  language: en
+  visibility: public
+  publication_state: published
+  preparation_time_seconds: 1
+  user: two

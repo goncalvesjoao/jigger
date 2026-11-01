@@ -17,21 +17,26 @@ module TheCocktailDbSeeder
       next unless local_image_available?("cocktails", name)
 
       source_url = "https://www.thecocktaildb.com/drink/#{drink.fetch("idDrink")}"
-      cocktail = Cocktail.find_by(source_url: source_url) ||
-        Cocktail.where(user_id: nil, source_url: nil).find_by(id: Cocktail.lookup(name, language: :en).select(:id)) || Cocktail.new
+      recipe = Recipe.find_by(source_url: source_url) ||
+        Recipe.where(user_id: nil, source_url: nil).find_by(id: Recipe.lookup(name, language: :en).select(:id)) || Recipe.new
       # Re-running seeds must not overwrite an admin's curated recipe.
-      next if cocktail.official? || cocktail.user_id.present?
+      next if recipe.official? || recipe.user_id.present?
 
-      previous_published_at = cocktail.published_at
-      Cocktail.transaction do
-        cocktail.publication_state = "draft"
-        cocktail.language = "en"
-        Globalize.with_locale(:en) { cocktail.name = name }
-        cocktail.source_reference = "TheCocktailDB"
-        cocktail.source_url = source_url
-        attach_seed_image!(cocktail, "cocktails", name)
-        cocktail.save!
-        cocktail.cocktail_ingredients.destroy_all
+      previous_published_at = recipe.published_at
+      Recipe.transaction do
+        recipe.publication_state = "draft"
+        recipe.language = "en"
+        Globalize.with_locale(:en) { recipe.name = name }
+        recipe.source_reference = "TheCocktailDB"
+        recipe.source_url = source_url
+        attach_seed_image!(recipe, "cocktails", name)
+        if recipe.cocktail.nil?
+          identity = Cocktail.joins(:translations).find_by(cocktail_translations: { locale: "en", normalized_name: LookupName.normalize(name) })
+          identity ||= Globalize.with_locale(:en) { Cocktail.create!(name: name) }
+          recipe.cocktail = identity
+        end
+        recipe.save!
+        recipe.recipe_ingredients.destroy_all
         (1..15).each do |position|
           ingredient_name = drink["strIngredient#{position}"].to_s.strip
           next if ingredient_name.empty?
@@ -40,19 +45,19 @@ module TheCocktailDbSeeder
           attach_seed_image!(ingredient, "ingredients", ingredient_name)
           ingredient.save!
           measure = drink["strMeasure#{position}"].to_s.strip
-          cocktail.cocktail_ingredients.create!(ingredient: ingredient, position: position,
+          recipe.recipe_ingredients.create!(ingredient: ingredient, position: position,
             submitted_text: [ measure.presence, ingredient_name ].compact.join(" "), language: "en")
         end
-        cocktail.recipe_steps.destroy_all
+        recipe.recipe_steps.destroy_all
         instructions = drink["strInstructions"].to_s.strip
-        cocktail.recipe_steps.create!(position: 0, body: instructions) if instructions.present?
-        cocktail.visibility = "public"
-        cocktail.publication_state = "published"
-        unless cocktail.save
-          cocktail.publication_state = "draft"
-          cocktail.save!
+        recipe.recipe_steps.create!(position: 0, body: instructions) if instructions.present?
+        recipe.visibility = "public"
+        recipe.publication_state = "published"
+        unless recipe.save
+          recipe.publication_state = "draft"
+          recipe.save!
         end
-        cocktail.update_columns(published_at: previous_published_at) if previous_published_at
+        recipe.update_columns(published_at: previous_published_at) if previous_published_at
       end
     end
   end

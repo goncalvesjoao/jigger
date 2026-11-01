@@ -24,7 +24,7 @@ class IngredientTest < ActiveSupport::TestCase
   test "lookup supports canonical names, translations and ambiguous aliases without changing prose" do
     [ [ Ingredient, ingredients(:one), :ingredient_aliases ],
       [ Utensil, utensils(:jigger), :utensil_aliases ],
-      [ Cocktail, cocktails(:margarita), :cocktail_aliases ] ].each do |type, identity, association|
+      [ Recipe, recipes(:margarita), :recipe_aliases ] ].each do |type, identity, association|
       identity.public_send(association).create!(name: "  ジガー  ", language: "ja")
       other = type.create!(image: photo_upload, name: "Other")
       other.public_send(association).create!(name: "ジガー", language: "ja")

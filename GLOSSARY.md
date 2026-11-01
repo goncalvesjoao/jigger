@@ -5,17 +5,17 @@ Jigger helps people discover cocktail recipes and find cocktails they can make.
 ## Language
 
 **Cocktail**:
-A recipe with ingredients and preparation instructions. It may be owned by a user or managed by Jigger.
-_Avoid_: Canonical cocktail, user cocktail
+A canonical drink identity shared by recipes that make that cocktail, with its accepted names and history.
+_Avoid_: Recipe, user cocktail
 
-**Variant**:
-A cocktail adapted from another cocktail, its parent. A variant may be user-owned or system-managed.
+**Recipe**:
+A particular way to make a drink, including ingredients, quantities and preparation instructions. A recipe may belong to a cocktail or remain unassigned, and may be user-owned or system-managed.
 
-**Official cocktail**:
-A recipe curated and endorsed by Jigger, with its reference source identified when known. Official status is independent of ownership and whether the recipe is a variant.
+**Official recipe**:
+A recipe curated and endorsed by Jigger, with its reference source identified when known. Official status is independent of ownership.
 
-**System-managed cocktail**:
-A cocktail maintained by Jigger rather than owned by a user. Importing a cocktail does not automatically make it official.
+**Unassigned recipe**:
+A recipe without a canonical cocktail classification. A complete public recipe remains discoverable as its own result until curated.
 
 **Marketplace**:
-The public collection of complete, published cocktail recipes available for discovery. Private recipes and drafts are excluded.
+The public collection of complete, published recipes, presented as cocktails with matching-recipe counts. Unassigned recipes appear individually; private recipes and drafts are excluded.
