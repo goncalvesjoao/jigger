@@ -147,3 +147,26 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 .search-context p { margin-bottom: .5rem; }
 .other-recipes { margin-top: 2rem; }
 .other-recipes summary { font-weight: 600; }
+
+.navbar-search { position: relative; }
+.search-panel > summary { cursor: pointer; font-size: .8rem; padding: .35rem .5rem; }
+.search-panel[open] { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: min(42rem, calc(100vw - 2rem)); background: #fffef9; border: 1px solid var(--border-color); border-radius: 1rem; box-shadow: 0 .75rem 2rem #20292320; }
+.search-panel[open] > summary { padding: .75rem 1rem; }
+.search-filters { padding: 0 1rem 1rem; max-height: 65vh; overflow-y: auto; }
+.search-filters p { font-size: .85rem; margin-block: .5rem; }
+.search-filter-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.search-picker { min-width: 0; border: 1px solid var(--border-color); border-radius: .5rem; padding: .5rem; }
+.search-picker summary { cursor: pointer; }
+.search-picker input[type=search] { margin-block: .5rem; }
+.search-options { max-height: 12rem; overflow-y: auto; }
+.search-options label, .search-mode { display: flex; align-items: center; gap: .5rem; }
+.search-options label[hidden] { display: none; }
+.search-options input[type=checkbox], .search-mode input[type=checkbox] { flex: 0 0 auto; width: 1.1rem; height: 1.1rem; margin: 0; }
+.search-options label { padding-block: .3rem; }
+.search-chips { display: flex; flex-wrap: wrap; gap: .35rem; margin-block: .75rem; }
+.search-chips button { min-height: 2rem; font-size: .8rem; padding: .2rem .65rem; }
+.search-actions { display: flex; align-items: center; gap: 1rem; margin-top: .75rem; }
+@media (max-width: 36rem) {
+ .search-filter-columns { grid-template-columns: 1fr; }
+ .search-panel[open] { width: calc(100vw - 2rem); }
+}

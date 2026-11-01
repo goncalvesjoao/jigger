@@ -1,5 +1,5 @@
 <% identity = local_assigns.fetch(:identity, recipe) %>
-<% destination = identity.is_a?(Cocktail) ? cocktail_path(identity, request.query_parameters.slice("q", "ingredient_ids", "utensil_ids")) : recipe_path(recipe) %>
+<% destination = identity.is_a?(Cocktail) ? cocktail_path(identity, request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable")) : recipe_path(recipe) %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" lang="<%= recipe.language %>">
   <div class="card-media">
