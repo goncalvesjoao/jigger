@@ -1,4 +1,11 @@
+require "digest"
+
 module ApplicationHelper
+  def gravatar_url(user)
+    hash = Digest::SHA256.hexdigest(user.email_address.strip.downcase)
+    "https://gravatar.com/avatar/#{hash}?s=80&d=mp"
+  end
+
   FLASH_TYPE_CSS_CLASS = { info: "info", alert: "danger", notice: "success" }
 
   def flash_messages

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "my/recipes", to: "account#recipes", as: :my_recipes
+  get "my/lists", to: "account#lists", as: :my_lists
+  get "my/profile", to: "account#profile", as: :my_profile
+
   resource :registration, only: %i[ new create ]
   resource :session
   resources :passwords, param: :token

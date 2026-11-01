@@ -44,11 +44,21 @@
         <% end %>
         <%= render "shared/marketplace_search" %>
         <ul>
-          <li><%= link_to "Discover", cocktails_path %></li>
-          <li><%= link_to "New Recipe", new_recipe_path %></li>
           <% if authenticated? %>
             <% if Current.user.admin? %><li><%= link_to "Admin", admin_root_path %></li><% end %>
-            <li><%= button_to "Log Out", session_path, method: :delete, class: "ghost" %></li>
+            <li>
+              <details class="account-dropdown">
+                <summary aria-label="User account">
+                  <%= image_tag gravatar_url(Current.user), alt: "", width: 40, height: 40, class: "user-avatar" %>
+                </summary>
+                <div class="account-dropdown-items">
+                  <%= link_to "My recipes", my_recipes_path %>
+                  <%= link_to "My lists", my_lists_path %>
+                  <%= link_to "My profile", my_profile_path %>
+                  <%= link_to "Log out", session_path, data: { turbo_method: :delete } %>
+                </div>
+              </details>
+            </li>
           <% else %>
             <li><%= link_to "Enter", new_session_path %></li>
           <% end %>

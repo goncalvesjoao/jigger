@@ -170,3 +170,17 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
  .search-filter-columns { grid-template-columns: 1fr; }
  .search-panel[open] { width: calc(100vw - 2rem); }
 }
+
+.account-dropdown { position: relative; }
+.account-dropdown > summary { display: flex; align-items: center; gap: .4rem; cursor: pointer; list-style: none; border-radius: 50%; }
+.account-dropdown > summary::after { transform: rotate(0deg); }
+.account-dropdown[open] > summary { margin-bottom: 0; }
+.account-dropdown[open] > summary::after { transform: rotate(180deg); }
+.account-dropdown > summary::-webkit-details-marker { display: none; }
+.account-dropdown > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.user-avatar { border-radius: 50%; object-fit: cover; }
+.account-dropdown-items { position: absolute; top: calc(100% + .75rem); right: 0; min-width: 11rem; padding: .5rem; background: #f7f5ee; border: 1px solid #20292330; border-radius: .5rem; box-shadow: 0 .5rem 1.5rem #20292320; }
+.account-dropdown-items > a { display: block; width: 100%; padding: .65rem .75rem; text-align: left; white-space: nowrap; border: 0; border-radius: .25rem; margin: 0; font: inherit; line-height: inherit; color: inherit; text-decoration: none; background: transparent; min-height: 0; box-shadow: none; cursor: pointer; }
+.account-dropdown-items > a:hover { background: #20292310; }
+
+.account-dropdown-items > a:focus-visible { background: #20292310; outline: 2px solid var(--primary-outline-color); outline-offset: -2px; }
