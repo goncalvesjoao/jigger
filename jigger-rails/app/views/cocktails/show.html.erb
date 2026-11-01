@@ -1,13 +1,41 @@
 <% content_for :title, "#{@cocktail.display_name} · Jigger" %>
-<%= link_to "← All cocktails", cocktails_path, class: "back-link" %>
-<h1><%= @cocktail.display_name %></h1>
-<% if @cocktail.description.present? %><p><%= @cocktail.description %></p><% end %>
-<% if @cocktail.history.present? %><section><h2>History</h2><p class="submitted-prose"><%= @cocktail.history %></p></section><% end %>
-<% if @cocktail.source_url.present? %><p>Source: <%= link_to @cocktail.source_reference.presence || "Cocktail source", @cocktail.source_url %></p><% elsif @cocktail.source_reference.present? %><p class="submitted-prose"><%= @cocktail.source_reference %></p><% end %>
-<% if @cocktail.source_published_on.present? %><p>Historical source publication: <%= @cocktail.source_published_on %></p><% end %>
-<% if @cocktail.source_date_note.present? %><p class="submitted-prose"><%= @cocktail.source_date_note %></p><% end %>
-<p><%= pluralize(@recipes.size, "matching recipe") %></p>
-<% if @recipes.empty? %><p>No recipes match these filters.</p><% end %>
-<% if params[:q].present? || params.key?(:ingredient_ids) || params.key?(:utensil_ids) %><p><%= link_to "All recipes for this cocktail", cocktail_path(@cocktail) %></p><% end %>
-<div class="auto-grid recipe-grid"><%= render @recipes %></div>
-<% if policy(@cocktail).edit? %><%= link_to "Edit cocktail", edit_admin_cocktail_path(@cocktail) %><% end %>
+<%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids")), class: "back-link" %>
+<article class="cocktail-details">
+  <header>
+    <h1><%= @cocktail.display_name %></h1>
+    <% if @cocktail.description.present? %><p class="submitted-prose"><%= @cocktail.description %></p><% end %>
+    <% if @cocktail.cocktail_aliases.any? %><p>Also known as: <%= @cocktail.cocktail_aliases.map(&:name).join(", ") %></p><% end %>
+  </header>
+  <% if @cocktail.history.present? %><section><h2>History</h2><p class="submitted-prose"><%= @cocktail.history %></p></section><% end %>
+  <% if @cocktail.source_reference.present? || @cocktail.source_url.present? || @cocktail.source_published_on.present? || @cocktail.source_date_note.present? %>
+    <section>
+      <h2>Sources</h2>
+      <% if @cocktail.source_url.present? %><p>Source: <%= link_to @cocktail.source_reference.presence || "Cocktail source", @cocktail.source_url %></p><% elsif @cocktail.source_reference.present? %><p class="submitted-prose"><%= @cocktail.source_reference %></p><% end %>
+      <% if @cocktail.source_published_on.present? %><p>Historical source publication: <%= @cocktail.source_published_on %></p><% end %>
+      <% if @cocktail.source_date_note.present? %><p class="submitted-prose"><%= @cocktail.source_date_note %></p><% end %>
+    </section>
+  <% end %>
+  <% if policy(@cocktail).edit? %><p><%= link_to "Edit cocktail", edit_admin_cocktail_path(@cocktail) %></p><% end %>
+</article>
+<% if @filtered %>
+  <section class="search-context" aria-label="Active recipe filters">
+    <% if params[:q].present? %><p>Search: <strong><%= params[:q] %></strong></p><% end %>
+    <% if @available_ingredients %>
+      <p>Available ingredients: <%= @available_ingredients.map(&:name).join(", ").presence || "None" %></p>
+      <p>Available utensils: <%= @available_utensils.map(&:name).join(", ").presence || "None" %></p>
+    <% end %>
+    <%= link_to "Show all recipes", cocktail_path(@cocktail) %>
+  </section>
+<% end %>
+<section id="matching-recipes" aria-labelledby="recipes-heading">
+  <h2 id="recipes-heading"><%= @filtered ? "Matching recipes" : "Recipes" %> (<%= @recipes.size %>)</h2>
+  <% if @recipes.empty? %><p>No recipes match these filters.</p><% end %>
+  <div class="auto-grid recipe-grid"><%= render @recipes %></div>
+</section>
+<% if @filtered && @other_recipes.any? %>
+  <details id="other-recipes" class="other-recipes">
+    <summary>Other recipes (<%= @other_recipes.size %>)</summary>
+    <p>These public recipes do not match your current filters.</p>
+    <div class="auto-grid recipe-grid"><%= render @other_recipes %></div>
+  </details>
+<% end %>

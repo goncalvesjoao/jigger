@@ -141,3 +141,9 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 }
 
 .ingredient-copy > .submitted-prose { font-size: 1.15rem; }
+
+.cocktail-details { max-width: 54rem; margin-bottom: 2.5rem; }
+.search-context { padding: 1rem 1.25rem; margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); }
+.search-context p { margin-bottom: .5rem; }
+.other-recipes { margin-top: 2rem; }
+.other-recipes summary { font-weight: 600; }

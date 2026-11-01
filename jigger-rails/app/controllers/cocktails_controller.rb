@@ -21,6 +21,16 @@ class CocktailsController < ApplicationController
 
   def show
     @recipes = matching_recipes.where(cocktail: @cocktail)
+    @filtered = params[:q].present? || params.key?(:ingredient_ids) || params.key?(:utensil_ids)
+    if @filtered
+      @other_recipes = Recipe.marketplace.where(cocktail: @cocktail)
+        .where.not(id: @recipes.except(:includes, :order).select(:id))
+        .with_attached_image.includes(:translations)
+      if params.key?(:ingredient_ids) || params.key?(:utensil_ids)
+        @available_ingredients = Ingredient.usable.where(id: Array(params[:ingredient_ids]).reject(&:blank?)).includes(:translations)
+        @available_utensils = Utensil.usable.where(id: Array(params[:utensil_ids]).reject(&:blank?)).includes(:translations)
+      end
+    end
   end
 
   private

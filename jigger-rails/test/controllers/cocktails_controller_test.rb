@@ -39,7 +39,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get cocktail_url(@cocktail), params: { q: "bright" }
     assert_response :success
     assert_select "#recipe_#{recipes(:one).id}"
-    assert_select "#recipe_#{recipes(:two).id}", count: 0
+    assert_select "#matching-recipes #recipe_#{recipes(:two).id}", count: 0
+    assert_select "#other-recipes #recipe_#{recipes(:two).id}"
     recipes(:two).update!(visibility: "private")
     get root_url, params: { q: "margarita" }
     assert_select ".recipe-count", text: "1"
@@ -59,9 +60,78 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".recipe-count", text: "1"
     get cocktail_url(@cocktail), params: filters
     assert_select "#recipe_#{recipes(:one).id}"
-    assert_select "#recipe_#{recipes(:two).id}", count: 0
+    assert_select "#matching-recipes #recipe_#{recipes(:two).id}", count: 0
+    assert_select "#other-recipes #recipe_#{recipes(:two).id}"
     get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids }
     assert_select ".recipe-count", count: 0
+  end
+
+  test "cocktail details precede matches and nonmatches are collapsed with search context" do
+    @cocktail.update!(history: "A historical account", source_reference: "History book", source_url: "https://example.com/history",
+      source_published_on: "1930-01-01", source_date_note: "Year confirmed")
+    @cocktail.cocktail_aliases.create!(name: "Daisy", language: "en")
+    get cocktail_url(@cocktail), params: { q: "bright" }
+    assert_response :success
+    assert_select ".cocktail-details" do
+      assert_select "h1", text: "Margarita"
+      assert_select "p", text: "A classic sour"
+      assert_select "p", text: "A historical account"
+      assert_select "p", text: "Also known as: Daisy"
+      assert_select "a[href='https://example.com/history']", text: "History book"
+      assert_select "p", text: "Historical source publication: 1930-01-01"
+      assert_select "p", text: "Year confirmed"
+    end
+    assert_operator response.body.index('class="cocktail-details"'), :<, response.body.index('id="matching-recipes"')
+    assert_select ".search-context strong", text: "bright"
+    assert_select ".search-context a[href=?]", cocktail_path(@cocktail), text: "Show all recipes"
+    assert_select "a.back-link[href=?]", cocktails_path(q: "bright")
+    assert_select "#matching-recipes h2", text: "Matching recipes (1)"
+    assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
+    assert_select "details#other-recipes:not([open])" do
+      assert_select "summary", text: "Other recipes (1)"
+      assert_select "#recipe_#{recipes(:two).id}"
+      assert_select "#recipe_#{recipes(:one).id}", count: 0
+    end
+  end
+
+  test "unfiltered and blank searches show all public recipes without collapsed alternatives" do
+    [ {}, { q: " " } ].each do |filters|
+      get cocktail_url(@cocktail), params: filters
+      assert_select "#matching-recipes h2", text: "Recipes (2)"
+      assert_select "#matching-recipes article", count: 2
+      assert_select "details#other-recipes", count: 0
+      assert_select ".search-context", count: 0
+    end
+    get cocktail_url(@cocktail), params: { q: "margarita" }
+    assert_select "#matching-recipes article", count: 2
+    assert_select "details#other-recipes", count: 0
+  end
+
+  test "zero matching recipes still offers collapsed alternatives and names availability filters" do
+    get cocktail_url(@cocktail), params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids }
+    assert_select "#matching-recipes h2", text: "Matching recipes (0)"
+    assert_select "#matching-recipes p", text: "No recipes match these filters."
+    assert_select ".search-context p", text: "Available ingredients: None"
+    assert_select ".search-context p", text: /Available utensils:/
+    assert_select "details#other-recipes:not([open]) article", count: 2
+  end
+
+  test "alternative recipes exclude private drafts and other cocktails even for admins" do
+    [ { visibility: "private" }, { publication_state: "draft" }, { cocktail: nil } ].each do |state|
+      recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Hidden alternative", language: "en", steps: "Stir.")
+      recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
+      recipe.assign_attributes({ visibility: "public", publication_state: "published" }.merge(state))
+      recipe.save!
+    end
+    users(:one).update!(admin: true)
+    sign_in_as(users(:one))
+    get cocktail_url(@cocktail), params: { q: "bright" }
+    assert_select "#matching-recipes article", count: 1
+    assert_select "#other-recipes article", count: 1
+    get cocktail_url(@cocktail, format: :json), params: { q: "bright" }
+    assert_equal true, response.parsed_body["filters_applied"]
+    assert_equal [ recipes(:one).id ], response.parsed_body["recipes"].map { |recipe| recipe["id"] }
+    assert_equal [ recipes(:two).id ], response.parsed_body["other_recipes"].map { |recipe| recipe["id"] }
   end
 
   test "marketplace paginates whole groups with lazy frames and preserves filters" do
