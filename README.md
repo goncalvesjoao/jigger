@@ -51,3 +51,13 @@ Jev is optional. A sufficiently fast open-source alternative could serve the sam
 - What should happen when an ingredient, cocktail, or utensil mention has no match? When should Jigger create a new identity or leave a mention unresolved?
 
 Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace cocktails.
+
+## Administration
+
+Administrators can open `/admin` from the Admin navigation link to list, search, create, edit and delete cocktails, ingredients, utensils and recipes. Administrate uses the existing sign-in and admin flag; no separate admin account system is created. Recipe owners are selectable without exposing user-management screens.
+
+Use **Content language** (for example `en` or `ja`) to edit a record’s translated fields. Forms show only the selected language’s stored values, without copying English fallback text into missing translations. Create English catalog content first. Search matches translated names across languages; photos and other shared attributes apply to all translations.
+
+Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership and one-official-recipe-per-cocktail constraints still apply.
+
+Administrate 1.0 uses Kaminari 1.2.2; marketplace grouping and pagination remain covered by the controller tests.

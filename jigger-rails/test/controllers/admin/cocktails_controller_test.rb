@@ -35,18 +35,18 @@ class Admin::CocktailsControllerTest < ActionDispatch::IntegrationTest
     patch admin_cocktail_url(@cocktail), params: { cocktail: { name: " " } }
     assert_response :unprocessable_content
     patch admin_cocktail_url(@cocktail), params: { cocktail: { name: "Updated" } }
-    assert_redirected_to cocktail_url(@cocktail)
+    assert_redirected_to admin_cocktail_url(@cocktail)
     assert_equal "Updated", @cocktail.reload.name
   end
 
-  test "admin deletion keeps recipes and redirects to discovery" do
+  test "admin deletion keeps recipes and redirects to the admin list" do
     users(:one).update!(admin: true)
     sign_in_as(users(:one))
     recipes(:one).update!(cocktail: @cocktail)
     assert_no_difference("Recipe.count") do
       assert_difference("Cocktail.count", -1) { delete admin_cocktail_url(@cocktail) }
     end
-    assert_redirected_to cocktails_url
+    assert_redirected_to admin_cocktails_url
     assert_nil recipes(:one).reload.cocktail
   end
 
@@ -59,7 +59,7 @@ class Admin::CocktailsControllerTest < ActionDispatch::IntegrationTest
       description: "A classic sour", history: "Historical account", source_reference: "History book",
       source_url: "https://example.com/history", source_published_on: "1930-01-01", source_date_note: "Year confirmed; day uncertain"
     } }
-    assert_redirected_to cocktail_url(@cocktail)
+    assert_redirected_to admin_cocktail_url(@cocktail)
     assert_equal Date.new(1930, 1, 1), @cocktail.reload.source_published_on
     assert_equal "History book", @cocktail.source_reference
     assert_equal "Recipe author", recipe.reload.source_reference

@@ -6,7 +6,11 @@ Rails.application.routes.draw do
     resource :image, only: :show, controller: "cocktail_images"
   end
   namespace :admin do
-    resources :cocktails, only: %i[ new create edit update destroy ]
+    root to: "cocktails#index"
+    resources :cocktails
+    resources :ingredients
+    resources :utensils
+    resources :recipes
   end
   resources :recipes do
     resource :image, only: :show, controller: "recipe_images"

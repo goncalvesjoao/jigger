@@ -47,6 +47,7 @@
           <li><%= link_to "Discover", cocktails_path %></li>
           <li><%= link_to "New Recipe", new_recipe_path %></li>
           <% if authenticated? %>
+            <% if Current.user.admin? %><li><%= link_to "Admin", admin_root_path %></li><% end %>
             <li><%= button_to "Log Out", session_path, method: :delete, class: "ghost" %></li>
           <% else %>
             <li><%= link_to "Enter", new_session_path %></li>

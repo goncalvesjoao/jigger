@@ -1,0 +1,3 @@
+<% if field.resource.image.attached? %>
+  <%= image_tag public_send("#{field.resource.model_name.singular}_image_path", field.resource, size: :card), alt: "Photo of #{field.resource.display_name}", loading: "lazy", width: (field.page == :index ? 80 : 320) %>
+<% end %>

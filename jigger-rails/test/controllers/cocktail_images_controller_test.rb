@@ -15,7 +15,7 @@ class CocktailImagesControllerTest < ActionDispatch::IntegrationTest
     get edit_admin_cocktail_url(@cocktail)
     assert_select "input[type=file][name='cocktail[image]']"
     patch admin_cocktail_url(@cocktail), params: { cocktail: { image: photo_upload } }
-    assert_redirected_to cocktail_url(@cocktail)
+    assert_redirected_to admin_cocktail_url(@cocktail)
     original = @cocktail.reload.image.blob
     get root_url
     assert_select "img[src=?]", cocktail_image_path(@cocktail, size: :card)
@@ -31,7 +31,7 @@ class CocktailImagesControllerTest < ActionDispatch::IntegrationTest
     patch admin_cocktail_url(@cocktail), params: { cocktail: { image: original.signed_id } }
     assert_response :bad_request
     patch admin_cocktail_url(@cocktail), params: { cocktail: { image: photo_upload("photo.webp", "image/webp") } }
-    assert_redirected_to cocktail_url(@cocktail)
+    assert_redirected_to admin_cocktail_url(@cocktail)
     assert_not_equal original.id, @cocktail.reload.image.blob.id
   end
 
