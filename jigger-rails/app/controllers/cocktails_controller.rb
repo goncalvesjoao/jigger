@@ -15,7 +15,7 @@ class CocktailsController < ApplicationController
     cocktail_ids = groups.filter_map(&:cocktail_id)
     standalone_ids = groups.reject(&:cocktail_id).map(&:id)
     @groups = matches.where(cocktail_id: cocktail_ids).or(matches.where(id: standalone_ids))
-      .order(id: :desc).includes(cocktail: :translations).group_by { |recipe| recipe.cocktail || recipe }
+      .order(id: :desc).includes(cocktail: [ :translations, { image_attachment: :blob } ]).group_by { |recipe| recipe.cocktail || recipe }
     @groups = @groups.sort_by { |identity, _| groups.index { |group| identity.is_a?(Cocktail) ? group.cocktail_id == identity.id : group.cocktail_id.nil? && group.id == identity.id } }.to_h
   end
 

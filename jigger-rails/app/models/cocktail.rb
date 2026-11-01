@@ -6,6 +6,8 @@ class Cocktail < ApplicationRecord
   translation_class.validates :name, :locale, presence: true
   translation_class.validates :locale, uniqueness: { scope: :cocktail_id }
 
+  include PhotoAttachment
+
   validates :source_url, format: { with: /\Ahttps?:\/\/[^\s]+\z/i }, allow_blank: true
   validates :name, presence: true
 

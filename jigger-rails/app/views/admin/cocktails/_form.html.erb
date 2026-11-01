@@ -7,5 +7,10 @@
   <%= form.label :source_url %><%= form.url_field :source_url %>
   <%= form.label :source_published_on, "Historical source publication date" %><%= form.date_field :source_published_on %>
   <%= form.label :source_date_note, "Historical date notes" %><%= form.text_area :source_date_note %>
+  <%= form.label :image, "Photo" %>
+  <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp" %>
+  <% if cocktail.image.attached? %>
+    <%= image_tag cocktail_image_path(cocktail, size: :card), alt: "Current photo of #{cocktail.display_name}", loading: "lazy" %>
+  <% end %>
   <%= form.submit %>
 <% end %>

@@ -1,0 +1,212 @@
+{
+  "Margarita": {
+    "description": "A tequila sour balancing lime with orange liqueur, traditionally shaken and served with an optional salt rim.",
+    "history": "The Margarita has become a widely recognised tequila classic. Cointreau promotes an origin story crediting Margaret Sames with mixing it in Acapulco in 1948. That is the brand’s account, not independent proof of a sole inventor; the IBA specification defines the drink without assigning an origin.",
+    "source_reference": "Cointreau — Discover the Original Margarita; International Bartenders Association — Margarita",
+    "source_url": "https://www.cointreau.com/uk/en/news/discover-cointreau-original-margarita",
+    "source_date_note": "1948 is an origin claim in Cointreau’s account, not a publication date. Current definition: https://iba-world.com/iba-cocktail/margarita/"
+  },
+  "Blue Margarita": {
+    "description": "A Margarita variation whose blue curaçao brings orange flavour and a vivid colour to tequila and lime, commonly served with a salted rim.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Blue Margarita",
+    "source_url": "https://www.thecocktaildb.com/drink/11118",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Tommy's Margarita": {
+    "description": "A tequila-and-lime sour sweetened with agave nectar instead of the orange liqueur used in a conventional Margarita.",
+    "history": "Tommy’s Mexican Restaurant in San Francisco identifies itself as the birthplace of this variation. Its agave-sweetened approach became a recognised cocktail in its own right and is now specified by the International Bartenders Association.",
+    "source_reference": "Tommy’s Mexican Restaurant; International Bartenders Association — Tommy’s Margarita",
+    "source_url": "https://www.tommysmexican.com/",
+    "source_date_note": "The restaurant documents its connection to the drink; no exact invention date is assigned here. Current definition: https://iba-world.com/iba-cocktail/tommys-margarita/"
+  },
+  "Whitecap Margarita": {
+    "description": "A blended tequila drink with coconut cream and lime, giving the Margarita format a creamy coconut character.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Whitecap Margarita",
+    "source_url": "https://www.thecocktaildb.com/drink/16158",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Strawberry Margarita": {
+    "description": "A strawberry variation on the tequila-and-orange-liqueur sour, pairing berry sweetness with citrus and a salted rim.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Strawberry Margarita",
+    "source_url": "https://www.thecocktaildb.com/drink/12322",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Smashed Watermelon Margarita": {
+    "description": "A tequila drink with muddled watermelon and mint, grapefruit and lime, served over ice for a juicy, herbal take on the Margarita.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Smashed Watermelon Margarita",
+    "source_url": "https://www.thecocktaildb.com/drink/178332",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Old Fashioned": {
+    "description": "A whiskey cocktail with sugar, aromatic bitters and a little water, built over ice so the spirit remains central.",
+    "history": "Kappeler’s Modern American Drinks records an Old-Fashioned Whiskey Cocktail in 1895 with sugar, water, bitters, lemon peel and whiskey. This documents an existing drink, without identifying its inventor.",
+    "source_reference": "George J. Kappeler — Modern American Drinks (1895), p. 43; International Bartenders Association — Old Fashioned",
+    "source_url": "https://www.gutenberg.org/files/61065/61065-h/61065-h.htm",
+    "source_date_note": "Historical recipe published in 1895; the exact month and day are not established. Current definition: https://iba-world.com/iba-cocktail/old-fashioned/"
+  },
+  "Mojito": {
+    "description": "A long rum drink with lime, sugar and mint, topped with soda water for a bright, herbal finish.",
+    "history": "Sloppy Joe’s bar in Havana printed a Mojito in its 1932 cocktail manual, combining rum, citrus, sugar, mint and seltzer. The same manual also listed a gin version. This is a contemporary record of the drink in Cuba, without establishing a single inventor or an exact invention date.",
+    "source_reference": "Sloppy Joe’s — Cocktails Manual (1932), p. 9; International Bartenders Association — Mojito",
+    "source_url": "https://euvs-vintage-cocktail-books.cld.bz/1932-Sloppy-Joe-s/I",
+    "source_date_note": "1932 dates the surviving bar manual, not the drink’s invention. Current definition: https://iba-world.com/iba-cocktail/mojito/"
+  },
+  "Mojito Extra": {
+    "description": "A dark-rum Mojito variation combining mint, lemon and club soda, finished with aromatic bitters.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Mojito Extra",
+    "source_url": "https://www.thecocktaildb.com/drink/15841",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Mango Mojito": {
+    "description": "A fruit variation on the Mojito with mango purée, white rum, mint and lime, lengthened with soda water.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Mango Mojito",
+    "source_url": "https://www.thecocktaildb.com/drink/178358",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Blueberry Mojito": {
+    "description": "A dark-rum Mojito variation with muddled blueberries, lime and sugar, lengthened with lemon-lime soda.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Blueberry Mojito",
+    "source_url": "https://www.thecocktaildb.com/drink/178336",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Daiquiri": {
+    "description": "A short rum sour made with lime and sugar, shaken cold and served without ice in the glass.",
+    "history": "The University of Miami’s Carmen Puig Papers preserve an original Daiquiri recipe associated with Jennings Cox, an engineer working near Daiquirí in Cuba. The collection credits Cox with a reported 1898 creation. The surviving recipe uses citrus, rum, sugar, water and ice; today’s IBA version specifies lime.",
+    "source_reference": "University of Miami Libraries — Carmen Puig Papers; International Bartenders Association — Daiquiri",
+    "source_url": "https://digitalcollections.library.miami.edu/digital/collection/chc0484",
+    "source_date_note": "1898 is the reported creation year in the collection description, not a precise publication date. Current definition: https://iba-world.com/iba-cocktail/daiquiri/"
+  },
+  "Banana Daiquiri": {
+    "description": "A banana variation on the rum-and-lime sour, with orange liqueur and sugar alongside the fruit.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Banana Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/11064",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Frozen Daiquiri": {
+    "description": "A blended Daiquiri variation combining rum, lime, sugar and orange liqueur with ice for a frozen texture.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Frozen Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/11387",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Strawberry Daiquiri": {
+    "description": "A strawberry variation on the rum-and-lime sour, with fresh berries and strawberry schnapps adding fruit flavour.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Strawberry Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/12316",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Frozen Mint Daiquiri": {
+    "description": "A frozen rum-and-lime sour with mint and sugar, blended with crushed ice.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Frozen Mint Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/11390",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Frozen Pineapple Daiquiri": {
+    "description": "A frozen rum sour combining pineapple, lime and sugar with crushed ice.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Frozen Pineapple Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/11391",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Banana Strawberry Shake Daiquiri": {
+    "description": "An alcohol-free blended fruit drink made with strawberries, banana and apple juice.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Banana Strawberry Shake Daiquiri",
+    "source_url": "https://www.thecocktaildb.com/drink/12658",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Negroni": {
+    "description": "An aperitif combining gin, Campari and sweet vermouth, served over ice with orange for a bitter, aromatic balance.",
+    "history": "Campari’s history places the drink at Caffè Casoni in Florence in 1919, where Count Camillo Negroni is said to have asked bartender Fosco Scarselli to replace the soda in his Americano with gin. This is the ingredient producer’s historical account, rather than an independently established invention record.",
+    "source_reference": "Campari — Negroni history",
+    "source_url": "https://negroni.campari.com/history/",
+    "source_date_note": "1919 is the origin year given by Campari; it is not the publication date of this webpage."
+  },
+  "French Negroni": {
+    "description": "A gin aperitif variation with Lillet and sweet vermouth, finished with orange peel.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — French Negroni",
+    "source_url": "https://www.thecocktaildb.com/drink/17248",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Garibaldi Negroni": {
+    "description": "A gin-and-Campari variation lengthened with orange juice, combining the Negroni spirit with the orange character of a Garibaldi.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Garibaldi Negroni",
+    "source_url": "https://www.thecocktaildb.com/drink/178340",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Manhattan": {
+    "description": "A stirred whiskey cocktail with sweet vermouth and aromatic bitters, usually served up with a cherry.",
+    "history": "Kappeler’s 1895 Modern American Drinks includes a Manhattan and two dry variations. Its equal measures of whiskey and Italian vermouth differ from the current IBA specification, which gives rye whiskey the larger share.",
+    "source_reference": "George J. Kappeler — Modern American Drinks (1895), p. 38; International Bartenders Association — Manhattan",
+    "source_url": "https://www.gutenberg.org/files/61065/61065-h/61065-h.htm",
+    "source_date_note": "The historical recipe is documented in 1895; this is not a claim of first publication or invention. Current definition: https://iba-world.com/iba-cocktail/manhattan/"
+  },
+  "Espresso Martini": {
+    "description": "A shaken vodka cocktail with espresso, coffee liqueur and optional sweetness, with a coffee foam on top.",
+    "history": "Bea Bradsell recounts that her father Dick Bradsell created the drink at Soho Brasserie in London in the mid-1980s. She describes an early Vodka Espresso served over ice, followed by years of refinement before the familiar martini-glass presentation.",
+    "source_reference": "Bea Bradsell — The real story of the Espresso Martini, CLASS; International Bartenders Association — Espresso Martini",
+    "source_url": "https://classbarmag.com/news/fullstory.php/aid/1361/Bea_Bradsell_on_the_real_story_of_the_Espresso_Martini_.html",
+    "source_date_note": "The mid-1980s is the creator’s daughter’s account, not an exact publication date. Current definition: https://iba-world.com/iba-cocktail/espresso-martini/"
+  },
+  "Moscow Mule": {
+    "description": "A long vodka drink combining lime with spicy ginger beer, commonly served over ice in a copper mug.",
+    "history": "Smirnoff traces the Mule to a 1941 collaboration between John G. Martin and Jack Morgan of the Cock and Bull restaurant in Los Angeles. The brand helped make the drink closely associated with vodka; this attribution is presented as Smirnoff’s account.",
+    "source_reference": "Smirnoff — Mule cocktail history; International Bartenders Association — Moscow Mule",
+    "source_url": "https://www.smirnoff.com/en-us/all-cocktails/vodka-cocktail-collection/smirnoff-mule-cocktail-collection",
+    "source_date_note": "1941 is the origin year claimed by Smirnoff, not this page’s publication date. Current definition: https://iba-world.com/iba-cocktail/moscow-mule/"
+  },
+  "Whiskey Sour": {
+    "description": "A whiskey sour balancing lemon with sugar; some versions add egg white for a softer texture and foam.",
+    "history": "Kappeler’s Modern American Drinks records a Whiskey Sour in 1895, substituting whiskey into its brandy sour method. This places it in an established family of spirit-and-citrus drinks without identifying an inventor.",
+    "source_reference": "George J. Kappeler — Modern American Drinks (1895), p. 104; International Bartenders Association — Whiskey Sour",
+    "source_url": "https://www.gutenberg.org/files/61065/61065-h/61065-h.htm",
+    "source_date_note": "1895 is a documented publication year, not the date of invention or necessarily the first appearance. Current definition: https://iba-world.com/iba-cocktail/whiskey-sour/"
+  },
+  "Pina Colada": {
+    "description": "A creamy rum drink with pineapple and coconut, commonly blended with ice for a tropical frozen texture.",
+    "history": "Caribe Hilton in San Juan credits bartender Ramón “Monchito” Marrero with creating its Piña Colada in 1954. The hotel says Puerto Rico made the cocktail its official drink in 1978. These dates are presented as the hotel’s account, rather than a resolution of competing origin claims.",
+    "source_reference": "Caribe Hilton — History and original Piña Colada recipe",
+    "source_url": "https://www.caribehilton.com/history/",
+    "source_date_note": "1954 and 1978 are event years in the hotel’s account; neither is an exact publication date for this source."
+  },
+  "Gimlet": {
+    "description": "A short gin-and-lime drink, traditionally sweetened with lime cordial; fresh-lime versions use sugar or syrup to balance the citrus.",
+    "history": "The ninth impression of Harry’s ABC of Mixing Cocktails, catalogued by EUVS as 1930, records a Gimlet made with Plymouth gin and Rose’s lime cordial. It describes the drink as popular in the Navy. This supports its historical naval association without proving a particular sailor or doctor invented it.",
+    "source_reference": "Harry McElhone — Harry’s ABC of Mixing Cocktails, ninth impression (EUVS: 1930), p. 43",
+    "source_url": "https://euvs-vintage-cocktail-books.cld.bz/1930-ABC-of-Mixing-Cocktails-ninth-impression",
+    "source_date_note": "1930 is the archive’s date for this impression. The entry documents an existing drink; no exact invention or first-publication date is assigned."
+  },
+  "Sidecar": {
+    "description": "A brandy sour combining cognac, orange liqueur and lemon, shaken and served up.",
+    "history": "The Ritz Paris associates the Sidecar with its bartender Frank Meier, saying he brought it to prominence there in 1923. This is the hotel’s account of its own connection to the cocktail; it does not settle who first invented the drink.",
+    "source_reference": "Ritz Paris — Sidecar account; International Bartenders Association — Sidecar",
+    "source_url": "https://www.linkedin.com/posts/ritz-paris_ritzparis-cocktailsparis-cocktailsbar-activity-7283539350363996161-eVIk",
+    "source_date_note": "1923 refers to the hotel’s account of popularisation, not a verified invention date. Current definition: https://iba-world.com/iba-cocktail/sidecar/"
+  },
+  "Boston Sidecar": {
+    "description": "A Sidecar variation combining light rum and brandy with orange liqueur and lime.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Boston Sidecar",
+    "source_url": "https://www.thecocktaildb.com/drink/11128",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  },
+  "Sidecar Cocktail": {
+    "description": "A brandy sour with orange liqueur and lemon, shaken cold and served up.",
+    "history": "The cited recipe documents this named variation, but does not establish its creator, place of invention, or date of origin.",
+    "source_reference": "TheCocktailDB — Sidecar Cocktail",
+    "source_url": "https://www.thecocktaildb.com/drink/12198",
+    "source_date_note": "Recipe record; no historical publication date or invention date is established. The database modification timestamp is not an origin date."
+  }
+}

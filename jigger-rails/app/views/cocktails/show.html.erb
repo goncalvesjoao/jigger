@@ -1,6 +1,7 @@
 <% content_for :title, "#{@cocktail.display_name} · Jigger" %>
 <%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids")), class: "back-link" %>
 <article class="cocktail-details">
+  <% if @cocktail.image.attached? %><%= image_tag cocktail_image_path(@cocktail, size: :detail), alt: "Photo of #{@cocktail.display_name}", class: "recipe-photo" %><% end %>
   <header>
     <h1><%= @cocktail.display_name %></h1>
     <% if @cocktail.description.present? %><p class="submitted-prose"><%= @cocktail.description %></p><% end %>

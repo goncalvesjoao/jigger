@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   resource :registration, only: %i[ new create ]
   resource :session
   resources :passwords, param: :token
-  resources :cocktails, only: %i[ index show ]
+  resources :cocktails, only: %i[ index show ] do
+    resource :image, only: :show, controller: "cocktail_images"
+  end
   namespace :admin do
     resources :cocktails, only: %i[ new create edit update destroy ]
   end

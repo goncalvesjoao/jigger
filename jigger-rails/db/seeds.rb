@@ -7,6 +7,22 @@ module TheCocktailDbSeeder
   def self.seed!
     seed_ingredients!
     seed_cocktails!
+    seed_canonical_content!
+  end
+
+  def self.seed_canonical_content!
+    load_json("canonical_cocktails.json").each do |name, content|
+      translation = Cocktail::Translation.find_by(locale: "en", normalized_name: LookupName.normalize(name))
+      next unless translation
+
+      Cocktail.transaction do
+        translation.update!(content.slice("description", "history").select { |field, _| translation[field].blank? })
+        cocktail = translation.globalized_model
+        sources = %w[source_reference source_url source_published_on source_date_note]
+        # Keep citations together rather than mixing seeded and curated sources.
+        cocktail.update!(content.slice(*sources)) if sources.all? { |field| cocktail[field].blank? }
+      end
+    end
   end
 
   def self.seed_cocktails!
@@ -30,11 +46,14 @@ module TheCocktailDbSeeder
         recipe.source_reference = "TheCocktailDB"
         recipe.source_url = source_url
         attach_seed_image!(recipe, "cocktails", name)
-        if recipe.cocktail.nil?
+        identity = recipe.cocktail
+        if identity.nil?
           identity = Cocktail.joins(:translations).find_by(cocktail_translations: { locale: "en", normalized_name: LookupName.normalize(name) })
           identity ||= Globalize.with_locale(:en) { Cocktail.create!(name: name) }
           recipe.cocktail = identity
         end
+        attach_seed_image!(identity, "cocktails", name)
+        identity.save!
         recipe.save!
         recipe.recipe_ingredients.destroy_all
         (1..15).each do |position|
