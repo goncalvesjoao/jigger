@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title) || "Jigger" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -36,12 +36,14 @@
   </head>
 
   <body class="content-grid">
-    <header>
+    <a href="#main-content" class="visually-hidden-focusable">Skip to content</a>
+    <header class="site-header full-width">
       <nav aria-label="Main navigation">
         <%= link_to root_path do %>
-          <strong>Jigger</strong>
+          <strong class="wordmark">Jigger<span aria-hidden="true">.</span></strong>
         <% end %>
         <ul>
+          <li><%= link_to "Discover", cocktails_path %></li>
           <li><%= link_to "New Cocktail", new_cocktail_path %></li>
           <% if authenticated? %>
             <li><%= button_to "Log Out", session_path, method: :delete, class: "ghost" %></li>
@@ -54,8 +56,9 @@
 
     <%= flash_messages %>
 
-    <main>
+    <main id="main-content" class="page-shell">
       <%= yield %>
     </main>
+    <footer class="site-footer"><span class="wordmark">Jigger.</span><span>A recipe. A ritual. A moment well made.</span></footer>
   </body>
 </html>

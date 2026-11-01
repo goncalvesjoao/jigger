@@ -1,54 +1,19 @@
 <% Globalize.with_locale(cocktail.language == "und" ? I18n.default_locale : cocktail.language) do %>
-<div id="<%= dom_id cocktail %>">
-  <% if cocktail.image.attached? %>
-    <%= image_tag cocktail_image_path(cocktail, size: local_assigns.fetch(:image_size, :card)), alt: "Photo of #{cocktail.name}", loading: "lazy", style: "max-width: 100%; height: auto;" %>
+<article id="<%= dom_id cocktail %>" lang="<%= cocktail.language %>">
+  <%= link_to cocktail, class: "card-image", tabindex: "-1", aria: { hidden: true } do %>
+    <% if cocktail.image.attached? %>
+      <%= image_tag cocktail_image_path(cocktail, size: :card), alt: "", loading: "lazy", srcset: "#{cocktail_image_path(cocktail, size: :card)} 320w, #{cocktail_image_path(cocktail, size: :detail)} 1200w", sizes: "(max-width: 36rem) calc(100vw - 2rem), (max-width: 55rem) calc((100vw - 4.3rem) / 2), (max-width: 81rem) calc((100vw - 7rem) / 3), 25rem" %>
+    <% else %>
+      <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
+    <% end %>
   <% end %>
-  <% if cocktail.official? %><p>Official Jigger recipe</p><% end %>
-  <div>
-    <strong>Name:</strong>
-    <%= cocktail.display_name %>
+  <div class="card-copy">
+    <p class="eyebrow"><%= cocktail.official? ? "Official Jigger recipe" : cocktail.user_id.present? ? "Community recipe" : "From our collection" %></p>
+    <h3><%= link_to cocktail.display_name, cocktail %></h3>
+    <% if cocktail.description.present? %><p class="card-description"><%= cocktail.description %></p><% end %>
+    <% if cocktail.preparation_method.present? %>
+      <div class="card-meta"><%= cocktail.preparation_method.humanize %></div>
+    <% end %>
   </div>
-
-  <div>
-    <strong>Steps:</strong>
-    <%= cocktail.steps %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= cocktail.description %>
-  </div>
-
-  <div>
-    <strong>Servings:</strong>
-    <%= cocktail.servings %>
-  </div>
-
-  <div>
-    <strong>Preparation method:</strong>
-    <%= cocktail.preparation_method %>
-  </div>
-
-  <div>
-    <strong>Source reference:</strong>
-    <%= cocktail.source_reference %>
-  </div>
-
-  <div>
-    <strong>Preparation time seconds:</strong>
-    <%= cocktail.preparation_time_seconds %>
-  </div>
-
-  <div>
-    <strong>User:</strong>
-    <%= cocktail.user_id.present? ? "Community recipe" : "System-managed recipe" %>
-  </div>
-
-</div>
-
-<% if cocktail.source_url.present? %>
-  <p>Source: <%= link_to cocktail.source_reference.presence || "Recipe source", cocktail.source_url %></p>
-<% end %>
-<% if cocktail.source_published_on.present? %><p>Original publication: <%= cocktail.source_published_on %></p><% end %>
-<% if cocktail.source_date_note.present? %><p><%= cocktail.source_date_note %></p><% end %>
+</article>
 <% end %>
