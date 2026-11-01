@@ -1,0 +1,22 @@
+<% content_for :title, "Cocktails" %>
+
+<h1>Cocktails</h1>
+
+<%= form_with url: cocktails_path, method: :get do |form| %>
+  <%= form.label :q, "Search cocktails" %>
+  <%= form.search_field :q, value: params[:q] %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<% if @cocktails.empty? %>
+  <p>No cocktails found.</p>
+<% end %>
+
+<div id="cocktails">
+  <% @cocktails.each do |cocktail| %>
+    <%= render cocktail %>
+    <p>
+      <%= link_to "Show this cocktail", cocktail %>
+    </p>
+  <% end %>
+</div>

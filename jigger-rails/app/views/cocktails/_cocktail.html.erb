@@ -1,0 +1,54 @@
+<% Globalize.with_locale(cocktail.language == "und" ? I18n.default_locale : cocktail.language) do %>
+<div id="<%= dom_id cocktail %>">
+  <% if cocktail.image.attached? %>
+    <%= image_tag cocktail_image_path(cocktail, size: local_assigns.fetch(:image_size, :card)), alt: "Photo of #{cocktail.name}", loading: "lazy", style: "max-width: 100%; height: auto;" %>
+  <% end %>
+  <% if cocktail.official? %><p>Official Jigger recipe</p><% end %>
+  <div>
+    <strong>Name:</strong>
+    <%= cocktail.display_name %>
+  </div>
+
+  <div>
+    <strong>Steps:</strong>
+    <%= cocktail.steps %>
+  </div>
+
+  <div>
+    <strong>Description:</strong>
+    <%= cocktail.description %>
+  </div>
+
+  <div>
+    <strong>Servings:</strong>
+    <%= cocktail.servings %>
+  </div>
+
+  <div>
+    <strong>Preparation method:</strong>
+    <%= cocktail.preparation_method %>
+  </div>
+
+  <div>
+    <strong>Source reference:</strong>
+    <%= cocktail.source_reference %>
+  </div>
+
+  <div>
+    <strong>Preparation time seconds:</strong>
+    <%= cocktail.preparation_time_seconds %>
+  </div>
+
+  <div>
+    <strong>User:</strong>
+    <%= cocktail.user_id.present? ? "Community recipe" : "System-managed recipe" %>
+  </div>
+
+</div>
+
+<% if cocktail.source_url.present? %>
+  <p>Source: <%= link_to cocktail.source_reference.presence || "Recipe source", cocktail.source_url %></p>
+<% end %>
+<% if cocktail.source_published_on.present? %><p>Original publication: <%= cocktail.source_published_on %></p><% end %>
+<% if cocktail.source_date_note.present? %><p><%= cocktail.source_date_note %></p><% end %>
+<% end %>

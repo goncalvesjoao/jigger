@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_01_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -51,6 +51,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "cocktail_aliases_nonblank_names"
   end
 
+  create_table "cocktail_ingredients", force: :cascade do |t|
+    t.integer "cocktail_id", null: false
+    t.integer "ingredient_id", null: false
+    t.text "submitted_text", null: false
+    t.string "language", null: false
+    t.integer "position", null: false
+    t.boolean "optional", default: false, null: false
+    t.string "role", default: "mixing", null: false
+    t.text "preparation_note"
+    t.decimal "quantity", precision: 12, scale: 4
+    t.string "measuring_unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cocktail_id", "ingredient_id"], name: "index_cocktail_ingredients_on_cocktail_id_and_ingredient_id"
+    t.index ["cocktail_id", "position"], name: "index_user_cocktail_ingredients_on_cocktail_and_position", unique: true
+    t.index ["ingredient_id"], name: "index_cocktail_ingredients_on_ingredient_id"
+    t.check_constraint "position >= 0", name: "user_cocktail_ingredients_position"
+    t.check_constraint "quantity IS NULL OR quantity > 0", name: "user_cocktail_ingredients_positive_quantity"
+    t.check_constraint "role IN ('mixing', 'garnish', 'rim')", name: "user_cocktail_ingredients_role"
+  end
+
   create_table "cocktail_translations", force: :cascade do |t|
     t.integer "cocktail_id", null: false
     t.string "locale", null: false
@@ -63,13 +84,58 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.index ["cocktail_id", "locale"], name: "index_cocktail_translations_on_cocktail_id_and_locale", unique: true
     t.index ["locale", "normalized_name"], name: "index_cocktail_translations_on_locale_and_normalized_name"
     t.check_constraint "length(trim(locale)) > 0", name: "cocktail_translations_locale"
-    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "cocktail_translations_english_name"
     t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "cocktail_translations_normalized_name"
+  end
+
+  create_table "cocktail_utensils", force: :cascade do |t|
+    t.integer "cocktail_id", null: false
+    t.integer "utensil_id", null: false
+    t.text "submitted_text", null: false
+    t.string "language", null: false
+    t.string "role", default: "preparation", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cocktail_id", "utensil_id"], name: "index_cocktail_utensils_on_cocktail_id_and_utensil_id", unique: true
+    t.index ["utensil_id"], name: "index_cocktail_utensils_on_utensil_id"
+    t.check_constraint "role IN ('preparation', 'serving')", name: "user_cocktail_utensils_role"
   end
 
   create_table "cocktails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.integer "parent_cocktail_id"
+    t.boolean "official", default: false, null: false
+    t.integer "legacy_user_cocktail_id"
+    t.string "language", default: "und", null: false
+    t.string "visibility", default: "private", null: false
+    t.string "publication_state", default: "draft", null: false
+    t.integer "preparation_time_seconds"
+    t.integer "servings", default: 1
+    t.string "preparation_method"
+    t.string "source_reference"
+    t.string "source_url"
+    t.date "source_published_on"
+    t.text "source_date_note"
+    t.datetime "published_at"
+    t.index ["legacy_user_cocktail_id"], name: "index_cocktails_on_legacy_user_cocktail_id", unique: true
+    t.index ["parent_cocktail_id"], name: "index_cocktails_on_parent_cocktail_id"
+    t.index ["published_at"], name: "index_cocktails_on_published_at"
+    t.index ["user_id"], name: "index_cocktails_on_user_id"
+    t.index ["visibility", "publication_state"], name: "index_cocktails_on_visibility_and_publication_state"
+    t.check_constraint "parent_cocktail_id IS NULL OR parent_cocktail_id != id", name: "cocktails_not_own_parent"
+    t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "cocktails_preparation_method"
+    t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "cocktails_preparation_time"
+    t.check_constraint "publication_state IN ('draft', 'published')", name: "cocktails_publication_state"
+    t.check_constraint "servings IS NULL OR servings > 0", name: "cocktails_positive_servings"
+    t.check_constraint "visibility IN ('private', 'public')", name: "cocktails_visibility"
+  end
+
+  create_table "cocktails_users", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "cocktail_id", null: false
+    t.index ["cocktail_id", "user_id"], name: "index_cocktails_users_on_cocktail_id_and_user_id"
+    t.index ["user_id", "cocktail_id"], name: "index_cocktails_users_on_user_id_and_cocktail_id"
   end
 
   create_table "ingredient_aliases", force: :cascade do |t|
@@ -111,12 +177,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
   end
 
   create_table "recipe_steps", force: :cascade do |t|
-    t.integer "user_cocktail_id", null: false
+    t.integer "cocktail_id", null: false
     t.integer "position", null: false
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_cocktail_id", "position"], name: "index_recipe_steps_on_user_cocktail_id_and_position", unique: true
+    t.index ["cocktail_id", "position"], name: "index_recipe_steps_on_cocktail_id_and_position", unique: true
     t.check_constraint "position >= 0", name: "recipe_steps_position"
   end
 
@@ -145,79 +211,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
     t.check_constraint "start_offset >= 0 AND end_offset > start_offset", name: "step_mentions_offsets"
   end
 
-  create_table "user_cocktail_ingredients", force: :cascade do |t|
-    t.integer "user_cocktail_id", null: false
-    t.integer "ingredient_id", null: false
-    t.text "submitted_text", null: false
-    t.string "language", null: false
-    t.integer "position", null: false
-    t.boolean "optional", default: false, null: false
-    t.string "role", default: "mixing", null: false
-    t.text "preparation_note"
-    t.decimal "quantity", precision: 12, scale: 4
-    t.string "measuring_unit"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ingredient_id"], name: "index_user_cocktail_ingredients_on_ingredient_id"
-    t.index ["user_cocktail_id", "ingredient_id"], name: "idx_on_user_cocktail_id_ingredient_id_b9244a9808"
-    t.index ["user_cocktail_id", "position"], name: "index_user_cocktail_ingredients_on_cocktail_and_position", unique: true
-    t.check_constraint "position >= 0", name: "user_cocktail_ingredients_position"
-    t.check_constraint "quantity IS NULL OR quantity > 0", name: "user_cocktail_ingredients_positive_quantity"
-    t.check_constraint "role IN ('mixing', 'garnish', 'rim')", name: "user_cocktail_ingredients_role"
-  end
-
-  create_table "user_cocktail_utensils", force: :cascade do |t|
-    t.integer "user_cocktail_id", null: false
-    t.integer "utensil_id", null: false
-    t.text "submitted_text", null: false
-    t.string "language", null: false
-    t.string "role", default: "preparation", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_cocktail_id", "utensil_id"], name: "idx_on_user_cocktail_id_utensil_id_1670add4a6", unique: true
-    t.index ["utensil_id"], name: "index_user_cocktail_utensils_on_utensil_id"
-    t.check_constraint "role IN ('preparation', 'serving')", name: "user_cocktail_utensils_role"
-  end
-
-  create_table "user_cocktails", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "language", default: "und", null: false
-    t.integer "cocktail_id"
-    t.integer "preparation_time_seconds"
-    t.text "description"
-    t.integer "servings"
-    t.string "preparation_method"
-    t.string "source_reference"
-    t.datetime "published_at"
-    t.integer "user_id", null: false
-    t.string "visibility", default: "private", null: false
-    t.string "publication_state", default: "draft", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cocktail_id"], name: "index_user_cocktails_on_cocktail_id"
-    t.index ["published_at"], name: "index_user_cocktails_on_published_at"
-    t.index ["user_id"], name: "index_user_cocktails_on_user_id"
-    t.index ["visibility", "publication_state"], name: "index_user_cocktails_on_visibility_and_publication_state"
-    t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "user_cocktails_preparation_method"
-    t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "user_cocktails_preparation_time"
-    t.check_constraint "publication_state != 'published' OR (cocktail_id IS NOT NULL AND length(trim(name)) > 0 AND language != 'und')", name: "user_cocktails_published_identity"
-    t.check_constraint "publication_state IN ('draft', 'published')", name: "user_cocktails_publication_state"
-    t.check_constraint "servings IS NULL OR servings > 0", name: "user_cocktails_positive_servings"
-    t.check_constraint "visibility IN ('private', 'public')", name: "user_cocktails_visibility"
-  end
-
-  create_table "user_cocktails_users", id: false, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "user_cocktail_id", null: false
-    t.index ["user_cocktail_id", "user_id"], name: "index_user_cocktails_users_on_user_cocktail_id_and_user_id"
-    t.index ["user_id", "user_cocktail_id"], name: "index_user_cocktails_users_on_user_id_and_user_cocktail_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "admin", default: false, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
@@ -260,20 +259,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_122802) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cocktail_aliases", "cocktails"
+  add_foreign_key "cocktail_ingredients", "cocktails"
+  add_foreign_key "cocktail_ingredients", "ingredients"
   add_foreign_key "cocktail_translations", "cocktails"
+  add_foreign_key "cocktail_utensils", "cocktails"
+  add_foreign_key "cocktail_utensils", "utensils"
+  add_foreign_key "cocktails", "cocktails", column: "parent_cocktail_id"
+  add_foreign_key "cocktails", "users"
   add_foreign_key "ingredient_aliases", "ingredients"
   add_foreign_key "ingredient_translations", "ingredients"
-  add_foreign_key "recipe_steps", "user_cocktails"
+  add_foreign_key "recipe_steps", "cocktails"
   add_foreign_key "sessions", "users"
   add_foreign_key "step_mentions", "ingredients"
   add_foreign_key "step_mentions", "recipe_steps"
   add_foreign_key "step_mentions", "utensils"
-  add_foreign_key "user_cocktail_ingredients", "ingredients"
-  add_foreign_key "user_cocktail_ingredients", "user_cocktails"
-  add_foreign_key "user_cocktail_utensils", "user_cocktails"
-  add_foreign_key "user_cocktail_utensils", "utensils"
-  add_foreign_key "user_cocktails", "cocktails"
-  add_foreign_key "user_cocktails", "users"
   add_foreign_key "utensil_aliases", "utensils"
   add_foreign_key "utensil_translations", "utensils"
 end

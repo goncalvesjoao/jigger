@@ -1,9 +1,9 @@
 one:
-  user_cocktail: one
+  cocktail: one
   position: 0
   body: MyText
 
 two:
-  user_cocktail: two
+  cocktail: two
   position: 0
   body: MyText

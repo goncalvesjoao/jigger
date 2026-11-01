@@ -6,7 +6,7 @@ class CatalogImageTest < ActiveSupport::TestCase
   include PhotoTestHelper
 
   test "canonical photos are required and replacements validate all supported formats" do
-    [ Cocktail, Ingredient, Utensil ].each do |type|
+    [ Ingredient, Utensil ].each do |type|
       catalog = type.create!(image: photo_upload, name: "Catalog item")
       assert catalog.image.attached?
       [ [ "photo.png", "image/png" ], [ "photo.jpg", "image/jpeg" ], [ "photo.webp", "image/webp" ] ].each do |filename, mime|
@@ -31,7 +31,7 @@ class CatalogImageTest < ActiveSupport::TestCase
   end
 
   test "catalog uploads have the same original size and pixel limits" do
-    [ Cocktail, Ingredient, Utensil ].each do |type|
+    [ Ingredient, Utensil ].each do |type|
       catalog = type.create!(image: photo_upload, name: "Catalog item")
       Tempfile.create([ "oversize", ".png" ], binmode: true) do |file|
         file.write(File.binread(Rails.root.join("test/fixtures/files/photo.png")))
@@ -51,10 +51,10 @@ class CatalogImageTest < ActiveSupport::TestCase
   end
 
   test "existing blobs and signed IDs cannot be reassigned across any photo owners" do
-    source = user_cocktails(:one)
+    source = cocktails(:one)
     source.update!(visibility: "private", image: photo_upload)
     blob = source.image.blob
-    [ cocktails(:margarita), ingredients(:one), utensils(:jigger), user_cocktails(:two) ].each do |target|
+    [ cocktails(:margarita), ingredients(:one), utensils(:jigger), cocktails(:two) ].each do |target|
       target.update!(image: photo_upload("small.png"))
       previous = target.image.blob.id
       [ blob, blob.signed_id, "invalid-signed-id", { io: blob, filename: "stolen.png" }, { blob: blob.id } ].each do |assignment|
@@ -66,7 +66,7 @@ class CatalogImageTest < ActiveSupport::TestCase
     end
   end
   test "all canonical identities require one photo on creation and normal removal fails" do
-    [ Cocktail, Ingredient, Utensil ].each do |type|
+    [ Ingredient, Utensil ].each do |type|
       missing = type.new(name: "English name")
       assert_not missing.save
       assert missing.errors[:image].any?
@@ -84,11 +84,11 @@ class CatalogImageTest < ActiveSupport::TestCase
   end
 
   test "low-level purge removes canonical usability and recipe marketplace eligibility" do
-    recipe = user_cocktails(:one)
-    [ cocktails(:margarita), ingredients(:one), utensils(:jigger) ].each do |catalog|
+    recipe = cocktails(:one)
+    [ ingredients(:one), utensils(:jigger) ].each do |catalog|
       catalog.update!(image: photo_upload)
       assert catalog.usable?
-      assert_includes UserCocktail.marketplace, recipe
+      assert_includes Cocktail.marketplace, recipe
       catalog.image.purge
       assert_not catalog.reload.image.attached?
       assert_not catalog.usable?
@@ -98,8 +98,8 @@ class CatalogImageTest < ActiveSupport::TestCase
       assert_empty catalog.class.lookup(catalog.name, language: "en")
       assert_not recipe.reload.valid?
       assert_not recipe.marketplace?
-      assert_not_includes UserCocktail.marketplace, recipe
-      assert_not_includes UserCocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), recipe
+      assert_not_includes Cocktail.marketplace, recipe
+      assert_not_includes Cocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), recipe
       assert recipe.update(publication_state: "draft")
       catalog.update!(image: photo_upload)
       recipe.reload.update!(publication_state: "published")

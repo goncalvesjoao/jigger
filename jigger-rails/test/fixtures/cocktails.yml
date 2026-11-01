@@ -1,1 +1,18 @@
-margarita: {}
+margarita:
+  language: en
+
+one:
+  language: en
+  parent_cocktail: margarita
+  visibility: public
+  publication_state: published
+  preparation_time_seconds: 1
+  user: one
+
+two:
+  language: en
+  parent_cocktail: margarita
+  visibility: public
+  publication_state: published
+  preparation_time_seconds: 1
+  user: two

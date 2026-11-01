@@ -1,11 +1,10 @@
 Rails.application.routes.draw do
+  get "/user_cocktails/:id", to: "cocktails#legacy"
+  get "/user_cocktails", to: redirect("/cocktails")
   resource :registration, only: %i[ new create ]
   resource :session
   resources :passwords, param: :token
-  resources :user_cocktails do
-    resource :image, only: :show, controller: "user_cocktail_images"
-  end
-  resources :cocktails, only: [] do
+  resources :cocktails do
     resource :image, only: :show, controller: "cocktail_images"
   end
   resources :ingredients, only: [] do
@@ -28,5 +27,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "user_cocktails#index"
+  root "cocktails#index"
 end

@@ -42,11 +42,11 @@ def fetch_binary(url)
 end
 
 def ingredient_image_candidates(name)
-  slug = slugify(name)
+  encoded_name = URI.encode_uri_component(name)
   [
-    "https://www.thecocktaildb.com/images/ingredients/#{slug}.png",
-    "https://www.thecocktaildb.com/images/ingredients/#{slug}-small.png",
-    "https://www.thecocktaildb.com/images/ingredients/#{slug}-medium.png"
+    "https://www.thecocktaildb.com/images/ingredients/#{encoded_name}.png",
+    "https://www.thecocktaildb.com/images/ingredients/#{encoded_name}-small.png",
+    "https://www.thecocktaildb.com/images/ingredients/#{encoded_name}-medium.png"
   ]
 end
 
@@ -58,7 +58,8 @@ end
 File.write(File.join(ROOT, "cocktails.json"), JSON.pretty_generate({ "drinks" => cocktails }))
 
 ingredients = []
-INGREDIENTS.each do |ingredient_name|
+recipe_ingredients = cocktails.flat_map { |drink| (1..15).map { |i| drink["strIngredient#{i}"] } }.compact.map(&:strip).reject(&:empty?)
+(INGREDIENTS + recipe_ingredients).uniq { |name| name.downcase }.each do |ingredient_name|
   payload = fetch_json("/search.php?i=#{URI.encode_www_form_component(ingredient_name)}")
   ingredient = Array(payload["ingredients"]).first
   ingredients << ingredient if ingredient
@@ -73,11 +74,13 @@ cocktails.each do |drink|
   File.binwrite(File.join(ROOT, "images", "cocktails", filename), data) if data
 end
 
-ingredients.each do |ingredient|
-  image_url = ingredient["strIngredientThumb"].to_s.strip.presence || ingredient_image_candidates(ingredient["strIngredient"]).find { |candidate| fetch_binary(candidate) }
+(INGREDIENTS + recipe_ingredients).uniq { |name| name.downcase }.each do |name|
+  ingredient = ingredients.find { |entry| entry["strIngredient"].casecmp?(name) } || {}
+  image_url = ingredient["strIngredientThumb"].to_s.strip
+  image_url = ingredient_image_candidates(name).find { |candidate| fetch_binary(candidate) } if image_url.empty?
   next if image_url.nil?
 
-  filename = "#{slugify(ingredient["strIngredient"])}.png"
+  filename = "#{slugify(name)}.png"
   data = fetch_binary(image_url)
   File.binwrite(File.join(ROOT, "images", "ingredients", filename), data) if data
 end

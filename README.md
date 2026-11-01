@@ -10,7 +10,7 @@ Users create accounts and add their own cocktail recipes. Different users can ha
 
 Recipes have separate visibility and publication readiness states. Visibility is private or public. Publication readiness is draft or published; drafts are recipes that are not ready to publish.
 
-Landing-page searches for a cocktail name should find its shared cocktail identity and show associated variations that are both public and published. Private recipes and drafts do not appear in the public marketplace.
+Landing-page searches return matching complete cocktail recipes that are both public and published. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace.
 
 ## Search by availability
 
@@ -22,8 +22,9 @@ The marketplace returns public, published recipe variations whose required ingre
 
 | Concept | Meaning |
 | --- | --- |
-| Canonical cocktail | A shared identity for a cocktail, connecting different users' recipe variations. |
-| Recipe variation | A user's owned recipe, associated with a canonical cocktail. It contains ingredients and ordered, free-text preparation steps, with separate visibility and publication readiness states. |
+| Cocktail | A complete recipe, optionally owned by a user, with ingredients and ordered preparation steps. |
+| Variant | A cocktail adapted from an optional parent cocktail. Both use the same recipe model. |
+| Official cocktail | A recipe curated and endorsed by Jigger, independently of its owner or parent. |
 | Canonical ingredient | A stable, unique ingredient identity shared across recipes. Ice is an ingredient. |
 | Utensil | An explicit domain object with its own database table or equivalent persistent collection. Utensils include jiggers, glasses and other glassware, and other cocktail equipment. |
 | Mention | Text in a preparation step associated with a system object, such as a canonical ingredient or utensil. The association preserves the submitted prose. |
@@ -32,13 +33,13 @@ The marketplace returns public, published recipe variations whose required ingre
 
 Each recipe preserves every ingredient's exact submitted text and its language, including native-language names and misspellings. Internally, that text maps to a canonical ingredient identity shared across recipes. Matching must not replace or correct what the user wrote.
 
-Each user's recipe variation similarly maps to a canonical cocktail identity. This allows different variations to belong to the same cocktail without treating the recipes as identical.
+A cocktail may link to another recipe as its parent. Independent originals need no parent. Sources and historical publication dates belong to the recipe.
 
 Preparation steps remain ordered, free-text instructions. Jigger should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
 
 ## Proposed entity matching
 
-Jev, identified by the user as the AI decision-making model developed by TypeSafe AI, is a proposed component for entity matching. Its task would be to associate submitted ingredient, utensil, and cocktail names with their unique canonical database representations, while preserving the original submitted text and language alongside the matches.
+Jev, identified by the user as the AI decision-making model developed by TypeSafe AI, is a proposed component for entity matching. Its task would be to associate submitted ingredient and utensil names with their unique canonical database representations, while preserving the original submitted text and language alongside the matches.
 
 Jev is optional. A sufficiently fast open-source alternative could serve the same purpose. No dependency has been chosen or integration implemented as part of this proposal. A proposed match does not guarantee the correct identity.
 

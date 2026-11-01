@@ -6,7 +6,7 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
   include PhotoTestHelper
 
   test "ingredient and utensil images have public original and bounded variant delivery" do
-    [ [ cocktails(:margarita), :cocktail_image_url ], [ ingredients(:one), :ingredient_image_url ], [ utensils(:jigger), :utensil_image_url ] ].each do |catalog, route|
+    [ [ ingredients(:one), :ingredient_image_url ], [ utensils(:jigger), :utensil_image_url ] ].each do |catalog, route|
       catalog.update!(image: photo_upload)
       [ [ :original, [ 640, 480 ], "image/png" ], [ :card, [ 320, 240 ], "image/webp" ], [ :detail, [ 640, 480 ], "image/webp" ] ].each do |size, dimensions, mime|
         get public_send(route, catalog, size: size)
@@ -35,15 +35,15 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
     utensil = utensils(:jigger)
     ingredient.update!(image: photo_upload)
     utensil.update!(image: photo_upload)
-    recipe = user_cocktails(:one)
-    get user_cocktail_url(recipe)
+    recipe = cocktails(:one)
+    get cocktail_url(recipe)
     assert_response :success
     assert_select "img[src=?]", ingredient_image_path(ingredient, size: :card)
     assert_select "img[src=?]", utensil_image_path(utensil, size: :card)
-    assert_select "span[lang=en]", text: recipe.user_cocktail_ingredients.sole.submitted_text
-    assert_select "span[lang=en]", text: recipe.user_cocktail_utensils.sole.submitted_text
+    assert_select "span[lang=en]", text: recipe.cocktail_ingredients.sole.submitted_text
+    assert_select "span[lang=en]", text: recipe.cocktail_utensils.sole.submitted_text
     recipe.update!(visibility: "private")
-    get user_cocktail_url(recipe)
+    get cocktail_url(recipe)
     assert_response :forbidden
     get ingredient_image_url(ingredient)
     assert_response :found
@@ -52,7 +52,7 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "missing and unusable catalog photos return not found and writes have no routes" do
-    [ [ cocktails(:margarita), :cocktail_image_url, "/cocktails" ], [ ingredients(:one), :ingredient_image_url, "/ingredients" ], [ utensils(:jigger), :utensil_image_url, "/utensils" ] ].each do |catalog, route, prefix|
+    [ [ ingredients(:one), :ingredient_image_url, "/ingredients" ], [ utensils(:jigger), :utensil_image_url, "/utensils" ] ].each do |catalog, route, prefix|
       catalog.image.detach
       get public_send(route, catalog)
       assert_response :not_found
@@ -70,9 +70,9 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "malformed shared attachments cannot publish a private recipe blob through catalog routes" do
-    private_recipe = user_cocktails(:one)
+    private_recipe = cocktails(:one)
     private_recipe.update!(visibility: "private", image: photo_upload)
-    [ [ cocktails(:margarita), :cocktail_image_url ], [ ingredients(:one), :ingredient_image_url ], [ utensils(:jigger), :utensil_image_url ] ].each do |catalog, route|
+    [ [ ingredients(:one), :ingredient_image_url ], [ utensils(:jigger), :utensil_image_url ] ].each do |catalog, route|
       # Simulate old/imported data bypassing the fresh-upload setter.
       catalog.image.detach
       attachment = ActiveStorage::Attachment.create!(name: "image", record: catalog, blob: private_recipe.image.blob)
@@ -82,10 +82,10 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
       end
       attachment.delete
     end
-    get user_cocktail_image_url(private_recipe)
+    get cocktail_image_url(private_recipe)
     assert_response :forbidden
     sign_in_as(users(:one))
-    get user_cocktail_image_url(private_recipe)
+    get cocktail_image_url(private_recipe)
     assert_response :found
     follow_redirect!
     assert_response :success
@@ -93,21 +93,12 @@ class CatalogImagesControllerTest < ActionDispatch::IntegrationTest
     get "/rails/active_storage/blobs/redirect/#{private_recipe.image.blob.signed_id}/photo.png"
     assert_response :not_found
   end
-  test "missing canonical cocktail photo hides public recipe reads but owners keep draft access" do
-    recipe = user_cocktails(:one)
-    canonical = recipe.cocktail
-    canonical.image.detach
-    get cocktail_image_url(canonical)
-    assert_response :not_found
-    [ :html, :json ].each do |format|
-      get user_cocktail_url(recipe, format: format)
-      assert_response :forbidden
-    end
-    get user_cocktails_url(format: :json)
-    assert_not_includes response.parsed_body.map { |entry| entry["id"] }, recipe.id
-    sign_in_as(users(:one))
-    get user_cocktail_url(recipe)
+  test "parent draft and missing parent photo do not hide complete variants" do
+    recipe = cocktails(:one)
+    parent = recipe.parent_cocktail
+    parent.image.detach
+    get cocktail_url(recipe)
     assert_response :success
-    assert recipe.update(publication_state: "draft")
+    assert_select "a[href=?]", cocktail_path(parent), count: 0
   end
 end

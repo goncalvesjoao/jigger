@@ -1,0 +1,26 @@
+<%= render @cocktail, image_size: :detail %>
+<%= render "requirements", cocktail: @cocktail %>
+
+<div>
+  <% if policy(@cocktail).edit? %>
+    <%= link_to "Edit this cocktail", edit_cocktail_path(@cocktail) %> |
+  <% end %>
+  <%= link_to "Back to cocktails", cocktails_path %>
+
+  <% if policy(@cocktail).destroy? %>
+    <%= button_to "Destroy this cocktail", @cocktail, method: :delete %>
+  <% end %>
+</div>
+
+<% if @cocktail.parent_cocktail && policy(@cocktail.parent_cocktail).show? %>
+  <p>Adapted from <%= link_to @cocktail.parent_cocktail.display_name, @cocktail.parent_cocktail %></p>
+<% end %>
+<% variants = @cocktail.variants.marketplace %>
+<% if variants.any? %>
+  <h2>Variants (<%= variants.count %>)</h2>
+  <ul>
+    <% variants.each do |variant| %>
+      <li><%= link_to variant.display_name, variant %></li>
+    <% end %>
+  </ul>
+<% end %>

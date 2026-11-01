@@ -4,7 +4,7 @@ require_relative "../test_helpers/photo_test_helper"
 class CanonicalTranslationsTest < ActiveSupport::TestCase
   include PhotoTestHelper
   def identity_types
-    [ [ Ingredient, :ingredient_aliases ], [ Utensil, :utensil_aliases ], [ Cocktail, :cocktail_aliases ] ]
+    [ [ Ingredient, :ingredient_aliases ], [ Utensil, :utensil_aliases ] ]
   end
 
   test "English creation and updates store content only in translations and normalize names" do
@@ -105,8 +105,8 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "missing English content excludes each required identity from publication and discovery" do
-    variation = user_cocktails(:one)
-    [ variation.cocktail, ingredients(:one), utensils(:jigger) ].each do |identity|
+    variation = cocktails(:one)
+    [ ingredients(:one), utensils(:jigger) ].each do |identity|
       Globalize.with_locale(:ja) { identity.update!(name: "別の名前") }
       english = identity.translation_for(:en, false)
       attributes = english.attributes
@@ -117,8 +117,8 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
       Globalize.with_locale(:ja) { assert_not identity.usable? }
       assert_not variation.valid?
       assert_not variation.marketplace?
-      assert_not_includes UserCocktail.marketplace, variation
-      assert_not_includes UserCocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), variation
+      assert_not_includes Cocktail.marketplace, variation
+      assert_not_includes Cocktail.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids), variation
       assert_empty identity.class.lookup(attributes["name"], language: "en")
       assert variation.update(publication_state: "draft")
       identity.class.translation_class.insert_all!([ attributes ])
@@ -127,16 +127,16 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "translated canonical names never overwrite user recipe or ingredient submissions" do
-    variation = user_cocktails(:one)
-    line = variation.user_cocktail_ingredients.sole
+    variation = cocktails(:one)
+    line = variation.cocktail_ingredients.sole
     before = [ variation.name, variation.language, line.submitted_text, line.language ]
     Globalize.with_locale(:ja) do
-      variation.cocktail.update!(name: "マルガリータ", description: "説明")
+      variation.parent_cocktail.update!(name: "マルガリータ", description: "説明")
       line.ingredient.update!(name: "ジン")
     end
     assert_equal before, [ variation.reload.name, variation.language, line.reload.submitted_text, line.language ]
-    assert_equal "Margarita", variation.cocktail.name
-    assert_equal [ variation.cocktail_id ], Cocktail.lookup("マルガリータ", language: "ja").ids
+    assert_equal "Margarita", variation.parent_cocktail.name
+    assert_equal [ variation.parent_cocktail_id ], Cocktail.lookup("マルガリータ", language: "ja").ids
   end
   test "only cocktails have translated history with English fallback" do
     [ Ingredient, Utensil ].each do |type|

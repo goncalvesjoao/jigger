@@ -1,6 +1,6 @@
 class StepMention < ApplicationRecord
   belongs_to :recipe_step
-  has_one :user_cocktail, through: :recipe_step
+  has_one :cocktail, through: :recipe_step
   belongs_to :ingredient, optional: true
   belongs_to :utensil, optional: true
 

@@ -21,7 +21,7 @@ class Ingredient < ApplicationRecord
   }, validate: true
 
   has_many :ingredient_aliases, dependent: :destroy, autosave: true, inverse_of: :ingredient
-  has_many :user_cocktail_ingredients, dependent: :restrict_with_error
+  has_many :cocktail_ingredients, dependent: :restrict_with_error
 
   has_many :step_mentions, dependent: :restrict_with_error
 
