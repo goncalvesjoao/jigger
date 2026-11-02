@@ -1,7 +1,7 @@
 <% content_for :title, "Discover cocktails · Jigger" %>
 
-<h1 class="marketplace-title">Discover cocktails</h1>
 <%= render "shared/marketplace_search" %>
+<div id="marketplace-results" aria-live="polite">
 <div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "cocktail") %></h2></div>
 <% if @groups.empty? %><section class="empty-state"><h3>No cocktails found.</h3><%= link_to "All cocktails", cocktails_path %></section><% end %>
 <% if policy(Cocktail).create? %><p><%= link_to "New canonical cocktail", new_admin_cocktail_path %></p><% end %>
@@ -18,3 +18,4 @@
     <% end %>
   <% end %>
 <% end %>
+</div>

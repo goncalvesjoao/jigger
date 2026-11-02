@@ -1,12 +1,70 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["picker", "choice", "chips", "help"]
+  static targets = ["picker", "choice", "chips", "help", "status"]
 
   connect() {
     this.selections()
     this.mode()
     this.sync()
+  }
+
+  disconnect() {
+    clearTimeout(this.searchTimer)
+    this.request?.abort()
+  }
+
+  search(event) {
+    clearTimeout(this.searchTimer)
+    this.request?.abort()
+    if (event.isComposing) return
+    this.searchTimer = setTimeout(() => this.apply(), 300)
+  }
+
+  submit(event) {
+    event.preventDefault()
+    this.apply()
+  }
+
+  changeSelections() {
+    this.selections()
+    this.apply()
+  }
+
+  changeMode(event) {
+    const picker = event.currentTarget.closest("details")
+    this.element.elements[picker.dataset.modeKey].value = event.currentTarget.dataset.mode
+    this.mode()
+    this.apply()
+  }
+
+  async apply() {
+    clearTimeout(this.searchTimer)
+    this.request?.abort()
+    const request = new AbortController()
+    this.request = request
+    const url = new URL(this.element.action)
+    url.search = new URLSearchParams(new FormData(this.element)).toString()
+    const results = document.getElementById("marketplace-results")
+    results.setAttribute("aria-busy", "true")
+    this.statusTarget.hidden = true
+    try {
+      const response = await fetch(url, { signal: request.signal, headers: { Accept: "text/html" } })
+      if (!response.ok) throw new Error("Search failed")
+      const page = new DOMParser().parseFromString(await response.text(), "text/html")
+      const updated = page.getElementById("marketplace-results")
+      if (!updated) throw new Error("Missing results")
+      if (request.signal.aborted) return
+      results.replaceChildren(...updated.childNodes)
+      history.replaceState(history.state, "", url)
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        this.statusTarget.textContent = "Couldn’t update results. Please try Search again."
+        this.statusTarget.hidden = false
+      }
+    } finally {
+      if (this.request === request) results.removeAttribute("aria-busy")
+    }
   }
 
   close() {
@@ -41,7 +99,8 @@ export default class extends Controller {
 
   clearPicker(event) {
     event.target.closest("details").querySelectorAll("input[type=checkbox]").forEach(choice => { choice.checked = false })
-    this.selections()
+    this.changeSelections()
+    event.target.closest("details").querySelector("input[type=search]").focus()
   }
 
   done(event) {
@@ -51,10 +110,16 @@ export default class extends Controller {
   }
 
   mode() {
-    const makeable = this.element.querySelector('input[name="makeable"]:checked').value === "1"
-    this.helpTarget.textContent = makeable
-      ? "Select everything you have, including ice and tools. Recipes needing anything else are excluded; optional ingredients are ignored."
-      : "Find recipes containing every selected ingredient and utensil. Other items may also be needed."
+    const summaries = this.pickerTargets.map(picker => {
+      const value = this.element.elements[picker.dataset.modeKey].value
+      picker.querySelectorAll("[data-mode]").forEach(button => {
+        button.setAttribute("aria-pressed", String(button.dataset.mode === value))
+      })
+      picker.querySelector("[data-mode-hint]").hidden = value !== "only"
+      const label = picker.querySelector("summary strong").textContent
+      return `${label}: ${value === "only" ? "Use only what I have" : "Include these items"}`
+    })
+    this.helpTarget.textContent = summaries.join(" · ")
   }
 
   selections() {
@@ -68,7 +133,7 @@ export default class extends Controller {
       chip.addEventListener("click", () => {
         const next = chip.nextElementSibling || chip.previousElementSibling
         choice.checked = false
-        this.selections()
+        this.changeSelections()
         const replacement = next && [...this.chipsTarget.children].find(item => item.textContent === next.textContent)
         ;(replacement || this.element.querySelector("#marketplace-query")).focus()
       })
@@ -76,8 +141,11 @@ export default class extends Controller {
     })
     this.pickerTargets.forEach(picker => {
       const count = picker.querySelectorAll("input[type=checkbox]:checked").length
+      picker.querySelector("[data-picker-clear]").hidden = count === 0
       const label = picker.querySelector("strong").textContent.toLowerCase()
-      picker.querySelector("[data-picker-count]").textContent = count ? `${count} selected` : `Add ${label}`
+      const countLabel = count ? `${count} selected` : `Add ${label}`
+      picker.querySelector("[data-picker-count]").textContent = countLabel
+      picker.querySelector("[data-picker-selection-count]").textContent = countLabel
     })
   }
 }

@@ -1,43 +1,58 @@
-<%= form_with url: cocktails_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss" } do |form| %>
+<%= form_with url: cocktails_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
   <div class="marketplace-search-bar" role="search" aria-label="Find cocktails">
     <div class="marketplace-query">
       <%= form.label :q, "Search cocktails", for: "marketplace-query" %>
-      <%= form.search_field :q, id: "marketplace-query", value: params[:q], placeholder: "Try Negroni, sour, highball…" %>
+      <%= form.search_field :q, id: "marketplace-query", value: params[:q], placeholder: "Try Negroni, sour, highball…", data: { action: "input->marketplace-search#search compositionend->marketplace-search#search" } %>
     </div>
     <% { ingredient_ids: ["Ingredients", Ingredient], utensil_ids: ["Utensils", Utensil] }.each do |key, (label, model)| %>
+      <% mode_key = key == :ingredient_ids ? :ingredient_mode : :utensil_mode %>
+      <% only_available = params[mode_key] == "only" || (!params.key?(mode_key) && params[:makeable] == "1") %>
+      <%= hidden_field_tag mode_key, only_available ? "only" : "include" %>
       <% items = model.usable.includes(:translations).sort_by { |item| item.display_name.downcase } %>
-      <details class="marketplace-picker" data-marketplace-search-target="picker" data-action="toggle->marketplace-search#sync">
+      <details class="marketplace-picker" data-marketplace-search-target="picker" data-mode-key="<%= mode_key %>" data-action="toggle->marketplace-search#sync">
         <summary aria-controls="picker-<%= key %>">
           <span><strong><%= label %></strong><small data-picker-count><%= Array(params[key]).reject(&:blank?).size.positive? ? "#{Array(params[key]).reject(&:blank?).size} selected" : "Add #{label.downcase}" %></small></span>
         </summary>
         <div class="marketplace-popover" id="picker-<%= key %>">
-          <label class="navbar-search-label" for="search-<%= key %>">Find <%= label.downcase %></label>
+          <div class="picker-header">
+            <div class="picker-heading-copy">
+              <label for="search-<%= key %>"><%= label %></label>
+              <div class="picker-selection-status">
+                <span data-picker-selection-count><%= Array(params[key]).reject(&:blank?).any? ? "#{Array(params[key]).reject(&:blank?).size} selected" : "Add #{label.downcase}" %></span>
+                <button type="button" class="picker-clear" aria-label="Clear selected <%= label.downcase %>" title="Clear selection" data-picker-clear data-action="marketplace-search#clearPicker" <%= "hidden" if Array(params[key]).reject(&:blank?).empty? %>><span aria-hidden="true">×</span></button>
+              </div>
+            </div>
+            <button type="button" class="picker-close" aria-label="Close <%= label.downcase %>" data-action="marketplace-search#done"><span aria-hidden="true">×</span></button>
+          </div>
           <input type="search" id="search-<%= key %>" placeholder="Find <%= label.downcase %>…" data-action="input->marketplace-search#filter">
-          <p class="picker-help">Select <%= label.downcase %> to refine your results.</p>
+          <div class="picker-match-mode">
+            <p class="picker-match-label">Match recipes</p>
+            <button type="button" data-mode="include" aria-pressed="<%= !only_available %>" data-action="marketplace-search#changeMode">
+              <strong>Include these items</strong>
+              <span>Recipes must contain your selections; other items are allowed.</span>
+            </button>
+            <button type="button" data-mode="only" aria-pressed="<%= only_available %>" data-action="marketplace-search#changeMode">
+              <strong>Use only what I have</strong>
+              <span>Recipes must use only your selected <%= label.downcase %>.</span>
+            </button>
+            <p class="picker-mode-hint" data-mode-hint <%= "hidden" unless only_available %>>Select all <%= label.downcase %> you have<%= ", including ice" if key == :ingredient_ids %>. Until you select one, this filter allows all <%= label.downcase %>.</p>
+          </div>
           <div class="marketplace-options">
             <% items.each do |item| %>
               <label data-search-option>
-                <%= check_box_tag "#{key}[]", item.id, Array(params[key]).map(&:to_s).include?(item.id.to_s), id: "search-#{key}-#{item.id}", data: { action: "change->marketplace-search#selections", marketplace_search_target: "choice", label: item.display_name } %>
+                <%= check_box_tag "#{key}[]", item.id, Array(params[key]).map(&:to_s).include?(item.id.to_s), id: "search-#{key}-#{item.id}", data: { action: "change->marketplace-search#changeSelections", marketplace_search_target: "choice", label: item.display_name } %>
                 <span><%= item.display_name %></span>
               </label>
             <% end %>
           </div>
           <p class="picker-empty" data-picker-empty hidden>No matching <%= label.downcase %>. Try another name.</p>
-          <div class="picker-actions">
-            <button type="button" class="search-text-button" data-action="marketplace-search#clearPicker">Clear</button>
-            <button type="button" data-action="marketplace-search#done">Done</button>
-          </div>
         </div>
       </details>
     <% end %>
     <%= form.submit "Search", class: "marketplace-submit" %>
   </div>
-  <fieldset class="marketplace-mode" aria-describedby="marketplace-mode-help">
-    <legend class="navbar-search-label">How to match your selections</legend>
-    <label><%= radio_button_tag :makeable, "0", params[:makeable] != "1", data: { action: "change->marketplace-search#mode" } %> Contains selected items</label>
-    <label><%= radio_button_tag :makeable, "1", params[:makeable] == "1", data: { action: "change->marketplace-search#mode" } %> I can make it</label>
-  </fieldset>
-  <p id="marketplace-mode-help" class="marketplace-help" data-marketplace-search-target="help"><%= params[:makeable] == "1" ? "Select everything you have, including ice and tools. Recipes needing anything else are excluded; optional ingredients are ignored." : "Find recipes containing every selected ingredient and utensil. Other items may also be needed." %></p>
+  <p class="marketplace-mode-summary" data-marketplace-search-target="help"></p>
+  <p role="status" data-marketplace-search-target="status" hidden></p>
   <div class="marketplace-selection-row">
     <div class="marketplace-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>
     <%= link_to "Clear all", cocktails_path, class: "marketplace-clear" %>

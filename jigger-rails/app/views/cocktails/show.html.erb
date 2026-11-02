@@ -1,5 +1,5 @@
 <% content_for :title, "#{@cocktail.display_name} · Jigger" %>
-<%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable")), class: "back-link" %>
+<%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %>
 <article class="cocktail-details">
   <% if @cocktail.image.attached? %><%= image_tag cocktail_image_path(@cocktail, size: :detail), alt: "Photo of #{@cocktail.display_name}", class: "recipe-photo" %><% end %>
   <header>
@@ -24,8 +24,8 @@
     <% if params[:q].present? %><p>Search: <strong><%= params[:q] %></strong></p><% end %>
     <% if params[:makeable] == "1" %><p>Only recipes I can make</p><% end %>
     <% if @available_ingredients %>
-      <p><%= params[:makeable] == "1" ? "Available ingredients" : "Contains ingredients" %>: <%= @available_ingredients.map(&:name).join(", ").presence || "None" %></p>
-      <p><%= params[:makeable] == "1" ? "Available utensils" : "Uses utensils" %>: <%= @available_utensils.map(&:name).join(", ").presence || "None" %></p>
+      <p><%= (params[:ingredient_mode] == "only" || params[:makeable] == "1") ? "Available ingredients" : "Contains ingredients" %>: <%= @available_ingredients.map(&:name).join(", ").presence || "None" %></p>
+      <p><%= (params[:utensil_mode] == "only" || params[:makeable] == "1") ? "Available utensils" : "Uses utensils" %>: <%= @available_utensils.map(&:name).join(", ").presence || "None" %></p>
     <% end %>
     <%= link_to "Show all recipes", cocktail_path(@cocktail) %>
   </section>

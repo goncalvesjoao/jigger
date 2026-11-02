@@ -22,10 +22,14 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
   test "account dropdown and pages" do
     sign_in_as(users(:one))
     get root_url
-    assert_select "details.account-dropdown" do
-      assert_select "summary[aria-label='User account'] img[src=?]", "https://gravatar.com/avatar/#{Digest::SHA256.hexdigest(users(:one).email_address)}?s=80&d=mp"
+    assert_select "nav .primary-navigation" do
+      assert_select "a[aria-current='page']", text: "Explore"
       assert_select "a[href=?]", my_recipes_path, text: "My recipes"
       assert_select "a[href=?]", my_lists_path, text: "My lists"
+    end
+    assert_select "nav a[href=?]", new_recipe_path, count: 0
+    assert_select "details.account-dropdown" do
+      assert_select "summary[aria-label='User account'] img[src=?]", "https://gravatar.com/avatar/#{Digest::SHA256.hexdigest(users(:one).email_address)}?s=80&d=mp"
       assert_select "a[href=?]", my_profile_path, text: "My profile"
       assert_select "a[href=?][data-turbo-method='delete']", session_path, text: "Log out"
     end

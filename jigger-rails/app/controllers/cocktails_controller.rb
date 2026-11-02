@@ -27,7 +27,7 @@ class CocktailsController < ApplicationController
       recipe_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
       recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] }
     }).call
-    @filtered = params[:q].present? || params[:makeable] == "1" || Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any?
+    @filtered = params[:q].present? || makeable_filter? || Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any?
     if @filtered
       @other_recipes = Recipe.marketplace.where(cocktail: @cocktail, official: false)
         .where.not(id: @recipes.except(:includes, :order).select(:id))
@@ -44,18 +44,24 @@ class CocktailsController < ApplicationController
       @cocktail = Cocktail.find(params.expect(:id))
     end
 
+    def makeable_filter?
+      params[:makeable] == "1" &&
+        (Array(params[:ingredient_ids]).reject(&:blank?).any? || Array(params[:utensil_ids]).reject(&:blank?).any?)
+    end
+
     def matching_recipes
-      recipes = if params[:makeable] == "1"
-        Recipe.makeable_with(ingredient_ids: Array(params[:ingredient_ids]).reject(&:blank?), utensil_ids: Array(params[:utensil_ids]).reject(&:blank?))
-      else
-        Recipe.marketplace
-      end
-      unless params[:makeable] == "1"
-        Array(params[:ingredient_ids]).reject(&:blank?).uniq.each do |id|
-          recipes = recipes.where(id: RecipeIngredient.where(ingredient_id: id).select(:recipe_id))
-        end
-        Array(params[:utensil_ids]).reject(&:blank?).uniq.each do |id|
-          recipes = recipes.where(id: RecipeUtensil.where(utensil_id: id).select(:recipe_id))
+      recipes = Recipe.marketplace
+      legacy_makeable = makeable_filter?
+      { ingredient_ids: [ RecipeIngredient, :ingredient_id, :ingredient_mode ],
+        utensil_ids: [ RecipeUtensil, :utensil_id, :utensil_mode ] }.each do |key, (model, column, mode)|
+        ids = Array(params[key]).reject(&:blank?).uniq
+        only_available = params[mode] == "only" || (!params.key?(mode) && legacy_makeable)
+        if only_available && (ids.any? || legacy_makeable)
+          missing = model.where.not(column => ids)
+          missing = missing.where(optional: false) if model == RecipeIngredient
+          recipes = recipes.where.not(id: missing.select(:recipe_id))
+        else
+          ids.each { |id| recipes = recipes.where(id: model.where(column => id).select(:recipe_id)) }
         end
       end
       recipes.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps)

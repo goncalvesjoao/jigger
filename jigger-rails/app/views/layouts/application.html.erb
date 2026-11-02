@@ -42,25 +42,30 @@
         <%= link_to root_path do %>
           <strong class="wordmark">Jigger<span aria-hidden="true">.</span></strong>
         <% end %>
-        <%= link_to "Discover cocktails", cocktails_path, class: "marketplace-nav-link" unless controller_name == "cocktails" && action_name == "index" %>
-        <ul>
+        <ul class="primary-navigation">
+          <li><%= link_to "Explore", cocktails_path, aria: { current: ("page" if controller_name == "cocktails") } %></li>
           <% if authenticated? %>
-            <% if Current.user.admin? %><li><%= link_to "Admin", admin_root_path %></li><% end %>
+            <li><%= link_to "My recipes", my_recipes_path, aria: { current: ("page" if controller_name == "account" && action_name == "recipes") } %></li>
+            <li><%= link_to "My lists", my_lists_path, aria: { current: ("page" if controller_name == "account" && action_name == "lists") } %></li>
+          <% end %>
+        </ul>
+        <ul class="navigation-actions">
+          <% if authenticated? %>
             <li>
               <details class="account-dropdown">
                 <summary aria-label="User account">
                   <%= image_tag gravatar_url(Current.user), alt: "", width: 40, height: 40, class: "user-avatar" %>
                 </summary>
                 <div class="account-dropdown-items">
-                  <%= link_to "My recipes", my_recipes_path %>
-                  <%= link_to "My lists", my_lists_path %>
                   <%= link_to "My profile", my_profile_path %>
+                  <% if Current.user.admin? %><%= link_to "Admin", admin_root_path %><% end %>
                   <%= link_to "Log out", session_path, data: { turbo_method: :delete } %>
                 </div>
               </details>
             </li>
           <% else %>
-            <li><%= link_to "Enter", new_session_path %></li>
+            <li><%= link_to "Log in", new_session_path %></li>
+            <li><%= link_to "Create account", new_registration_path, class: "button navigation-create" %></li>
           <% end %>
         </ul>
       </nav>

@@ -7,6 +7,35 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).update!(cocktail: @cocktail, name: "Dry sour")
   end
 
+  test "ingredient and utensil matching modes are independent" do
+    shaker = Utensil.new(name: "Shaker")
+    shaker.image.attach(io: StringIO.new(utensils(:jigger).image.download), filename: "shaker.png", content_type: "image/png")
+    shaker.save!
+    RecipeUtensil.create!(recipe: recipes(:one), utensil: shaker, submitted_text: "Shaker", language: "en", role: "preparation")
+    filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: [ utensils(:jigger).id ], ingredient_mode: "only", utensil_mode: "include" }
+    get cocktails_url, params: filters
+    assert_select ".recipe-count", text: "1"
+    get cocktail_url(@cocktail), params: filters
+    assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
+    get cocktails_url, params: filters.merge(utensil_mode: "only")
+    assert_select ".empty-state"
+    get cocktails_url, params: filters.merge(ingredient_ids: [ ingredients(:one).id, ingredients(:two).id ])
+    assert_select ".recipe-count", text: "1"
+    get cocktails_url, params: filters.merge(ingredient_mode: "include", ingredient_ids: [ ingredients(:one).id, ingredients(:two).id ])
+    assert_select ".empty-state"
+  end
+
+  test "makeable mode without selections keeps marketplace results and text search" do
+    [ {}, { ingredient_ids: [ "" ], utensil_ids: [ "" ] } ].each do |filters|
+      get cocktails_url, params: filters.merge(makeable: "1")
+      assert_response :success
+      assert_select "h3 a", text: "Margarita"
+      assert_select ".empty-state", count: 0
+    end
+    get cocktails_url, params: { makeable: "1", q: "bright" }
+    assert_select ".recipe-count", text: "1"
+  end
+
   test "marketplace search lives above results and retains selections and image badges" do
     get root_url, params: { q: "margarita", ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids, makeable: "1" }
     assert_response :success

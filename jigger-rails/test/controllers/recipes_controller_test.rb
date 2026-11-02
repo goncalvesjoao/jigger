@@ -40,7 +40,8 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_select "nav[aria-label='Main navigation']" do
       assert_select "a[href=?]", new_recipe_path, count: 0
-      assert_select "a[href=?]", new_session_path, text: "Enter"
+      assert_select "a[href=?]", new_session_path, text: "Log in"
+      assert_select "a[href=?]", new_registration_path, text: "Create account"
       assert_select "button", text: "Log out", count: 0
     end
   end
@@ -50,7 +51,8 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_select "nav" do
       assert_select "a[href=?]", new_recipe_path, count: 0
       assert_select "a[href=?][data-turbo-method='delete']", session_path, text: "Log out"
-      assert_select "a", text: "Enter", count: 0
+      assert_select "a[href=?]", new_session_path, count: 0
+      assert_select "a[href=?]", new_registration_path, count: 0
     end
   end
 
