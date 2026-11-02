@@ -45,7 +45,7 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     recipe = recipes(:one)
     recipe.update!(user: nil, official: true)
     get recipes_url
-    assert_select "#recipe_#{recipe.id} .eyebrow", text: "Official Jigger recipe"
+    assert_select "#recipe_#{recipe.id} .eyebrow", text: "Official recipe"
     assert_select "#recipe_#{recipes(:two).id} .eyebrow", text: "Community recipe"
   end
 

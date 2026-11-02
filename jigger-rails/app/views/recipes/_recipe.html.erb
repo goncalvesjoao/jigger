@@ -15,7 +15,7 @@
   <% if local_assigns[:matching_count].to_i.positive? %><span class="recipe-count" tabindex="0" title="Matching recipe(s)" aria-label="<%= pluralize(matching_count, "matching recipe") %>"><%= matching_count %></span><% end %>
   </div>
   <div class="card-copy">
-    <p class="eyebrow"><%= recipe.official? ? "Official Jigger recipe" : "Community recipe" %></p>
+    <p class="eyebrow"><%= recipe.official? ? "Official recipe" : "Community recipe" %></p>
     <h3><%= link_to identity.display_name, destination %></h3>
     <% if identity.is_a?(Cocktail) && identity.description.present? %><p class="card-description"><%= identity.description %></p><% end %>
     <% if recipe.preparation_method.present? %>

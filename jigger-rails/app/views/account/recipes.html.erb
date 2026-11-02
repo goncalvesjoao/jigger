@@ -1,7 +1,7 @@
 <% content_for :title, "My recipes · Jigger" %>
 <div class="section-heading">
   <h1>My recipes</h1>
-  <%= link_to "New Recipe", new_recipe_path %>
+  <%= link_to "New Recipe", new_recipe_path, class: "button" %>
 </div>
 <% if @recipes.empty? %>
   <section class="empty-state"><h2>No recipes yet.</h2><p>Create your first recipe to start your collection.</p></section>

@@ -42,6 +42,9 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "section.discovery-heading", count: 0
     assert_select "nav .marketplace-search", count: 0
     assert_select "main .marketplace-search[action=?]", cocktails_path do
+      assert_select ".marketplace-submit-wrapper > button.marketplace-submit[type=submit][aria-label=Search]" do
+        assert_select "svg[aria-hidden=true]"
+      end
       assert_select "label[for=marketplace-query]", text: "Search cocktails"
       assert_select "input[type=search][name=q][value=margarita]"
       assert_select "input[type=checkbox][name='ingredient_ids[]'][checked]", count: Ingredient.count
@@ -131,7 +134,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:one).update!(official: true)
     get root_url
     assert_select ".recipe-count", text: "1", count: 1
-    assert_select ".eyebrow", text: "Official Jigger recipe"
+    assert_select ".eyebrow", text: "Official recipe"
     get cocktails_url(format: :json)
     assert_equal 1, response.parsed_body.sole["matching_recipe_count"]
     get root_url, params: { q: "bright" }

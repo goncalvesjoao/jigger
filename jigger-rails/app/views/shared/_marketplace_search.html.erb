@@ -49,7 +49,11 @@
         </div>
       </details>
     <% end %>
-    <%= form.submit "Search", class: "marketplace-submit" %>
+    <div class="marketplace-submit-wrapper">
+      <button type="submit" class="marketplace-submit" aria-label="Search" title="Search">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+      </button>
+    </div>
   </div>
   <p class="marketplace-mode-summary" data-marketplace-search-target="help"></p>
   <p role="status" data-marketplace-search-target="status" hidden></p>

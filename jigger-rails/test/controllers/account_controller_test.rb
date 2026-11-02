@@ -16,7 +16,7 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#recipe_#{own_recipe.id}"
     assert_select "#recipe_#{recipes(:two).id}", count: 0
-    assert_select "a[href=?]", new_recipe_path, text: "New Recipe"
+    assert_select "a.button[href=?]", new_recipe_path, text: "New Recipe"
   end
 
   test "account dropdown and pages" do
