@@ -1,3 +1,9 @@
 <% content_for :title, "#{@recipe.display_name} · Jigger" %>
-<%= link_to "← All recipes", cocktails_path, class: "back-link" %>
-<%= render "details", recipe: @recipe, embedded: false %>
+<div class="detail-page">
+  <%= link_to "← All recipes", cocktails_path, class: "back-link" %>
+  <%= render "details", recipe: @recipe, embedded: false %>
+  <% if @cocktail %>
+    <%= render "cocktails/background", cocktail: @cocktail %>
+    <%= render "cocktails/community", recipes: @community_recipes, filtered: false, other_recipes: [] %>
+  <% end %>
+</div>

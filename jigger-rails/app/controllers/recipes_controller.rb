@@ -17,6 +17,11 @@ class RecipesController < ApplicationController
       recipe_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
       recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] }
     }).call
+    if @recipe.cocktail && policy(@recipe.cocktail).show?
+      @cocktail = @recipe.cocktail
+      @community_recipes = Recipe.marketplace.where(cocktail: @cocktail, official: false)
+        .where.not(id: @recipe.id).with_attached_image.includes(:translations)
+    end
   end
 
   # GET /recipes/new

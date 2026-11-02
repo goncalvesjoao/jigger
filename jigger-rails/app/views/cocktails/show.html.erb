@@ -1,44 +1,11 @@
 <% content_for :title, "#{@cocktail.display_name} · Jigger" %>
-<%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %>
-<article class="cocktail-details">
-  <% if @cocktail.image.attached? %><%= image_tag cocktail_image_path(@cocktail, size: :detail), alt: "Photo of #{@cocktail.display_name}", class: "recipe-photo" %><% end %>
-  <header>
-    <h1><%= @cocktail.display_name %></h1>
-    <% if @cocktail.description.present? %><p class="submitted-prose"><%= @cocktail.description %></p><% end %>
-    <% if @cocktail.cocktail_aliases.any? %><p>Also known as: <%= @cocktail.cocktail_aliases.map(&:name).join(", ") %></p><% end %>
-  </header>
-  <% if @cocktail.history.present? %><section><h2>History</h2><p class="submitted-prose"><%= @cocktail.history %></p></section><% end %>
-  <% if @cocktail.source_reference.present? || @cocktail.source_url.present? || @cocktail.source_published_on.present? || @cocktail.source_date_note.present? %>
-    <section>
-      <h2>Sources</h2>
-      <% if @cocktail.source_url.present? %><p>Source: <%= link_to @cocktail.source_reference.presence || "Cocktail source", @cocktail.source_url %></p><% elsif @cocktail.source_reference.present? %><p class="submitted-prose"><%= @cocktail.source_reference %></p><% end %>
-      <% if @cocktail.source_published_on.present? %><p>Historical source publication: <%= @cocktail.source_published_on %></p><% end %>
-      <% if @cocktail.source_date_note.present? %><p class="submitted-prose"><%= @cocktail.source_date_note %></p><% end %>
-    </section>
-  <% end %>
-  <%= render partial: "recipes/details", collection: @official_recipes, as: :recipe, locals: { embedded: true } %>
-  <% if policy(@cocktail).edit? %><p><%= link_to "Edit cocktail", edit_admin_cocktail_path(@cocktail) %></p><% end %>
-</article>
-<% if @filtered %>
-  <section class="search-context" aria-label="Active recipe filters">
-    <% if params[:q].present? %><p>Search: <strong><%= params[:q] %></strong></p><% end %>
-    <% if params[:makeable] == "1" %><p>Only recipes I can make</p><% end %>
-    <% if @available_ingredients %>
-      <p><%= (params[:ingredient_mode] == "only" || params[:makeable] == "1") ? "Available ingredients" : "Contains ingredients" %>: <%= @available_ingredients.map(&:name).join(", ").presence || "None" %></p>
-      <p><%= (params[:utensil_mode] == "only" || params[:makeable] == "1") ? "Available utensils" : "Uses utensils" %>: <%= @available_utensils.map(&:name).join(", ").presence || "None" %></p>
-    <% end %>
-    <%= link_to "Show all recipes", cocktail_path(@cocktail) %>
-  </section>
-<% end %>
-<section id="matching-recipes" aria-labelledby="recipes-heading">
-  <h2 id="recipes-heading">Community recipes (<%= @recipes.size %>)</h2>
-  <% if @recipes.empty? %><p><%= @official_recipes.any? ? "No community recipes listed." : "No community recipes match these filters." %></p><% end %>
-  <div class="auto-grid recipe-grid"><%= render @recipes %></div>
-</section>
-<% if @filtered && @other_recipes.any? %>
-  <details id="other-recipes" class="other-recipes">
-    <summary>Other community recipes (<%= @other_recipes.size %>)</summary>
-    <p>These public recipes do not match your current filters.</p>
-    <div class="auto-grid recipe-grid"><%= render @other_recipes %></div>
-  </details>
-<% end %>
+<div class="detail-page">
+  <%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %>
+  <article class="cocktail-details">
+    <%= render "cocktails/hero", cocktail: @cocktail, recipe: nil, mixing_recipe: @official_recipes.first %>
+    <%= render "cocktails/section_nav", cocktail: @cocktail, mixing_recipe: @official_recipes.first, recipe_page: false %>
+    <%= render partial: "recipes/details", collection: @official_recipes, as: :recipe, locals: { embedded: true } %>
+    <%= render "cocktails/background", cocktail: @cocktail %>
+  </article>
+  <%= render "cocktails/community", recipes: @recipes, filtered: @filtered, other_recipes: @other_recipes %>
+</div>

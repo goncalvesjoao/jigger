@@ -1,0 +1,26 @@
+<header class="detail-hero recipe-hero">
+  <div class="recipe-intro">
+    <p class="eyebrow"><%= recipe ? (recipe.official? ? "Official Jigger recipe" : "Community recipe") : "The cocktail" %></p>
+    <h1><%= recipe ? recipe.display_name : cocktail.display_name %></h1>
+    <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
+    <% if cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
+    <% if recipe %><%= render "recipes/facts", recipe: recipe %><% end %>
+    <div class="detail-actions">
+      <% if mixing_recipe %>
+        <%= link_to "Start mixing ↓", recipe ? "#ingredients" : "##{dom_id(mixing_recipe, :ingredients)}", class: "button" %>
+      <% else %>
+        <%= link_to "Explore recipes ↓", "#matching-recipes", class: "button" %>
+      <% end %>
+      <% if cocktail %><%= link_to "The story", "#cocktail-background", class: "detail-text-link" %><% end %>
+    </div>
+  </div>
+  <div class="detail-visual">
+    <% photo = recipe || cocktail %>
+    <% if photo.image.attached? %>
+      <%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{photo.display_name}", class: "recipe-photo", fetchpriority: "high", width: 1200, height: 1200 %>
+    <% else %>
+      <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
+    <% end %>
+    <span class="detail-image-caption"><%= recipe ? "This recipe" : "#{cocktail.display_name} · The collection" %></span>
+  </div>
+</header>

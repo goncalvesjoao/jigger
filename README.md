@@ -61,3 +61,9 @@ Use **Content language** (for example `en` or `ja`) to edit a record’s transla
 Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership and one-official-recipe-per-cocktail constraints still apply.
 
 Administrate 1.0 uses Kaminari 1.2.2; marketplace grouping and pagination remain covered by the controller tests.
+
+## Cocktail and recipe detail pages
+
+Both pages share a photo-led layout, ingredient and preparation checklists, cocktail background and public community alternatives. A cocktail page uses only its canonical photo and embeds its public official recipe when present, independently of discovery filters. A recipe page uses only its own photo, shows accessible canonical cocktail information when assigned, and excludes itself and official recipes from the community list. Private and draft alternatives stay out of both lists. Missing photos use a placeholder rather than borrowing another record’s image.
+
+History and sources use native disclosure controls; section navigation links directly to the mixing, background and community sections. The layouts adapt to narrow screens and larger text, retain keyboard focus indicators, and respect reduced-motion, reduced-transparency and increased-contrast preferences.

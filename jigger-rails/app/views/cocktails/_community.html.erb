@@ -1,0 +1,23 @@
+<% if filtered %>
+  <section class="search-context" aria-label="Active recipe filters">
+    <% if params[:q].present? %><p>Search: <strong><%= params[:q] %></strong></p><% end %>
+    <% if params[:makeable] == "1" %><p>Only recipes I can make</p><% end %>
+    <% if @available_ingredients %>
+      <p><%= (params[:ingredient_mode] == "only" || params[:makeable] == "1") ? "Available ingredients" : "Contains ingredients" %>: <%= @available_ingredients.map(&:name).join(", ").presence || "None" %></p>
+      <p><%= (params[:utensil_mode] == "only" || params[:makeable] == "1") ? "Available utensils" : "Uses utensils" %>: <%= @available_utensils.map(&:name).join(", ").presence || "None" %></p>
+    <% end %>
+    <%= link_to "Show all recipes", cocktail_path(@cocktail) %>
+  </section>
+<% end %>
+<section id="matching-recipes" class="community-section" aria-labelledby="recipes-heading">
+  <div class="section-heading"><div><p class="eyebrow">A different take</p><h2 id="recipes-heading">Community recipes (<%= recipes.size %>)</h2></div></div>
+  <% if recipes.empty? %><p><%= filtered ? "No community recipes match these filters." : "No community recipes yet." %></p><% end %>
+  <div class="auto-grid recipe-grid"><%= render recipes %></div>
+</section>
+<% if filtered && other_recipes.any? %>
+  <details id="other-recipes" class="other-recipes">
+    <summary>Other community recipes (<%= other_recipes.size %>)</summary>
+    <p>These public recipes do not match your current filters.</p>
+    <div class="auto-grid recipe-grid"><%= render other_recipes %></div>
+  </details>
+<% end %>

@@ -1,0 +1,4 @@
+<nav class="detail-nav" aria-label="On this page">
+  <% if mixing_recipe %><%= link_to "Ingredients", recipe_page ? "#ingredients" : "##{dom_id(mixing_recipe, :ingredients)}" %><%= link_to "Preparation", recipe_page ? "#preparation" : "##{dom_id(mixing_recipe, :preparation)}" %><% end %>
+  <% if cocktail %><%= link_to "About the cocktail", "#cocktail-background" %><%= link_to "Community recipes", "#matching-recipes" %><% end %>
+</nav>

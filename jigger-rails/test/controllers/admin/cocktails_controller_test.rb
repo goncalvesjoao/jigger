@@ -70,7 +70,8 @@ class Admin::CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Year confirmed; day uncertain", response.parsed_body["source_date_note"]
     get recipe_url(recipe)
     assert_select "a[href='https://example.com/instructions']", text: "Recipe author"
-    assert_select "a[href='https://example.com/history']", count: 0
+    assert_select ".cocktail-background a[href='https://example.com/history']", text: "History book"
+    assert_select ".recipe-footer a[href='https://example.com/history']", count: 0
     get edit_recipe_url(recipe)
     %w[description history parent_recipe_id source_published_on source_date_note].each do |field|
       assert_select "[name='recipe[#{field}]']", count: 0

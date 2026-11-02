@@ -1,0 +1,5 @@
+<dl class="recipe-facts">
+  <% if recipe.servings.present? %><div><dt>Servings</dt><dd><%= recipe.servings %></dd></div><% end %>
+  <% if recipe.preparation_method.present? %><div><dt>Method</dt><dd><%= recipe.preparation_method.humanize %></dd></div><% end %>
+  <% if recipe.preparation_time_seconds.present? %><div><dt>Preparation</dt><dd><%= recipe.preparation_time_seconds %> <small>sec</small></dd></div><% end %>
+</dl>
