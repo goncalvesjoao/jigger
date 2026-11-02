@@ -1,9 +1,8 @@
 <% content_for :title, "#{@cocktail.display_name} · Jigger" %>
-<div class="detail-page">
-  <%= link_to "← All cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %>
+<% content_for :body_class, "cocktail-journal" %>
+<div class="detail-page cocktail-page">
   <article class="cocktail-details">
     <%= render "cocktails/hero", cocktail: @cocktail, recipe: nil, mixing_recipe: @official_recipes.first %>
-    <%= render "cocktails/section_nav", cocktail: @cocktail, mixing_recipe: @official_recipes.first, recipe_page: false %>
     <%= render partial: "recipes/details", collection: @official_recipes, as: :recipe, locals: { embedded: true } %>
     <%= render "cocktails/background", cocktail: @cocktail %>
   </article>

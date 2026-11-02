@@ -1,4 +1,10 @@
-<nav class="detail-nav" aria-label="On this page">
-  <% if mixing_recipe %><%= link_to "Ingredients", recipe_page ? "#ingredients" : "##{dom_id(mixing_recipe, :ingredients)}" %><%= link_to "Preparation", recipe_page ? "#preparation" : "##{dom_id(mixing_recipe, :preparation)}" %><% end %>
-  <% if cocktail %><%= link_to "About the cocktail", "#cocktail-background" %><%= link_to "Community recipes", "#matching-recipes" %><% end %>
+<nav class="detail-nav<%= " detail-nav-tiles" unless recipe_page %>" aria-label="On this page">
+  <% if recipe_page %>
+    <%= link_to "Ingredients", "#ingredients" %><%= link_to "Preparation", "#preparation" %>
+    <% if cocktail %><%= link_to "About the cocktail", "#cocktail-background" %><%= link_to "Community recipes", "#matching-recipes" %><% end %>
+  <% else %>
+    <% if mixing_recipe %><%= link_to "Recipe & Craft", "##{dom_id(mixing_recipe, :ingredients)}" %><% end %>
+    <%= link_to "Lore", "#cocktail-background" %>
+    <%= link_to "Community Recipes", "#matching-recipes" %>
+  <% end %>
 </nav>

@@ -3,7 +3,7 @@
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" class="recipe" lang="<%= recipe.language %>">
   <% if embedded %>
-    <header class="recipe-summary">
+    <header class="recipe-summary <%= "visually-hidden" if embedded %>">
       <div><p class="eyebrow">Official Jigger recipe</p><h2><%= recipe.display_name %></h2></div>
       <%= render "recipes/facts", recipe: recipe %>
     </header>
@@ -14,25 +14,24 @@
   <div class="mixing-layout">
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
     <section id="<%= preparation_id %>" class="card recipe-panel mb-0" data-controller="preparation">
-      <p class="eyebrow">02 / Make</p><h2>Preparation</h2>
-      <a href="#<%= ingredients_id %>">← Back to ingredients</a>
+      <div class="preparation-heading">
+      <p class="eyebrow">02 / Craft &amp; method</p><h2>Preparation</h2>
+      <% if recipe.recipe_steps.any? %><progress class="checklist-progress" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
+      </div>
+      <a href="#<%= ingredients_id %>" class="preparation-back">← Back to ingredients</a>
       <% if recipe.recipe_steps.any? %>
-        <div class="mixing-progress mt-4" data-preparation-target="status" hidden>
-          <p data-preparation-target="summary" role="status" aria-live="polite"></p>
-          <progress data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress"></progress>
-          <button type="button" class="ghost" data-action="preparation#reset">Reset steps</button>
-        </div>
         <ol class="checklist steps-list">
           <% recipe.recipe_steps.each_with_index do |step, index| %>
-            <li><label><input type="checkbox" data-preparation-target="step" data-action="preparation#update"><span><span class="step-number">Step <%= index + 1 %></span><span class="submitted-prose step-body"><%= step.body %></span></span></label></li>
+            <li><label><input type="checkbox" data-preparation-target="step" data-action="preparation#update"><span><span class="step-number"><%= index + 1 %></span><span class="submitted-prose step-body"><%= step.body %></span></span></label></li>
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
     </section>
   </div>
-  <% if recipe.source_url.present? || recipe.source_reference.present? || policy(recipe).edit? || policy(recipe).destroy? %>
+  <% show_source = !embedded && (recipe.source_url.present? || recipe.source_reference.present?) %>
+  <% if show_source || policy(recipe).edit? || policy(recipe).destroy? %>
   <footer class="recipe-footer">
-    <% if recipe.source_url.present? || recipe.source_reference.present? %>
+    <% if show_source %>
     <section><h2>Recipe source</h2>
       <% if recipe.source_url.present? %><p>Source: <%= link_to recipe.source_reference.presence || "Recipe source", recipe.source_url %></p><% elsif recipe.source_reference.present? %><p class="submitted-prose"><%= recipe.source_reference %></p><% end %>
     </section>

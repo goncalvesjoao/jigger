@@ -1,0 +1,765 @@
+/* Detail pages share their structure while keeping each record's own photo. */
+.detail-page .cocktail-details {
+  max-width: none;
+  margin-bottom: 0;
+}
+.detail-page .back-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  margin-bottom: 2.5rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+.detail-page .back-link:hover {
+  color: var(--color);
+  text-decoration: underline;
+}
+.detail-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  margin-bottom: 2.5rem;
+}
+.detail-hero h1 {
+  font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  margin-block: 0 1.25rem;
+}
+.detail-hero .recipe-intro {
+  padding-block: 1rem;
+}
+.detail-page .eyebrow {
+  letter-spacing: .12em;
+}
+.detail-description {
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--color-muted);
+  max-width: 42ch;
+}
+.detail-parent {
+  font-size: .95rem;
+  color: var(--color-muted);
+}
+.detail-parent a {
+  font-weight: 600;
+}
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: 2rem;
+}
+.detail-actions .button {
+  background: var(--primary-background-color);
+  color: #fffef9;
+  padding: .85rem 1.5rem;
+  min-height: 3rem;
+  font-weight: 600;
+}
+.detail-actions .button:hover {
+  background: var(--primary-background-color-hover);
+}
+.detail-text-link {
+  font-size: .9rem;
+  font-weight: 600;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+.detail-visual {
+  position: relative;
+  min-width: 0;
+}
+.detail-visual .recipe-photo {
+  display: block;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 1.8rem;
+  background: #e7e8d9;
+}
+.detail-image-caption {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  max-width: calc(100% - 2rem);
+  border-radius: 2rem;
+  padding: .5rem .9rem;
+  background: #fffef9ec;
+  backdrop-filter: blur(12px);
+  color: #202923;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+.detail-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  padding: .45rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1.2rem;
+  background: #fffef8b8;
+  margin-bottom: 3.5rem;
+}
+.detail-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: .5rem 1.1rem;
+  border-radius: .8rem;
+  color: var(--color);
+  font-size: .9rem;
+  font-weight: 550;
+  text-decoration: none;
+}
+.detail-nav a:hover, .detail-nav a:focus-visible {
+  background: #e9ecdf;
+}
+.detail-nav a:active {
+  background: #dce2cd;
+}
+.detail-page .recipe-facts {
+  gap: 1.75rem;
+}
+.detail-page .recipe-facts dt {
+  font-size: .75rem;
+  letter-spacing: .015em;
+}
+.detail-page .recipe-facts dd {
+  font-size: 1.25rem;
+  letter-spacing: -.02em;
+}
+.recipe-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.recipe-summary .eyebrow {
+  margin-bottom: .5rem;
+}
+.recipe-summary h2 {
+  font-size: clamp(1.65rem, 3vw, 2.2rem);
+  margin-bottom: 0;
+}
+.recipe-summary .recipe-facts {
+  margin-block: 0;
+}
+.detail-page .mixing-layout {
+  gap: 1.5rem;
+}
+.detail-page .recipe-panel {
+  border: 1px solid var(--border-color);
+  border-radius: 1.4rem;
+  --card-spacing: clamp(1.25rem, 3vw, 2.25rem);
+}
+.detail-page .recipe-panel h2 {
+  font-size: 1.65rem;
+  letter-spacing: -.025em;
+}
+.detail-page .step-body {
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+.detail-page .checklist input {
+  accent-color: var(--primary-color);
+}
+.detail-page .recipe-footer {
+  margin-bottom: 3rem;
+}
+.cocktail-background {
+  padding-block: 3rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 3rem;
+}
+.cocktail-background .section-heading {
+  align-items: center;
+}
+.cocktail-background .eyebrow {
+  margin-bottom: .6rem;
+}
+.cocktail-background h2 {
+  margin-bottom: 0;
+}
+.cocktail-background h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.cocktail-background h2 a:hover {
+  text-decoration: underline;
+}
+.detail-aliases {
+  color: var(--color-muted);
+  font-size: .9rem;
+}
+.detail-disclosure {
+  border-bottom: 1px solid var(--border-color);
+  padding-block: .5rem;
+}
+.detail-disclosure summary {
+  font-size: 1rem;
+  font-weight: 600;
+  padding-block: 1rem;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.detail-disclosure p {
+  max-width: 70ch;
+  line-height: 1.8;
+  color: var(--color-muted);
+  padding-bottom: .5rem;
+}
+.community-section {
+  padding-top: 2rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  scroll-margin-top: 10rem;
+}
+.community-section > p {
+  color: var(--color-muted);
+  padding-block: 1rem;
+}
+.community-section .eyebrow {
+  margin-bottom: .6rem;
+}
+.detail-page .search-context {
+  margin-top: 2rem;
+  background: var(--card-background-color);
+}
+.detail-page :is(.recipe-panel, .cocktail-background) {
+  scroll-margin-top: 10rem;
+}
+@media (max-width: 55rem) {
+  .detail-hero {
+    gap: 2rem;
+  }
+  .detail-page .mixing-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-nav {
+    margin-bottom: 2.5rem;
+  }
+}
+@media (max-width: 36rem) {
+  .detail-hero {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .detail-hero .recipe-intro {
+    padding: 0;
+  }
+  .detail-visual .recipe-photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 1.3rem;
+  }
+  .detail-hero h1 {
+    font-size: clamp(2.6rem, 12vw, 3.5rem);
+  }
+  .detail-page .back-link {
+    margin-bottom: 1.5rem;
+  }
+  .detail-nav a {
+    flex: 1 0 auto;
+    justify-content: center;
+    padding-inline: .7rem;
+  }
+  .detail-page :is(.recipe-panel, .cocktail-background, .community-section) {
+    scroll-margin-top: 12rem;
+  }
+  .cocktail-background .section-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .cocktail-background {
+    padding-block: 2rem;
+    margin-top: 2rem;
+  }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .detail-image-caption, .detail-nav {
+    background: #fffef9;
+    backdrop-filter: none;
+  }
+}
+/* Cocktail-specific layout and surfaces; typography comes from the original shared rules. */
+.cocktail-journal {
+  --background-color: #f7f5ee;
+  --color: #202923;
+  --typography-color: #202923;
+  --color-muted: #596155;
+  --primary-color: #293311;
+  --primary-background-color: #293311;
+  --primary-background-color-hover: #414e22;
+  --border-color: #e9e1dc;
+  --content-grid-content-max-width: 75rem;
+  --content-grid-breakout-max-width: 75rem;
+  --content-grid-padding-inline: clamp(1.25rem, 4.4vw, 3.5rem);
+  background: var(--background-color);
+  color: var(--color);
+}
+.cocktail-journal .page-shell {
+  padding-block: 1.25em 3em;
+  min-height: 0;
+}
+.cocktail-page .eyebrow {
+  color: #59673e;
+  margin: 0 0 .5em;
+}
+.cocktail-page .detail-hero {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 10fr);
+  gap: 1.8em;
+  margin: 0 0 2em;
+  align-items: center;
+}
+.cocktail-page .recipe-intro {
+  padding: 0;
+}
+.cocktail-page .detail-hero h1 {
+  margin: 0;
+}
+.cocktail-page .detail-description {
+  max-width: 39ch;
+  margin: 0 0 1em;
+  color: var(--color-muted);
+}
+.cocktail-page .detail-visual .recipe-photo {
+  aspect-ratio: 1.46;
+  border-radius: 1.5em;
+  box-shadow: 0 .8em 1em #30251c20;
+}
+.cocktail-page .detail-image-caption {
+  bottom: 1em;
+  left: 1em;
+  background: #302c24de;
+  color: white;
+  padding: .4em 1em;
+}
+.cocktail-page .detail-text-link {
+  background: #f2ece8;
+  border-radius: 3em;
+  min-height: 2.4em;
+  padding: .35em 1.7em;
+  color: #191b14;
+  text-decoration: none;
+}
+.cocktail-page .recipe-summary.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  margin: 0;
+  padding: 0;
+}
+.cocktail-page .mixing-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 10fr);
+  gap: 1.4em;
+  align-items: stretch;
+}
+.cocktail-page .recipe-panel {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+}
+.cocktail-page .recipe-panel h2 {
+  margin: 0 0 .45em;
+}
+.cocktail-page .ingredients-panel {
+  display: flex;
+  flex-direction: column;
+}
+.cocktail-page .checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cocktail-page .checklist li {
+  padding: 0;
+  overflow: hidden;
+}
+.cocktail-page .checklist label {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: .65em;
+  padding: .65em .55em;
+  min-height: 3.4em;
+  margin: 0;
+  cursor: pointer;
+}
+.cocktail-page .checklist input[type=checkbox] {
+  appearance: auto;
+  width: 1.15em;
+  height: 1.15em;
+  min-width: 1.15em;
+  border-radius: 2px;
+  margin: 0;
+  accent-color: #293311;
+}
+.cocktail-page .ingredient-copy {
+  flex: 1;
+  gap: .1em;
+}
+.cocktail-page .quantity {
+  display: inline;
+}
+.cocktail-page .requirement-photo {
+  flex: 0 0 auto;
+  width: 1.5em;
+  height: 1.8em;
+  object-fit: contain;
+  margin-left: auto;
+}
+.ingredients-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75em;
+  margin-top: auto;
+  padding-top: 2.5em;
+}
+.cocktail-page .ingredients-footer a {
+  color: #191b14;
+  text-decoration: none;
+}
+.cocktail-page .steps-list label {
+  align-items: flex-start;
+  padding: 1em;
+  gap: .6em;
+}
+.cocktail-page .steps-list input {
+  margin-top: .2em;
+}
+.cocktail-page .step-body {
+  color: var(--color-muted);
+}
+.cocktail-page .ingredients-panel h3 {
+  margin-top: 1em;
+}
+.cocktail-page .recipe-footer {
+  border: 0;
+  margin: .65em 0 1.6em;
+  padding: 0 1.4em;
+}
+.cocktail-page .recipe-footer h2 {
+  display: none;
+}
+.cocktail-page .recipe-footer p {
+  margin: 0;
+}
+.cocktail-page .cocktail-background .section-heading {
+  margin: 0 0 1em;
+}
+.cocktail-page .cocktail-background h2 {
+  margin: 0;
+}
+.cocktail-page .history-disclosure {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.cocktail-page .history-disclosure summary {
+  min-height: 0;
+  padding: 0;
+  margin-bottom: .75em;
+}
+.cocktail-page .detail-disclosure p {
+  max-width: 90ch;
+  padding: 0;
+  margin: .5em 0;
+}
+.cocktail-page .sources-disclosure summary {
+  padding: .25em 0;
+  min-height: 2em;
+}
+.cocktail-page .community-section {
+  border: 0;
+  margin: 2.5em 0 0;
+  padding: 0;
+}
+.cocktail-page .community-section .section-heading {
+  margin-bottom: 1.2em;
+}
+.cocktail-journal .site-footer {
+  border: 0;
+  padding: 1em 0 2em;
+}
+.cocktail-journal .site-footer > span:last-child {
+  color: #191b14;
+}
+@media (min-width: 48rem) {
+  .cocktail-page .recipe-panel {
+    min-height: 28em;
+  }
+}
+@media (max-width: 47.99rem) {
+  .cocktail-page .detail-hero, .cocktail-page .mixing-layout {
+    grid-template-columns: 1fr;
+  }
+  .cocktail-page .detail-hero {
+    gap: 1.75em;
+  }
+  .cocktail-page .detail-hero .recipe-intro {
+    padding: 0;
+  }
+  .cocktail-page .section-heading {
+    flex-wrap: wrap;
+  }
+}
+.cocktail-page .steps-list input[type=checkbox] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.cocktail-page .steps-list label > span {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.4em minmax(0, 1fr);
+  gap: .6em;
+  align-items: start;
+}
+.cocktail-page .steps-list label:focus-within {
+  outline: 2px solid #4d5b2e;
+  outline-offset: -3px;
+  border-radius: 1em;
+}
+.cocktail-page .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  background: #293311;
+  color: white;
+  margin: 0 0 .5em;
+  margin-top: .15em;
+}
+.cocktail-page .cocktail-background {
+  margin: 2em 0;
+  border: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 10fr) minmax(0, 7fr);
+  gap: 1.4em;
+  background: transparent;
+  padding: 0;
+}
+.cocktail-page .background-story:only-child {
+  grid-column: 1 / -1;
+}
+.cocktail-page .background-sources h3 {
+  margin: 0 0 .75em;
+}
+.cocktail-page .sources-disclosure {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 47.99rem) {
+  .cocktail-page .cocktail-background {
+    grid-template-columns: 1fr;
+  }
+}
+/* Keep the shared topbar identical to the rest of the app. */
+.cocktail-journal .site-header {
+  --color: #202923;
+  --color-muted: #596155;
+  --primary-color: #4d5b2e;
+  --primary-color-hover: #35421e;
+  --primary-background-color: #4d5b2e;
+  --primary-background-color-hover: #35421e;
+  --border-color: #d9dbcf;
+}
+.cocktail-journal .site-header nav {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(78rem, calc(100vw - 3rem));
+}
+.cocktail-breadcrumb {
+  margin: 0 0 1em;
+}
+.cocktail-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .5em;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cocktail-breadcrumb li {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cocktail-breadcrumb li + li::before {
+  content: "/";
+  margin-right: .5em;
+  color: var(--color-muted);
+}
+.cocktail-page .cocktail-breadcrumb .back-link {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  color: var(--color-muted);
+}
+/* Use the original card treatment throughout the cocktail details. */
+.cocktail-page .recipe-panel,
+.cocktail-page .background-story,
+.cocktail-page .background-sources {
+  background: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 1.4rem;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+.cocktail-page .preparation-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+.cocktail-page .ingredient-list li {
+  background: #fff;
+  border: 1px solid #e9e1dc;
+  border-radius: 1rem;
+  margin: 0 0 .35em;
+}
+.cocktail-page .ingredient-list label {
+  padding: .65em .55em;
+  gap: .65em;
+}
+.cocktail-page .community-section > p {
+  padding: 1.3em;
+  background: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-border-radius);
+}
+.cocktail-page .checklist label:has(input:checked) {
+  background: #f1f3e9;
+}
+/* Numbered inset step cards from the reference, inside the original outer panel. */
+.cocktail-page .steps-list li {
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  background: #f2ece8;
+  margin: 0 0 .55rem;
+}
+.cocktail-page .steps-list li:first-child,
+.cocktail-page .steps-list li:has(input:checked) + li {
+  background: #fff;
+  border-color: #e9e1dc;
+}
+.cocktail-page .ingredient-list input[type=checkbox] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.cocktail-page .ingredient-list label:focus-within {
+  outline: 2px solid var(--primary-outline-color);
+  outline-offset: -3px;
+  border-radius: 1rem;
+}
+.cocktail-page .checklist-progress {
+  display: block;
+  flex-shrink: 0;
+  width: 100%;
+  height: .25rem;
+  margin: 0 0 1rem;
+  border-radius: 0;
+  accent-color: #293311;
+}
+.cocktail-page .checklist-progress[hidden] {
+  display: none;
+}
+.cocktail-title-accent {
+  color: #4d5b2e;
+  margin: .05em 0 .4em;
+  font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+}
+@media (max-width: 36rem) {
+  .cocktail-title-accent {
+    font-size: clamp(2.6rem, 12vw, 3.5rem);
+  }
+}
+.ingredients-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+}
+.recipe-servings {
+  font-size: .85rem;
+  color: var(--color-muted);
+}
+/* In-page navigation occupies the former hero fact tiles. */
+.cocktail-page .detail-nav-tiles a:hover,
+.cocktail-page .detail-nav-tiles a:focus-visible {
+  background: #e9ecdf;
+  border-color: var(--primary-color);
+}
+.cocktail-page .detail-nav-tiles {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: .35rem;
+  padding: 0;
+  margin: 1.1rem 0 0;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  align-items: stretch;
+}
+.cocktail-page .detail-nav-tiles a {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 3.5rem;
+  padding: .65rem;
+  border: 1px solid var(--border-color);
+  border-radius: .7rem;
+  background: var(--card-background-color);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 48rem) {
+  .cocktail-page .detail-hero {
+    align-items: stretch;
+  }
+  .cocktail-page .detail-visual {
+    min-height: 0;
+  }
+  .cocktail-page .detail-visual .recipe-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+}

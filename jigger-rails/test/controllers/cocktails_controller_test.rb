@@ -93,7 +93,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_select "#ingredients_recipe_#{recipe.id} .ingredient-list li", count: recipe.recipe_ingredients.count
       assert_select "#preparation_recipe_#{recipe.id} .step-body", text: recipe.recipe_steps.first.body
       assert_select "dd", text: "2"
-      assert_select "p", text: "Official source"
+      assert_select ".recipe-footer", count: 0
+      assert_select "p", text: "Official source", count: 0
     end
     assert_select "#matching-recipes h2", text: "Community recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipe.id}", count: 0
@@ -201,7 +202,10 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index('class="cocktail-details"'), :<, response.body.index('id="matching-recipes"')
     assert_select ".search-context strong", text: "bright"
     assert_select ".search-context a[href=?]", cocktail_path(@cocktail), text: "Show all recipes"
-    assert_select "a.back-link[href=?]", cocktails_path(q: "bright")
+    assert_select "nav[aria-label='Breadcrumb']" do
+      assert_select "a.back-link[href=?]", cocktails_path(q: "bright"), text: "Cocktails"
+      assert_select "li[aria-current='page']", text: "Margarita"
+    end
     assert_select "#matching-recipes h2", text: "Community recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     assert_select "details#other-recipes:not([open])" do

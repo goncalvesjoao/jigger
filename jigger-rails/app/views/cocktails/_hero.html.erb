@@ -1,10 +1,23 @@
 <header class="detail-hero recipe-hero">
   <div class="recipe-intro">
-    <p class="eyebrow"><%= recipe ? (recipe.official? ? "Official Jigger recipe" : "Community recipe") : "The cocktail" %></p>
+    <% unless recipe %>
+      <nav class="cocktail-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><%= link_to "Cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %></li>
+          <li aria-current="page"><%= cocktail.display_name %></li>
+        </ol>
+      </nav>
+    <% end %>
+    <p class="eyebrow"><%= recipe ? (recipe.official? ? "Official Jigger recipe" : "Community recipe") : (mixing_recipe&.official? ? "Official recipe" : "Community recipe") %></p>
     <h1><%= recipe ? recipe.display_name : cocktail.display_name %></h1>
+    <% unless recipe %><p class="cocktail-title-accent" aria-hidden="true">Cocktail</p><% end %>
     <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
     <% if cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
-    <% if recipe %><%= render "recipes/facts", recipe: recipe %><% end %>
+    <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, mixing_recipe: mixing_recipe, recipe_page: false %><% end %>
+    <% if recipe %>
+      <%= render "recipes/facts", recipe: recipe %>
+    <% end %>
+    <% if recipe %>
     <div class="detail-actions">
       <% if mixing_recipe %>
         <%= link_to "Start mixing ↓", recipe ? "#ingredients" : "##{dom_id(mixing_recipe, :ingredients)}", class: "button" %>
@@ -13,6 +26,7 @@
       <% end %>
       <% if cocktail %><%= link_to "The story", "#cocktail-background", class: "detail-text-link" %><% end %>
     </div>
+    <% end %>
   </div>
   <div class="detail-visual">
     <% photo = recipe || cocktail %>
