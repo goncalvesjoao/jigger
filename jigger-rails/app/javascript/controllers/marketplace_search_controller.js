@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["picker", "choice", "chips", "help", "status"]
+  static targets = ["picker", "choice", "chips", "status"]
 
   connect() {
     this.selections()
@@ -35,6 +35,7 @@ export default class extends Controller {
     const picker = event.currentTarget.closest("details")
     this.element.elements[picker.dataset.modeKey].value = event.currentTarget.dataset.mode
     this.mode()
+    this.selections()
     this.apply()
   }
 
@@ -110,16 +111,13 @@ export default class extends Controller {
   }
 
   mode() {
-    const summaries = this.pickerTargets.map(picker => {
+    this.pickerTargets.forEach(picker => {
       const value = this.element.elements[picker.dataset.modeKey].value
       picker.querySelectorAll("[data-mode]").forEach(button => {
         button.setAttribute("aria-pressed", String(button.dataset.mode === value))
       })
       picker.querySelector("[data-mode-hint]").hidden = value !== "only"
-      const label = picker.querySelector("summary strong").textContent
-      return `${label}: ${value === "only" ? "Use only what I have" : "Include these items"}`
     })
-    this.helpTarget.textContent = summaries.join(" · ")
   }
 
   selections() {
@@ -144,7 +142,8 @@ export default class extends Controller {
       picker.querySelector("[data-picker-clear]").hidden = count === 0
       const label = picker.querySelector("strong").textContent.toLowerCase()
       const countLabel = count ? `${count} selected` : `Add ${label}`
-      picker.querySelector("[data-picker-count]").textContent = countLabel
+      const onlyAvailable = this.element.elements[picker.dataset.modeKey].value === "only"
+      picker.querySelector("[data-picker-count]").textContent = count && onlyAvailable ? `${count} available · Only these` : countLabel
       picker.querySelector("[data-picker-selection-count]").textContent = countLabel
     })
   }

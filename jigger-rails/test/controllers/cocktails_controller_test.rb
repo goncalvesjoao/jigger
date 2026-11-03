@@ -31,6 +31,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select "h3 a", text: "Margarita"
       assert_select ".empty-state", count: 0
+      assert_select "[data-picker-count]", text: "Add ingredients"
+      assert_select "[data-picker-count]", text: "Add utensils"
     end
     get cocktails_url, params: { makeable: "1", q: "bright" }
     assert_select ".recipe-count", text: "1"
@@ -45,6 +47,9 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".marketplace-submit-wrapper > button.marketplace-submit[type=submit][aria-label=Search]" do
         assert_select "svg[aria-hidden=true]"
       end
+      assert_select ".marketplace-mode-summary", count: 0
+      assert_select "[data-picker-count]", text: "#{Ingredient.count} available · Only these"
+      assert_select "[data-picker-count]", text: "#{Utensil.count} available · Only these"
       assert_select "label[for=marketplace-query]", text: "Search cocktails"
       assert_select "input[type=search][name=q][value=margarita]"
       assert_select "input[type=checkbox][name='ingredient_ids[]'][checked]", count: Ingredient.count

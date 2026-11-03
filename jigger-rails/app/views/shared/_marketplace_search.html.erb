@@ -8,10 +8,11 @@
       <% mode_key = key == :ingredient_ids ? :ingredient_mode : :utensil_mode %>
       <% only_available = params[mode_key] == "only" || (!params.key?(mode_key) && params[:makeable] == "1") %>
       <%= hidden_field_tag mode_key, only_available ? "only" : "include" %>
+      <% selected_count = Array(params[key]).reject(&:blank?).size %>
       <% items = model.usable.includes(:translations).sort_by { |item| item.display_name.downcase } %>
       <details class="marketplace-picker" data-marketplace-search-target="picker" data-mode-key="<%= mode_key %>" data-action="toggle->marketplace-search#sync">
         <summary aria-controls="picker-<%= key %>">
-          <span><strong><%= label %></strong><small data-picker-count><%= Array(params[key]).reject(&:blank?).size.positive? ? "#{Array(params[key]).reject(&:blank?).size} selected" : "Add #{label.downcase}" %></small></span>
+          <span><strong><%= label %></strong><small data-picker-count><%= selected_count.positive? ? (only_available ? "#{selected_count} available · Only these" : "#{selected_count} selected") : "Add #{label.downcase}" %></small></span>
         </summary>
         <div class="marketplace-popover" id="picker-<%= key %>">
           <div class="picker-header">
@@ -55,7 +56,6 @@
       </button>
     </div>
   </div>
-  <p class="marketplace-mode-summary" data-marketplace-search-target="help"></p>
   <p role="status" data-marketplace-search-target="status" hidden></p>
   <div class="marketplace-selection-row">
     <div class="marketplace-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>

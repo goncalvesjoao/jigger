@@ -86,7 +86,6 @@
 .marketplace-popover :is(.picker-close, .picker-clear):not(:focus-visible) { outline: none; }
 .picker-selection-status [hidden] { display: none; }
 
-.marketplace-mode-summary { margin: 1rem 0 .5rem; font-size: .85rem; color: var(--color-muted); }
 .picker-match-mode { flex-shrink: 0; margin-top: 1rem; }
 .picker-match-label { margin: 0 0 .4rem; font-size: .85rem; font-weight: 600; }
 .marketplace-popover .picker-match-mode button { display: block; width: 100%; margin: 0 0 .4rem; padding: .6rem .75rem; border: 1px solid var(--border-color); border-radius: .65rem; background: transparent; color: var(--color); text-align: left; box-shadow: none; line-height: 1.35; }
