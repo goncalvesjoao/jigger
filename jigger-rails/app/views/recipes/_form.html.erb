@@ -1,80 +1,40 @@
-<%= form_with(model: recipe, class: "recipe-form") do |form| %>
+<%= form_with model: recipe, class: "recipe-form recipe-editor-form" do |form| %>
   <% if recipe.errors.any? %>
-    <div role="alert" class="text-danger">
-      <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
-
-      <ul>
-        <% recipe.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div role="alert" class="library-errors"><strong>Check your recipe details</strong><ul><% recipe.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div>
+  <% end %>
+  <section class="recipe-editor-section" aria-labelledby="recipe-basics-title">
+    <div class="recipe-section-intro"><h2 id="recipe-basics-title">The basics</h2><p>Give your drink a name and a little character.</p></div>
+    <div class="recipe-section-fields">
+      <div><%= form.label :name, "Recipe name" %><%= form.text_field :name, placeholder: "e.g. My Sunday Negroni" %></div>
+      <div><%= form.label :language %><%= form.text_field :language, aria: { describedby: "recipe-language-help" } %><small id="recipe-language-help">The language you’re writing in, such as en for English or ja for Japanese.</small></div>
+      <div class="recipe-editor-row"><div><%= form.label :servings %><%= form.number_field :servings, min: 1, step: 1 %></div><div><%= form.label :preparation_method %><%= form.select :preparation_method, options_for_select([["Choose a method", nil]] + Recipe.preparation_methods.keys.map { |value| [value.humanize, value] }, recipe.preparation_method) %></div></div>
     </div>
+  </section>
+  <section class="recipe-editor-section" aria-labelledby="recipe-preparation-title">
+    <div class="recipe-section-intro"><h2 id="recipe-preparation-title">Preparation</h2><p>Make it easy to get every pour right.</p></div>
+    <div class="recipe-section-fields">
+      <% multi_step = recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
+      <div><%= form.label :steps, "Preparation steps" %><% if multi_step %><p id="recipe-steps-help" class="recipe-editor-note">This recipe has multiple steps. They’re shown here for reference and can’t be changed in this editor yet.</p><% end %><%= form.textarea :steps, rows: 6, readonly: multi_step, placeholder: "Add the ingredients, stir with ice, and strain…", aria: { describedby: ("recipe-steps-help" if multi_step) } %></div>
+      <div><%= form.label :preparation_time_seconds, "Preparation time (seconds)" %><%= form.number_field :preparation_time_seconds, min: 0, step: 1, placeholder: "e.g. 120" %></div>
+    </div>
+  </section>
+  <section class="recipe-editor-section" aria-labelledby="recipe-photo-title">
+    <div class="recipe-section-intro"><h2 id="recipe-photo-title">A photo to remember</h2><p>Optional, but a good drink deserves a good close-up.</p></div>
+    <div class="recipe-section-fields"><div class="recipe-photo-field">
+      <% if recipe.persisted? && recipe.image.attached? %><%= image_tag recipe_image_path(recipe, size: :card), alt: "Current photo of #{recipe.display_name}", loading: "lazy", class: "recipe-editor-photo" %><% end %>
+      <%= form.label :image, recipe.image.attached? ? "Replace photo" : "Add a photo" %><%= form.file_field :image, accept: "image/jpeg,image/png,image/webp", aria: { describedby: "image-help" } %><small id="image-help">JPEG, PNG or WebP. Up to 10 MB and 25 megapixels.<%= " Your current photo stays unless you choose a replacement." if recipe.image.attached? %></small>
+    </div></div>
+  </section>
+  <section class="recipe-editor-section" aria-labelledby="recipe-sharing-title">
+    <div class="recipe-section-intro"><h2 id="recipe-sharing-title">Saving &amp; sharing</h2><p>Keep an idea to yourself or share the finished recipe.</p></div>
+    <div class="recipe-section-fields">
+      <div><%= form.label :publication_state, "Recipe status" %><%= form.select :publication_state, [["Draft", "draft"], ["Published", "published"]], {}, aria: { describedby: "recipe-state-help" } %><small id="recipe-state-help">Drafts are only visible to you. Publishing requires a name, language, ingredients, and preparation steps.</small></div>
+      <div><%= form.label :visibility, "Visibility" %><%= form.select :visibility, [["Private — only you", "private"], ["Public — visible when published", "public"]], {}, aria: { describedby: "recipe-visibility-help" } %><small id="recipe-visibility-help">A recipe appears in Explore when it’s public and published.</small></div>
+    </div>
+  </section>
+  <details class="recipe-editor-extra"><summary>Source &amp; inspiration <span>Optional</span></summary><div class="recipe-section-fields"><div><%= form.label :source_reference, "Source or credit" %><%= form.text_field :source_reference, placeholder: "A book, a bartender, an inspiration…" %></div><div><%= form.label :source_url, "Source link" %><%= form.url_field :source_url, placeholder: "https://" %></div></div></details>
+  <% if Current.user&.admin? %>
+    <details class="recipe-editor-extra"><summary>Catalog settings</summary><div class="recipe-section-fields"><div><%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %><%= form.collection_select :cocktail_id, Cocktail.includes(:translations).to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %></div><label class="recipe-official-field"><%= form.check_box :official %>Official Jigger recipe</label></div></details>
   <% end %>
-
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.label :language %>
-    <%= form.text_field :language %>
-  </div>
-
-  <% if recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
-    <p>This recipe has multiple preparation steps. Editing them here is not supported yet.</p>
-  <% end %>
-
-  <div>
-    <%= form.label :steps %>
-    <%= form.textarea :steps, readonly: recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
-  </div>
-
-  <div>
-    <%= form.label :preparation_time_seconds %>
-    <%= form.number_field :preparation_time_seconds %>
-  </div>
-
-  <div>
-    <%= form.label :servings %>
-    <%= form.number_field :servings, min: 1, step: 1 %>
-  </div>
-
-  <div>
-    <%= form.label :preparation_method %>
-    <%= form.select :preparation_method, options_for_select([ [ "", nil ] ] + Recipe.preparation_methods.keys.map { |value| [ value.humanize, value ] }, recipe.preparation_method) %>
-  </div>
-
-  <div>
-    <%= form.label :source_reference %>
-    <%= form.text_field :source_reference %>
-  </div>
-
-  <div>
-    <%= form.label :source_url %>
-    <%= form.url_field :source_url %>
-    <%= form.label :visibility %>
-    <%= form.select :visibility, %w[private public] %>
-    <%= form.label :publication_state %>
-    <%= form.select :publication_state, %w[draft published] %>
-    <% if Current.user&.admin? %>
-      <%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %>
-      <%= form.collection_select :cocktail_id, Cocktail.includes(:translations).to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %>
-      <%= form.label :official, "Official Jigger recipe" %>
-      <%= form.check_box :official %>
-    <% end %>
-  </div>
-
-  <div>
-    <%= form.label :image, "Photo" %>
-    <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp", aria: { describedby: "image-help" } %>
-    <p id="image-help">Optional JPEG, PNG or WebP photo. Maximum 10 MB and 25 megapixels. Choose a new photo to replace the current one.</p>
-    <% if recipe.persisted? && recipe.image.attached? %>
-      <%= image_tag recipe_image_path(recipe, size: :card), alt: "Current photo of #{recipe.name}", loading: "lazy" %>
-    <% end %>
-  </div>
-
-  <div>
-    <%= form.submit class: "w-auto mt-3" %>
-  </div>
+  <div class="recipe-editor-actions"><%= form.submit recipe.persisted? ? "Save changes" : "Create recipe", class: "library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", recipe.persisted? ? recipe_path(recipe) : my_recipes_path, class: "library-cancel" %></div>
 <% end %>

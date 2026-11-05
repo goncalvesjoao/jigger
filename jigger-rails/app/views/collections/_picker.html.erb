@@ -6,7 +6,7 @@
     <p class="collection-recipe-name"><%= recipe.display_name %></p>
     <p class="collection-picker-hint">Select a collection to save this recipe. Select it again to remove it.</p>
     <%= form_with url: collection_recipes_path, data: { action: "submit->collection-picker#save" } do |form| %>
-      <%= form.hidden_field :recipe_id, value: recipe.id %>
+      <%= form.hidden_field :recipe_id, value: recipe.id, id: dom_id(recipe, :save_collection_recipe) %>
       <div class="collection-choices" data-collection-picker-target="choices">
         <% Current.user.collections.order(:created_at).each do |collection| %>
           <button type="submit" name="collection_id" value="<%= collection.id %>" class="collection-choice" aria-pressed="<%= saved_collection_ids.include?(collection.id) %>"><span><%= collection.name %></span><small><%= collection.visibility.capitalize %></small><span class="collection-choice-indicator" aria-hidden="true"><%= saved_collection_ids.include?(collection.id) ? "✓" : "+" %></span></button>
@@ -16,7 +16,7 @@
     <details class="collection-create" data-collection-picker-target="create">
       <summary>+ Create new collection</summary>
       <%= form_with url: collection_recipes_path, data: { action: "submit->collection-picker#create" } do |form| %>
-        <%= form.hidden_field :recipe_id, value: recipe.id %>
+        <%= form.hidden_field :recipe_id, value: recipe.id, id: dom_id(recipe, :create_collection_recipe) %>
         <%= label_tag dom_id(recipe, :collection_name), "Name" %>
         <%= text_field_tag "new_collection[name]", nil, id: dom_id(recipe, :collection_name), required: true, placeholder: "e.g. Weekend drinks" %>
         <%= label_tag dom_id(recipe, :collection_visibility), "Visibility" %>

@@ -1,16 +1,6 @@
-<section class="card form-page">
-<p class="eyebrow">Your recipe book</p>
-<% content_for :title, "Editing recipe" %>
-
-<h1>Editing recipe</h1>
-
-<%= render "form", recipe: @recipe %>
-
-<br>
-
-<div>
-  <%= link_to "Show this recipe", @recipe %> |
-  <%= link_to "Back to recipes", recipes_path %>
+<% content_for :title, "Edit #{@recipe.display_name.presence || "recipe"} · Jigger" %>
+<div class="library-page recipe-editor">
+  <%= link_to my_recipes_path, class: "library-back" do %><%= render "collections/icon", name: "back" %>My recipes<% end %>
+  <header class="library-heading"><div><p class="eyebrow">Keep refining</p><h1>Edit recipe</h1><p class="library-description"><%= @recipe.display_name.presence || "A little refinement goes a long way." %></p></div><%= link_to "View recipe", @recipe, class: "button library-secondary" %></header>
+  <%= render "form", recipe: @recipe %>
 </div>
-
-</section>
