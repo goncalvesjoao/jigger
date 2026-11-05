@@ -10,10 +10,7 @@
     <div class="library-section-label"><h2>All collections</h2><span><%= pluralize(@collections.size, "collection") %></span></div>
     <div class="library-grid">
       <% @collections.each do |collection| %>
-        <%= link_to collection, class: "library-card" do %>
-          <%= render "artwork", collection: collection, recipes: (@previews[collection.id] || []).map(&:recipe) %>
-          <div class="library-card-copy"><h2><%= collection.name %></h2><div class="library-card-meta"><span><%= pluralize(@recipe_counts.fetch(collection.id, 0), "recipe") %></span><span class="library-visibility"><%= render "icon", name: collection.visibility %><%= collection.visibility.capitalize %></span></div></div>
-        <% end %>
+        <%= render "collections/card", collection: collection %>
       <% end %>
     </div>
   <% end %>

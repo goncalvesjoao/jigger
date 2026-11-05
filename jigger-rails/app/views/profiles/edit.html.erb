@@ -1,0 +1,15 @@
+<% content_for :title, "Edit profile · Jigger" %>
+<div class="library-page library-editor profile-editor">
+  <%= link_to my_profile_path, class: "library-back" do %><%= render "collections/icon", name: "back" %>My profile<% end %>
+  <header class="library-heading"><div><p class="eyebrow">Make yourself at home</p><h1>Edit profile</h1><p class="library-description">A little about you. Shared on your terms.</p></div></header>
+  <%= form_with model: @profile, url: my_profile_path, method: :patch, class: "library-form" do |form| %>
+    <% if @profile.errors.any? %><div class="library-errors" role="alert"><strong>Check your profile details</strong><ul><% @profile.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+    <div class="library-form-section"><%= form.label :display_name, "Display name" %><p id="profile-name-help">The name people see on your public profile. Your email stays private.</p><%= form.text_field :display_name, maxlength: 80, autocomplete: "nickname", placeholder: "What should we call you?", aria: { describedby: "profile-name-help" } %></div>
+    <div class="library-form-section"><%= form.label :bio, "About you" %><p id="profile-bio-help">A favorite drink, a little inspiration, or a few words about you. Up to 280 characters.</p><%= form.textarea :bio, rows: 3, maxlength: 280, placeholder: "Usually experimenting with…", aria: { describedby: "profile-bio-help" } %></div>
+    <fieldset class="library-form-section library-privacy"><legend>Who can see your profile?</legend>
+      <label class="library-privacy-option"><%= form.radio_button :profile_visibility, "private" %><span class="library-privacy-icon"><%= render "collections/icon", name: "private" %></span><span><strong>Private</strong><small>Only you can view your profile. Your content keeps its own visibility settings.</small></span></label>
+      <label class="library-privacy-option"><%= form.radio_button :profile_visibility, "public" %><span class="library-privacy-icon"><%= render "collections/icon", name: "public" %></span><span><strong>Public</strong><small>Anyone can view your profile, public collections, and published public recipes. Drafts and private content stay just for you.</small></span></label>
+    </fieldset>
+    <div class="library-form-actions"><%= form.submit "Save changes", class: "library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", my_profile_path, class: "library-cancel" %></div>
+  <% end %>
+</div>

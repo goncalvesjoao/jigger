@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   resources :collections do
     resources :collection_recipes, only: %i[create destroy]
   end
-  get "my/profile", to: "account#profile", as: :my_profile
+  get "my/profile", to: "profiles#show", as: :my_profile
+  get "my/profile/edit", to: "profiles#edit", as: :edit_my_profile
+  patch "my/profile", to: "profiles#update"
+  get "profiles/:id", to: "profiles#show", as: :profile
 
   resource :registration, only: %i[ new create ]
   resource :session

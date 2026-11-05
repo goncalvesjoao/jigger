@@ -7,7 +7,4 @@ class AccountController < ApplicationController
     @recipes = @recipes.where(publication_state: @publication_state) if @publication_state
     @recipes = @recipes.with_attached_image.includes(:translations, :recipe_steps).order(updated_at: :desc, id: :desc)
   end
-
-  def profile
-  end
 end

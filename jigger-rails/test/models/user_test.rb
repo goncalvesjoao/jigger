@@ -8,6 +8,15 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 1, user.collections.count
   end
 
+  test "profile visibility defaults to private and rejects unknown values" do
+    user = User.new
+    assert_equal "private", user.profile_visibility
+    assert_equal "Jigger member", user.profile_name
+    user.profile_visibility = "hidden"
+    assert_not user.valid?
+    assert user.errors[:profile_visibility].any?
+  end
+
   test "downcases and strips email_address" do
     user = User.new(email_address: " DOWNCASED@EXAMPLE.COM ")
     assert_equal("downcased@example.com", user.email_address)

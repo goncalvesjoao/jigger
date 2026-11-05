@@ -11,6 +11,7 @@
     <p class="eyebrow"><%= recipe ? (recipe.official? ? "Official Jigger recipe" : "Community recipe") : (mixing_recipe&.official? ? "Official recipe" : "Community recipe") %></p>
     <h1><%= recipe ? recipe.display_name : cocktail.display_name %></h1>
     <% unless recipe %><p class="cocktail-title-accent" aria-hidden="true">Cocktail</p><% end %>
+    <% if recipe&.user&.public_profile? && !recipe.official? %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
     <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
     <% if cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
     <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, mixing_recipe: mixing_recipe, recipe_page: false %><% end %>

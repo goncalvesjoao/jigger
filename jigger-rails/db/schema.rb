@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_010000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -269,7 +269,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "profile_visibility", default: "private", null: false
+    t.string "display_name"
+    t.text "bio"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.check_constraint "profile_visibility IN ('private', 'public')", name: "users_profile_visibility"
   end
 
   create_table "utensil_aliases", force: :cascade do |t|

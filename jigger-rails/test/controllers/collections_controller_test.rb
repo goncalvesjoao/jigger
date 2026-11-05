@@ -121,7 +121,7 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
     get my_collections_url
     assert_response :success
     assert_select "a.library-card[href=?]", collection_path(@collection) do
-      assert_select "h2", text: "Weekend"
+      assert_select "h3", text: "Weekend"
       assert_select ".library-card-meta", text: /1 recipe/
       assert_select ".library-visibility", text: "Private"
       assert_select ".library-artwork-tile", count: 4

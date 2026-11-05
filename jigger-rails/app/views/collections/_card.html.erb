@@ -1,0 +1,4 @@
+        <%= link_to collection, class: "library-card" do %>
+          <%= render "collections/artwork", collection: collection, recipes: (@previews[collection.id] || []).map(&:recipe) %>
+          <div class="library-card-copy"><h3><%= collection.name %></h3><div class="library-card-meta"><span><%= pluralize(@recipe_counts.fetch(collection.id, 0), "recipe") %></span><span class="library-visibility"><%= render "collections/icon", name: collection.visibility %><%= collection.visibility.capitalize %></span></div></div>
+        <% end %>

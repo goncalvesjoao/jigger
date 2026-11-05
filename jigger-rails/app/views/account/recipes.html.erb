@@ -26,11 +26,7 @@
     <% else %>
       <div id="recipes" class="auto-grid recipe-grid personal-recipe-grid">
         <% @recipes.each do |recipe| %>
-          <div class="personal-recipe">
-            <%= render "recipes/recipe", recipe: recipe, personal: true %>
-            <div class="personal-recipe-status"><span class="personal-state <%= "is-draft" if recipe.publication_state == "draft" %>"><%= recipe.publication_state.capitalize %></span><span class="personal-visibility"><%= render "collections/icon", name: recipe.visibility %><%= recipe.visibility.capitalize %></span></div>
-            <div class="personal-recipe-actions"><span>Edited <%= time_ago_in_words(recipe.updated_at) %> ago</span><% if policy(recipe).edit? %><%= link_to edit_recipe_path(recipe), aria: { label: "Edit #{recipe.display_name.presence || "untitled recipe"}" } do %><%= render "collections/icon", name: "edit" %><%= recipe.publication_state == "draft" ? "Continue editing" : "Edit recipe" %><% end %><% end %></div>
-          </div>
+          <%= render "recipes/personal_card", recipe: recipe %>
         <% end %>
       </div>
     <% end %>
