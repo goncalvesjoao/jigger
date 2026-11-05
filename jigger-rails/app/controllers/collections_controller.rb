@@ -4,12 +4,21 @@ class CollectionsController < ApplicationController
 
   def index
     @collections = Current.user.collections.order(:created_at)
+    memberships = CollectionRecipe.where(collection: @collections).where(recipe_id: Recipe.readable_by(Current.user).select(:id))
+    @recipe_counts = memberships.group(:collection_id).count
+    @previews = memberships.where(<<~SQL.squish).order(created_at: :desc, id: :desc).includes(recipe: { image_attachment: :blob }).group_by(&:collection_id)
+      collection_recipes.id IN (
+        SELECT preview.id FROM collection_recipes preview
+        WHERE preview.collection_id = collection_recipes.collection_id
+        ORDER BY preview.created_at DESC, preview.id DESC LIMIT 4
+      )
+    SQL
   end
 
   def show
     resume_session
     @collection = Collection.readable_by(Current.user).find(params[:id])
-    @recipes = @collection.recipes.merge(Recipe.readable_by(Current.user)).with_attached_image.includes(:translations, :recipe_steps)
+    @recipes = @collection.recipes.merge(Recipe.readable_by(Current.user)).with_attached_image.includes(:translations, :recipe_steps).reorder("collection_recipes.created_at DESC, collection_recipes.id DESC").to_a
   end
 
   def new

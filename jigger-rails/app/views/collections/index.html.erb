@@ -1,6 +1,20 @@
 <% content_for :title, "My collections · Jigger" %>
-<div class="section-heading"><h1>My collections</h1><%= link_to "Create collection", new_collection_path, class: "button" %></div>
-<% if @collections.empty? %><p>No collections yet.</p><% end %>
-<% @collections.each do |collection| %>
-  <article class="card"><h2><%= link_to collection.name, collection %></h2><p><%= collection.visibility.capitalize %></p></article>
-<% end %>
+<div class="library-page">
+  <header class="library-heading">
+    <div><p class="eyebrow">Your library</p><h1>My collections</h1><p class="library-description">Good recipes, kept together. Ready for your next pour.</p></div>
+    <%= link_to new_collection_path, class: "button library-primary" do %><%= render "icon", name: "plus" %>Create collection<% end %>
+  </header>
+  <% if @collections.empty? %>
+    <section class="library-empty"><span class="library-empty-symbol"><%= render "icon", name: "collection" %></span><h2>A place for your next favorite.</h2><p>Keep the recipes you love in collections made for you.</p><%= link_to "Create your first collection", new_collection_path, class: "button library-primary" %></section>
+  <% else %>
+    <div class="library-section-label"><h2>All collections</h2><span><%= pluralize(@collections.size, "collection") %></span></div>
+    <div class="library-grid">
+      <% @collections.each do |collection| %>
+        <%= link_to collection, class: "library-card" do %>
+          <%= render "artwork", collection: collection, recipes: (@previews[collection.id] || []).map(&:recipe) %>
+          <div class="library-card-copy"><h2><%= collection.name %></h2><div class="library-card-meta"><span><%= pluralize(@recipe_counts.fetch(collection.id, 0), "recipe") %></span><span class="library-visibility"><%= render "icon", name: collection.visibility %><%= collection.visibility.capitalize %></span></div></div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

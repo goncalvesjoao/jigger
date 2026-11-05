@@ -1,6 +1,9 @@
-<%= form_with model: collection do |form| %>
-  <% if collection.errors.any? %><p role="alert"><%= collection.errors.full_messages.to_sentence %></p><% end %>
-  <div><%= form.label :name %><%= form.text_field :name, required: true %></div>
-  <div><%= form.label :visibility %><%= form.select :visibility, [["Private", "private"], ["Public", "public"]] %></div>
-  <%= form.submit %>
+<%= form_with model: collection, class: "library-form" do |form| %>
+  <% if collection.errors.any? %><div class="library-errors" role="alert"><strong>Check your collection details</strong><ul><% collection.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+  <div class="library-form-section"><%= form.label :name, "Collection name" %><p id="collection-name-help">A mood, an occasion, or simply your favorites.</p><%= form.text_field :name, required: true, placeholder: "e.g. Friday night favorites", aria: { describedby: "collection-name-help" } %></div>
+  <fieldset class="library-form-section library-privacy"><legend>Who can see this collection?</legend>
+    <label class="library-privacy-option"><%= form.radio_button :visibility, "private" %><span class="library-privacy-icon"><%= render "icon", name: "private" %></span><span><strong>Private</strong><small>Only you. Keep your discoveries to yourself.</small></span></label>
+    <label class="library-privacy-option"><%= form.radio_button :visibility, "public" %><span class="library-privacy-icon"><%= render "icon", name: "public" %></span><span><strong>Public</strong><small>Anyone with the link can view this collection.</small></span></label>
+  </fieldset>
+  <div class="library-form-actions"><%= form.submit collection.persisted? ? "Save changes" : "Create collection", class: "library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", collection.persisted? ? collection_path(collection) : my_collections_path, class: "library-cancel" %></div>
 <% end %>

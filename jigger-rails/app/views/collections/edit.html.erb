@@ -1,2 +1,7 @@
-<h1>Edit collection</h1>
-<%= render "form", collection: @collection %>
+<% content_for :title, "Edit #{@collection.name} · Jigger" %>
+<div class="library-page library-editor">
+  <%= link_to @collection, class: "library-back" do %><%= render "icon", name: "back" %>Back to collection<% end %>
+  <header class="library-heading"><div><p class="eyebrow">Collection settings</p><h1>Edit collection</h1><p class="library-description">Give it a name. Choose who can see it.</p></div></header>
+  <%= render "form", collection: @collection %>
+  <details class="library-danger"><summary>Delete collection</summary><p>This permanently deletes the collection. Your recipes will stay in Jigger.</p><%= button_to "Delete collection", @collection, method: :delete, class: "library-delete", data: { turbo_confirm: "Delete #{@collection.name}? This cannot be undone. Your recipes will not be deleted." } %></details>
+</div>

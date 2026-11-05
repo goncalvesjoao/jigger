@@ -1,2 +1,6 @@
-<h1>Create collection</h1>
-<%= render "form", collection: @collection %>
+<% content_for :title, "Create collection · Jigger" %>
+<div class="library-page library-editor">
+  <%= link_to my_collections_path, class: "library-back" do %><%= render "icon", name: "back" %>My collections<% end %>
+  <header class="library-heading"><div><p class="eyebrow">Make it yours</p><h1>Create collection</h1><p class="library-description">A home for the recipes you want to come back to.</p></div></header>
+  <%= render "form", collection: @collection %>
+</div>

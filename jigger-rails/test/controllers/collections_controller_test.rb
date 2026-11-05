@@ -113,6 +113,47 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "library shows recipe previews counts and visibility without exposing hidden recipes" do
+    @collection.recipes << recipes(:one)
+    @collection.recipes << recipes(:two)
+    recipes(:two).update!(visibility: "private", publication_state: "draft")
+    sign_in_as(users(:one))
+    get my_collections_url
+    assert_response :success
+    assert_select "a.library-card[href=?]", collection_path(@collection) do
+      assert_select "h2", text: "Weekend"
+      assert_select ".library-card-meta", text: /1 recipe/
+      assert_select ".library-visibility", text: "Private"
+      assert_select ".library-artwork-tile", count: 4
+    end
+  end
+
+  test "collection editor explains visibility and groups destructive actions separately" do
+    sign_in_as(users(:one))
+    get new_collection_url
+    assert_response :success
+    assert_select "input[type='radio'][value='private'][checked]"
+    assert_select "input[type='radio'][value='public']"
+    assert_select "a.library-cancel[href=?]", my_collections_path
+    get edit_collection_url(@collection)
+    assert_response :success
+    assert_select ".library-danger form[action=?]", collection_path(@collection)
+    patch collection_url(@collection), params: { collection: { name: "", visibility: "public" } }
+    assert_response :unprocessable_content
+    assert_select ".library-errors[role='alert']"
+    assert_select "input[type='radio'][value='public'][checked]"
+  end
+
+  test "public visitors see collection contents without management controls" do
+    @collection.update!(visibility: "public")
+    get collection_url(@collection)
+    assert_response :success
+    assert_select ".library-detail-heading h1", text: "Weekend"
+    assert_select ".library-empty a[href=?]", cocktails_path
+    assert_select "a[href=?]", edit_collection_path(@collection), count: 0
+    assert_select ".library-remove", count: 0
+  end
+
   test "unreadable recipes cannot be saved" do
     recipes(:two).update!(visibility: "private", publication_state: "draft")
     sign_in_as(users(:one))
