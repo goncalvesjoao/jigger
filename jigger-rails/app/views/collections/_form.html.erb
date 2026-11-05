@@ -1,0 +1,6 @@
+<%= form_with model: collection do |form| %>
+  <% if collection.errors.any? %><p role="alert"><%= collection.errors.full_messages.to_sentence %></p><% end %>
+  <div><%= form.label :name %><%= form.text_field :name, required: true %></div>
+  <div><%= form.label :visibility %><%= form.select :visibility, [["Private", "private"], ["Public", "public"]] %></div>
+  <%= form.submit %>
+<% end %>

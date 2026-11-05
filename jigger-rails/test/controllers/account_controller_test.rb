@@ -2,7 +2,7 @@ require "test_helper"
 
 class AccountControllerTest < ActionDispatch::IntegrationTest
   test "account pages require authentication" do
-    [ my_recipes_url, my_lists_url, my_profile_url ].each do |url|
+    [ my_recipes_url, my_collections_url, my_profile_url ].each do |url|
       get url
       assert_redirected_to new_session_url
     end
@@ -25,7 +25,7 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
     assert_select "nav .primary-navigation" do
       assert_select "a[aria-current='page']", text: "Explore"
       assert_select "a[href=?]", my_recipes_path, text: "My recipes"
-      assert_select "a[href=?]", my_lists_path, text: "My lists"
+      assert_select "a[href=?]", my_collections_path, text: "My collections"
     end
     assert_select "nav a[href=?]", new_recipe_path, count: 0
     assert_select "details.account-dropdown" do
@@ -33,9 +33,9 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", my_profile_path, text: "My profile"
       assert_select "a[href=?][data-turbo-method='delete']", session_path, text: "Log out"
     end
-    get my_lists_url
+    get my_collections_url
     assert_response :success
-    assert_select "h2", text: "Work in progress"
+    assert_select "h1", text: "My collections"
     get my_profile_url
     assert_response :success
     assert_select "dd", text: users(:one).email_address

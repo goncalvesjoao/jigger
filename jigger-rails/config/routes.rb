@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   get "my/recipes", to: "account#recipes", as: :my_recipes
-  get "my/lists", to: "account#lists", as: :my_lists
+  get "my/collections", to: "collections#index", as: :my_collections
+  get "my/lists", to: redirect("/my/collections"), as: :my_lists
+  resources :collection_recipes, only: :create
+  resources :collections do
+    resources :collection_recipes, only: %i[create destroy]
+  end
   get "my/profile", to: "account#profile", as: :my_profile
 
   resource :registration, only: %i[ new create ]

@@ -1,0 +1,29 @@
+<% saved_collection_ids = Current.user.collections.joins(:collection_recipes).where(collection_recipes: { recipe_id: recipe.id }).pluck(:id) %>
+<div data-controller="collection-picker" data-collection-picker-remove-url-value="<%= collection_collection_recipe_path(":collection_id", recipe) %>">
+  <button type="button" class="collection-trigger" aria-label="Manage collections" aria-haspopup="dialog" aria-controls="<%= dom_id(recipe, :collection_picker) %>" data-action="collection-picker#open" data-collection-picker-target="trigger"><span aria-hidden="true"><%= saved_collection_ids.any? ? "✓" : "+" %></span></button>
+  <dialog id="<%= dom_id(recipe, :collection_picker) %>" class="collection-dialog" aria-labelledby="<%= dom_id(recipe, :collection_title) %>" data-collection-picker-target="dialog" data-action="click->collection-picker#backdrop">
+    <div class="collection-dialog-heading"><h2 id="<%= dom_id(recipe, :collection_title) %>">Save to collection</h2><button type="button" class="collection-close" aria-label="Close" data-action="collection-picker#close">×</button></div>
+    <p class="collection-recipe-name"><%= recipe.display_name %></p>
+    <p class="collection-picker-hint">Select a collection to save this recipe. Select it again to remove it.</p>
+    <%= form_with url: collection_recipes_path, data: { action: "submit->collection-picker#save" } do |form| %>
+      <%= form.hidden_field :recipe_id, value: recipe.id %>
+      <div class="collection-choices" data-collection-picker-target="choices">
+        <% Current.user.collections.order(:created_at).each do |collection| %>
+          <button type="submit" name="collection_id" value="<%= collection.id %>" class="collection-choice" aria-pressed="<%= saved_collection_ids.include?(collection.id) %>"><span><%= collection.name %></span><small><%= collection.visibility.capitalize %></small><span class="collection-choice-indicator" aria-hidden="true"><%= saved_collection_ids.include?(collection.id) ? "✓" : "+" %></span></button>
+        <% end %>
+      </div>
+    <% end %>
+    <details class="collection-create" data-collection-picker-target="create">
+      <summary>+ Create new collection</summary>
+      <%= form_with url: collection_recipes_path, data: { action: "submit->collection-picker#create" } do |form| %>
+        <%= form.hidden_field :recipe_id, value: recipe.id %>
+        <%= label_tag dom_id(recipe, :collection_name), "Name" %>
+        <%= text_field_tag "new_collection[name]", nil, id: dom_id(recipe, :collection_name), required: true, placeholder: "e.g. Weekend drinks" %>
+        <%= label_tag dom_id(recipe, :collection_visibility), "Visibility" %>
+        <%= select_tag "new_collection[visibility]", options_for_select([["Private", "private"], ["Public", "public"]], "private"), id: dom_id(recipe, :collection_visibility) %>
+        <%= form.submit "Create and save" %>
+      <% end %>
+    </details>
+    <p role="status" aria-live="polite" data-collection-picker-target="status"></p>
+  </dialog>
+</div>

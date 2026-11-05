@@ -1,0 +1,6 @@
+<% content_for :title, "My collections · Jigger" %>
+<div class="section-heading"><h1>My collections</h1><%= link_to "Create collection", new_collection_path, class: "button" %></div>
+<% if @collections.empty? %><p>No collections yet.</p><% end %>
+<% @collections.each do |collection| %>
+  <article class="card"><h2><%= link_to collection.name, collection %></h2><p><%= collection.visibility.capitalize %></p></article>
+<% end %>

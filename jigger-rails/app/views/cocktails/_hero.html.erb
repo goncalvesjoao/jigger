@@ -35,6 +35,7 @@
     <% else %>
       <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
     <% end %>
+    <% if mixing_recipe && authenticated? %><%= render "collections/picker", recipe: mixing_recipe %><% end %>
     <span class="detail-image-caption"><%= recipe ? "This recipe" : "#{cocktail.display_name} · The collection" %></span>
   </div>
 </header>

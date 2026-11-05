@@ -6,6 +6,9 @@ class Recipe < ApplicationRecord
     blended: "blended"
   }, validate: { allow_nil: true }
 
+  has_many :collection_recipes, dependent: :destroy
+  has_many :collections, through: :collection_recipes
+
   belongs_to :cocktail, optional: true
   belongs_to :user, optional: true
   has_many :recipe_aliases, dependent: :destroy, autosave: true, inverse_of: :recipe

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_01_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_090000) do
     t.text "source_date_note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "collection_recipes", force: :cascade do |t|
+    t.integer "collection_id", null: false
+    t.integer "recipe_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id", "recipe_id"], name: "index_collection_recipes_on_collection_id_and_recipe_id", unique: true
+    t.index ["collection_id"], name: "index_collection_recipes_on_collection_id"
+    t.index ["recipe_id"], name: "index_collection_recipes_on_recipe_id"
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.string "visibility", default: "private", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_collections_on_user_id"
+    t.check_constraint "length(trim(name)) > 0", name: "collections_name"
+    t.check_constraint "visibility IN ('private', 'public')", name: "collections_visibility"
   end
 
   create_table "ingredient_aliases", force: :cascade do |t|
@@ -291,6 +312,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_090000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cocktail_aliases", "cocktails"
   add_foreign_key "cocktail_translations", "cocktails"
+  add_foreign_key "collection_recipes", "collections"
+  add_foreign_key "collection_recipes", "recipes"
+  add_foreign_key "collections", "users"
   add_foreign_key "ingredient_aliases", "ingredients"
   add_foreign_key "ingredient_translations", "ingredients"
   add_foreign_key "recipe_aliases", "recipes"

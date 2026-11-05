@@ -46,7 +46,7 @@
           <li><%= link_to "Explore", cocktails_path, aria: { current: ("page" if controller_name == "cocktails") } %></li>
           <% if authenticated? %>
             <li><%= link_to "My recipes", my_recipes_path, aria: { current: ("page" if controller_name == "account" && action_name == "recipes") } %></li>
-            <li><%= link_to "My lists", my_lists_path, aria: { current: ("page" if controller_name == "account" && action_name == "lists") } %></li>
+            <li><%= link_to "My collections", my_collections_path, aria: { current: ("page" if controller_name == "collections") } %></li>
           <% end %>
         </ul>
         <ul class="navigation-actions">
