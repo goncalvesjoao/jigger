@@ -116,3 +116,30 @@
 @media print { .recipe-star { display: none; } }
 
 .recipe-star-status:not(.visually-hidden) { display: block; max-width: 28ch; margin-top: .5rem; padding: .5rem .75rem; border-radius: .7rem; background: var(--card-background-color); color: var(--color); font-size: .9rem; }
+
+.recipe-techniques { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+.recipe-techniques h3 { margin: 0 0 .5rem; font-size: 1.125rem; }
+.recipe-techniques > p { margin: 0 0 1rem; color: var(--color-muted); font-size: .9375rem; }
+.technique-links { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.technique-links > li { margin: 0; padding: 0; }
+.technique-link { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--border-color); border-radius: 3rem; color: var(--primary-color); font-weight: 600; text-underline-offset: .2em; }
+.technique-link:hover { background: var(--checked-color, #eff2e7); }
+.technique-dialog { width: min(36rem, calc(100vw - 2rem)); overflow-y: auto; overscroll-behavior: contain; }
+.technique-dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.technique-dialog-heading h2 { overflow-wrap: anywhere; }
+.technique-close { flex: 0 0 auto; width: auto; min-height: 2.75rem; margin: 0; padding: .5rem .875rem; border: 1px solid var(--border-color); border-radius: 3rem; background: transparent; color: var(--color); font-size: .9375rem; }
+.technique-close:hover { background: var(--checked-color, #eff2e7); }
+.technique-description { color: var(--color-muted); }
+.technique-instructions h3, .technique-tip h3 { font-size: 1.125rem; margin: 1.5rem 0 .5rem; }
+.technique-instructions p, .technique-tip p { margin: 0; overflow-wrap: anywhere; }
+.technique-tip { border-top: 1px solid var(--border-color); margin-top: 1.5rem; }
+.technique-page { max-width: 65ch; margin: 1rem auto 3rem; }
+.technique-page h1 { margin-top: 1rem; }
+.technique-options { padding: 0; margin: 0; border: 0; }
+.technique-options legend { margin-bottom: .5rem; font-weight: 600; }
+.technique-options > p { margin: 0 0 1rem; color: var(--color-muted); font-size: .9375rem; }
+.technique-options-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .25rem .75rem; }
+.technique-options-list label { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; margin: 0; }
+.technique-options-list input[type=checkbox] { appearance: auto; flex: 0 0 auto; width: 1.25rem; height: 1.25rem; margin: 0; accent-color: var(--primary-color); }
+@media print { .technique-dialog { display: none; } }
+@media (prefers-reduced-motion: reduce) { .technique-dialog, .technique-dialog::backdrop { transition: none; } }

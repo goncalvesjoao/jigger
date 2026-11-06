@@ -69,6 +69,8 @@ Ingredient photos must exist in the cache for referenced ingredients. Refresh us
 
 The seeds also load a [59-entry utensil catalog](db/seeds/utensils/README.md) with original English descriptions and a separate generated photo for each entry. It covers mixing, measuring, straining, prep, ice, specialty tools and glassware. Repeat runs preserve existing utensil curation and fill missing descriptions or photos. All assets are checked in; seeding needs no image-generation credentials or network access.
 
+The [technique catalog](db/seeds/techniques/README.md) contains 17 beginner guides with translated names, descriptions, instructions and optional tips. `RecipeTechnique` links multiple techniques to each recipe. Authors choose techniques in the recipe form; readers open their guides below Preparation, with a standalone page as the no-JavaScript fallback. Administrators manage guide content under `/admin/techniques`. Reviewed seed mappings connect 29 eligible, unchanged system imports to their techniques; arbitrary recipe prose is not classified automatically. Existing `preparation_method` values remain independent for compatibility.
+
 ## Photos
 
 Recipe images are optional; catalog ingredient and utensil images are required. Uploads must be fresh file bytes, not existing blobs or signed IDs. Still JPEG, PNG, and WebP are accepted, up to 10 MB and 25 megapixels. The validator decodes bytes with libvips, rejects corrupt/animated files, and retains the saved image when a replacement fails.

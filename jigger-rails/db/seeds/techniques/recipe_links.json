@@ -1,0 +1,117 @@
+{
+  "Margarita": [
+    "rim",
+    "shake"
+  ],
+  "Blue Margarita": [
+    "rim",
+    "shake",
+    "strain"
+  ],
+  "Tommy's Margarita": [
+    "shake",
+    "strain"
+  ],
+  "Whitecap Margarita": [
+    "blend"
+  ],
+  "Strawberry Margarita": [
+    "rim",
+    "shake",
+    "strain"
+  ],
+  "Smashed Watermelon Margarita": [
+    "muddle",
+    "strain",
+    "shake"
+  ],
+  "Old Fashioned": [
+    "build",
+    "muddle"
+  ],
+  "Mojito": [
+    "build",
+    "muddle"
+  ],
+  "Mojito Extra": [
+    "build",
+    "muddle"
+  ],
+  "Mango Mojito": [
+    "blend",
+    "muddle",
+    "build",
+    "stir"
+  ],
+  "Blueberry Mojito": [
+    "muddle",
+    "build"
+  ],
+  "Daiquiri": [
+    "shake",
+    "strain"
+  ],
+  "Banana Daiquiri": [
+    "shake",
+    "strain"
+  ],
+  "Frozen Daiquiri": [
+    "blend"
+  ],
+  "Strawberry Daiquiri": [
+    "shake",
+    "strain"
+  ],
+  "Frozen Mint Daiquiri": [
+    "blend"
+  ],
+  "Frozen Pineapple Daiquiri": [
+    "blend"
+  ],
+  "Banana Strawberry Shake Daiquiri": [
+    "blend"
+  ],
+  "Negroni": [
+    "build",
+    "stir"
+  ],
+  "French Negroni": [
+    "stir",
+    "strain"
+  ],
+  "Manhattan": [
+    "stir",
+    "strain"
+  ],
+  "Espresso Martini": [
+    "shake",
+    "strain"
+  ],
+  "Moscow Mule": [
+    "build",
+    "stir"
+  ],
+  "Whiskey Sour": [
+    "shake",
+    "strain"
+  ],
+  "Pina Colada": [
+    "blend"
+  ],
+  "Gimlet": [
+    "shake",
+    "strain"
+  ],
+  "Sidecar": [
+    "shake",
+    "strain"
+  ],
+  "Boston Sidecar": [
+    "shake",
+    "strain"
+  ],
+  "Sidecar Cocktail": [
+    "shake",
+    "strain"
+  ]
+}

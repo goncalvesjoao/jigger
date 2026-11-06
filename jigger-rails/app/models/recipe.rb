@@ -22,6 +22,8 @@ class Recipe < ApplicationRecord
   has_many :ingredients, through: :recipe_ingredients
   has_many :recipe_utensils, dependent: :destroy
   has_many :utensils, through: :recipe_utensils
+  has_many :recipe_techniques, dependent: :destroy
+  has_many :techniques, -> { order(:slug) }, through: :recipe_techniques
   has_many :recipe_steps, -> { order(:position) }, dependent: :destroy, autosave: true
 
   include PhotoAttachment

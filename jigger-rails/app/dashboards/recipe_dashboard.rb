@@ -7,6 +7,7 @@ class RecipeDashboard < Administrate::BaseDashboard
     image: PhotoField,
     cocktail: Field::BelongsTo,
     user: Field::BelongsTo,
+    techniques: Field::HasMany,
     language: Field::String,
     visibility: Field::Select.with_options(collection: %w[private public]),
     publication_state: Field::Select.with_options(collection: %w[draft published]),
@@ -22,7 +23,7 @@ class RecipeDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[id name user publication_state].freeze
   SHOW_PAGE_ATTRIBUTES = ATTRIBUTE_TYPES.keys.freeze
-  FORM_ATTRIBUTES = %i[name image cocktail user language visibility publication_state servings preparation_method preparation_time_seconds steps source_reference source_url].freeze
+  FORM_ATTRIBUTES = %i[name image cocktail user language visibility publication_state servings preparation_method preparation_time_seconds steps techniques source_reference source_url].freeze
 
   def display_resource(resource)
     resource.display_name.presence || "Recipe #{resource.id}"

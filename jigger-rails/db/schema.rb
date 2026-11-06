@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -146,6 +146,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.check_constraint "position >= 0", name: "recipe_steps_position"
   end
 
+  create_table "recipe_techniques", force: :cascade do |t|
+    t.integer "recipe_id", null: false
+    t.integer "technique_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id", "technique_id"], name: "index_recipe_techniques_on_recipe_id_and_technique_id", unique: true
+    t.index ["technique_id"], name: "index_recipe_techniques_on_technique_id"
+  end
+
   create_table "recipe_translations", force: :cascade do |t|
     t.integer "recipe_id", null: false
     t.string "locale", null: false
@@ -231,6 +240,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.check_constraint "start_offset >= 0 AND end_offset > start_offset", name: "step_mentions_offsets"
   end
 
+  create_table "technique_translations", force: :cascade do |t|
+    t.integer "technique_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.string "normalized_name"
+    t.text "description"
+    t.text "instructions"
+    t.text "tip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["locale", "normalized_name"], name: "index_technique_translations_on_locale_and_normalized_name"
+    t.index ["technique_id", "locale"], name: "index_technique_translations_on_technique_id_and_locale", unique: true
+    t.check_constraint "length(trim(locale)) > 0", name: "technique_translations_locale"
+    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0 AND description IS NOT NULL AND length(trim(description)) > 0 AND instructions IS NOT NULL AND length(trim(instructions)) > 0)", name: "technique_translations_english_content"
+  end
+
+  create_table "techniques", force: :cascade do |t|
+    t.string "slug", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_techniques_on_slug", unique: true
+    t.check_constraint "length(trim(slug)) > 0", name: "techniques_slug"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -281,6 +314,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
   add_foreign_key "recipe_steps", "recipes"
+  add_foreign_key "recipe_techniques", "recipes"
+  add_foreign_key "recipe_techniques", "techniques"
   add_foreign_key "recipe_translations", "recipes"
   add_foreign_key "recipe_utensils", "recipes"
   add_foreign_key "recipe_utensils", "utensils"
@@ -290,5 +325,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
   add_foreign_key "step_mentions", "ingredients"
   add_foreign_key "step_mentions", "recipe_steps"
   add_foreign_key "step_mentions", "utensils"
+  add_foreign_key "technique_translations", "techniques"
   add_foreign_key "utensil_translations", "utensils"
 end

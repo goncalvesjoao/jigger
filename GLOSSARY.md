@@ -16,3 +16,6 @@ A recipe without a canonical cocktail classification. A complete public recipe r
 
 **Marketplace**:
 The public collection of complete, published recipes, presented as individual recipes with author handles and links to the exact preparation. Recipe and linked cocktail names are searchable; private recipes and drafts are excluded.
+
+**Technique**:
+A reusable bartending action, such as shaking, stirring or fine-straining, with a description and instructions. A recipe may use several techniques; each has a beginner guide available from the preparation section.

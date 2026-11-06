@@ -218,3 +218,6 @@ ProfileImagesSeeder.seed!
 
 require_relative "seeds/utensils"
 UtensilsSeeder.seed!
+
+require_relative "seeds/techniques"
+TechniquesSeeder.seed!

@@ -8,14 +8,15 @@ class RecipesController < ApplicationController
 
   # GET /recipes or /recipes.json
   def index
-    @recipes = Recipe.marketplace.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps, :user, cocktail: [ :translations, { image_attachment: :blob } ])
+    @recipes = Recipe.marketplace.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps, :user, techniques: :translations, cocktail: [ :translations, { image_attachment: :blob } ])
   end
 
   # GET /recipes/1 or /recipes/1.json
   def show
     ActiveRecord::Associations::Preloader.new(records: [ @recipe ], associations: {
       recipe_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
-      recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] }
+      recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] },
+      techniques: :translations
     }).call
     if @recipe.cocktail && policy(@recipe.cocktail).show?
       @cocktail = @recipe.cocktail
@@ -92,6 +93,7 @@ class RecipesController < ApplicationController
     def recipe_params
       fields = [ :name, :language, :steps, :preparation_time_seconds, :servings, :preparation_method, :source_reference, :source_url, :visibility, :publication_state, :image ]
       fields += [ :cocktail_id ] if Current.user&.admin?
+      fields += [ { technique_ids: [] } ]
       permitted = params.expect(recipe: fields)
       if permitted[:image].blank?
         permitted.delete(:image)

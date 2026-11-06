@@ -20,6 +20,7 @@
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
+      <%= render "recipes/techniques", recipe: recipe %>
     </section>
   </div>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>

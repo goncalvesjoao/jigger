@@ -1,0 +1,121 @@
+[
+  {
+    "slug": "shake",
+    "name": "Shake",
+    "description": "Mix, chill, dilute and aerate ingredients by shaking them with ice.",
+    "instructions": "Add the recipe ingredients to a shaker, then add ice. Seal firmly and hold both parts securely. Shake briskly until well chilled, then open and strain as the recipe directs.",
+    "tip": "Leave room for the ice to move. Add sparkling ingredients after shaking, not inside a sealed shaker."
+  },
+  {
+    "slug": "stir",
+    "name": "Stir",
+    "description": "Gently combine and chill ingredients with ice while keeping a smooth texture.",
+    "instructions": "Add ingredients and plenty of ice to a mixing glass or the serving glass, as directed. Move a bar spoon smoothly around the inside edge so the ice rotates together. Stop when the drink reaches the desired chill and dilution. Strain if the recipe calls for it.",
+    "tip": "Keep the spoon against the glass rather than beating the ice. Follow the recipe instead of relying on a fixed number of turns."
+  },
+  {
+    "slug": "build",
+    "name": "Build",
+    "description": "Assemble the drink directly in the glass in which it will be served.",
+    "instructions": "Prepare the serving glass and add ingredients and ice in the order given by the recipe. Add sparkling mixers gently and give a light stir only if instructed. Finish with the garnish.",
+    "tip": "Building describes where you assemble the drink. A built drink may also involve muddling or stirring."
+  },
+  {
+    "slug": "muddle",
+    "name": "Muddle",
+    "description": "Press fruit, herbs or sugar to release juice and flavor.",
+    "instructions": "Place the ingredients to be muddled in a sturdy glass or shaker. Press with a muddler using controlled movements. Use gentle pressure on herbs; firmer fruit may need more pressure. Continue with the remaining recipe steps.",
+    "tip": "Do not grind mint into a paste. Gentle pressing releases aroma without shredding the leaves."
+  },
+  {
+    "slug": "blend",
+    "name": "Blend",
+    "description": "Use an electric blender to combine ingredients, often with ice, into an even texture.",
+    "instructions": "Add ingredients and the amount of ice specified by the recipe to an ice-capable blender. Secure the lid and blend until the texture is even. Stop the machine before removing the lid or adjusting the contents.",
+    "tip": "Measure the ice as well as the liquids. Extra ice changes both the texture and the balance."
+  },
+  {
+    "slug": "swizzle",
+    "name": "Swizzle",
+    "description": "Churn ingredients with crushed ice using a swizzle stick.",
+    "instructions": "Add the ingredients and crushed ice to a tall glass as directed. Place a swizzle stick in the mixture and rotate its shaft between your palms, moving it through the drink to combine and chill. Top with more crushed ice if instructed.",
+    "tip": "Keep the stick below the surface to reduce splashing. A bar spoon can churn the mixture if you do not have a swizzle stick."
+  },
+  {
+    "slug": "roll",
+    "name": "Roll",
+    "description": "Gently mix a drink by transferring it between two vessels at a short distance.",
+    "instructions": "Add the ingredients and ice as the recipe directs. Hold two mixing vessels close together and carefully pour the contents from one to the other a few times. Pour into the serving glass, straining if instructed.",
+    "tip": "Start with a short, slow pour over a sink or tray. Rolling is gentler than shaking and different from the long pour used for throwing."
+  },
+  {
+    "slug": "throw",
+    "name": "Throw",
+    "description": "Aerate a drink by pouring a controlled stream between two mixing vessels.",
+    "instructions": "Place ingredients and ice in one vessel and retain the ice with a strainer. Pour the liquid into the second vessel, gradually increasing the distance only as you gain control. Return the liquid at a short distance and repeat as the recipe directs.",
+    "tip": "Practice with water first and keep the receiving vessel low. A long pour is an advanced handling skill, not a requirement for every cocktail."
+  },
+  {
+    "slug": "layer",
+    "name": "Layer",
+    "description": "Carefully float ingredients to create distinct layers in the glass.",
+    "instructions": "Add the first ingredient as directed. Hold the back of a bar spoon close to the liquid surface and slowly pour the next ingredient over it. Keep the stream gentle and follow the ingredient order in the recipe.",
+    "tip": "Layering depends on density, not just color. Use the recipe order rather than assuming all spirits will float."
+  },
+  {
+    "slug": "strain",
+    "name": "Strain",
+    "description": "Separate the mixed drink from the ice and larger solids used during preparation.",
+    "instructions": "Fit a suitable strainer to the shaker or mixing glass. Hold it securely and pour into the prepared serving glass. Use fresh ice in the serving glass when the recipe calls for a drink over ice.",
+    "tip": "A Hawthorne strainer commonly fits shaker tins; a julep strainer is often used with a mixing glass."
+  },
+  {
+    "slug": "fine-strain",
+    "name": "Fine-strain",
+    "description": "Pour through a fine-mesh sieve as well as a primary strainer to catch smaller particles.",
+    "instructions": "Hold a fine-mesh strainer above the serving glass. Pour the drink through the shaker or mixing-glass strainer, then through the mesh into the glass. Empty or clean the mesh if pulp blocks the flow.",
+    "tip": "Also called double straining. It helps remove small ice shards, seeds and herb fragments; it is not necessary for every drink."
+  },
+  {
+    "slug": "dry-shake",
+    "name": "Dry shake",
+    "description": "Shake without ice to help develop foam before chilling the drink.",
+    "instructions": "Add the non-carbonated ingredients specified by the recipe to a shaker without ice. Hold both parts tightly and shake to develop foam. Open carefully, add ice and shake again to chill. Strain as directed.",
+    "tip": "An unchilled shaker may not seal as tightly, so keep a firm grip on both parts."
+  },
+  {
+    "slug": "reverse-dry-shake",
+    "name": "Reverse dry shake",
+    "description": "Chill the drink first, then shake without ice to develop foam.",
+    "instructions": "Shake the ingredients with ice to chill them. Strain into an empty shaker and remove all the used ice. Seal and shake the liquid again without ice, then pour as the recipe directs.",
+    "tip": "Remove the ice before the second shake. This reverses the order of a conventional dry shake."
+  },
+  {
+    "slug": "whip-shake",
+    "name": "Whip shake",
+    "description": "Shake with a small measured amount of ice to aerate the drink with controlled dilution.",
+    "instructions": "Add the ingredients and the small amount of crushed or pebble ice specified by the recipe. Seal and shake until that ice is mostly or fully melted, as directed. Pour into the prepared glass and add serving ice if called for.",
+    "tip": "Do not substitute a full shaker of ice: the ice quantity is part of the recipe."
+  },
+  {
+    "slug": "rim",
+    "name": "Rim",
+    "description": "Coat the edge of a glass with salt, sugar or another fine garnish.",
+    "instructions": "Place the coating in a shallow dish. Moisten only the outside edge of the glass with the ingredient specified by the recipe. Gently roll that edge through the coating, then shake off excess before filling the glass.",
+    "tip": "A half rim lets the drinker choose whether to sip through the coating. Keep loose salt or sugar out of the drink."
+  },
+  {
+    "slug": "express-citrus-oils",
+    "name": "Express citrus oils",
+    "description": "Squeeze a strip of citrus peel over the drink to release its aromatic oils.",
+    "instructions": "Cut a fresh strip of peel, avoiding excessive white pith. Hold it skin-side toward the drink and gently bend or squeeze it so oils spray onto the surface. Add or discard the peel as the recipe directs.",
+    "tip": "A citrus twist garnish does not always mean the peel must be expressed. Follow the preparation instructions."
+  },
+  {
+    "slug": "rinse",
+    "name": "Rinse",
+    "description": "Coat the inside of a glass with a small amount of an aromatic ingredient.",
+    "instructions": "Add the specified rinse ingredient to the glass. Tilt and rotate the glass to coat the inside, then discard excess or retain it only if the recipe says to. Add the prepared drink.",
+    "tip": "The aim is a thin coating, not a full extra measure. A rinse can noticeably change the aroma even in a small amount."
+  }
+]

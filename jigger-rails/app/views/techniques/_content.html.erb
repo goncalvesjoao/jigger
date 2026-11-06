@@ -1,0 +1,11 @@
+<p class="technique-description"><%= technique.description %></p>
+<div class="technique-instructions">
+  <h3>How to do it</h3>
+  <%= simple_format technique.instructions %>
+</div>
+<% if technique.tip.present? %>
+  <div class="technique-tip">
+    <h3>Beginner tip</h3>
+    <%= simple_format technique.tip %>
+  </div>
+<% end %>
