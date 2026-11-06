@@ -1,5 +1,24 @@
 # Jigger Rails
 
+## Local development
+
+With the project's mise Ruby active and npm dependencies installed, set up the
+Ruby dependencies, Foreman, and database:
+
+```sh
+bin/setup --skip-server
+bin/dev
+```
+
+This starts Rails at `http://localhost:3000` and the Vite dev server at
+`http://localhost:3036`, with combined logs. Press Ctrl+C to stop both processes.
+`bin/setup` installs Foreman if it is missing. `bin/dev` reports an error with
+setup instructions when Foreman is unavailable; it does not install dependencies.
+Foreman runs outside the application's bundle and does not need a Gemfile entry.
+
+To use a different Rails port, run `PORT=3001 bin/dev`. Vite's port is configured
+separately in `config/vite.json`.
+
 ## Recipes and ownership
 
 `Cocktail` represents a canonical drink identity with translated names, description, history and aliases. It has many recipes.

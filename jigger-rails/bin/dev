@@ -1,2 +1,12 @@
-#!/usr/bin/env ruby
-exec "./bin/rails", "server", *ARGV
+#!/usr/bin/env sh
+set -e
+
+cd "$(dirname "$0")/.."
+
+if ! gem list --installed --exact --silent foreman || ! command -v foreman >/dev/null 2>&1; then
+  echo "Foreman is missing. Run bin/setup --skip-server first, then retry bin/dev." >&2
+  exit 1
+fi
+
+export PORT="${PORT:-3000}"
+exec foreman start -f Procfile.dev "$@"
