@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["dialog", "status", "choices", "create", "trigger"]
-  static values = { removeUrl: String }
+  static values = { removeUrl: String, recipeId: Number }
 
   open() { this.dialogTarget.showModal() }
   close() { this.dialogTarget.close() }
@@ -14,6 +14,19 @@ export default class extends Controller {
   updateChoice(button, saved) {
     button.setAttribute("aria-pressed", String(saved))
     button.querySelector(".collection-choice-indicator").textContent = saved ? "✓" : "+"
+  }
+
+  syncStar(event) {
+    const state = event.detail
+    if (state.recipe_id !== this.recipeIdValue) return
+    const choice = this.choicesTarget.querySelector(`[value="${state.favorites_collection_id}"]`)
+    if (choice) this.updateChoice(choice, state.starred)
+    this.updateTrigger()
+  }
+
+  updateTrigger() {
+    const anySaved = this.choicesTarget.querySelector('[aria-pressed="true"]') !== null
+    this.triggerTarget.querySelector("span").textContent = anySaved ? "✓" : "+"
   }
 
   async submit(event, creating) {
@@ -56,8 +69,8 @@ export default class extends Controller {
         event.target.reset()
       }
       if (!creating) this.updateChoice(button, collection.saved)
-      const anySaved = this.choicesTarget.querySelector('[aria-pressed="true"]') !== null
-      this.triggerTarget.querySelector("span").textContent = anySaved ? "✓" : "+"
+      this.updateTrigger()
+      window.dispatchEvent(new CustomEvent("recipe-star:changed", { detail: collection }))
       this.statusTarget.textContent = collection.saved ? `Saved to ${collection.name}.` : `Removed from ${collection.name}.`
     } catch (error) {
       this.statusTarget.textContent = error.message

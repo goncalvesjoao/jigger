@@ -13,7 +13,11 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
     2.times { post recipe_star_url(recipes(:one)) }
     assert_equal [ recipes(:one).id ], @favorites.recipe_ids
     get recipe_url(recipes(:one))
-    assert_select "button[aria-pressed=true]", text: "Unstar recipe"
+    assert_select ".detail-visual .recipe-star-button[aria-pressed=true]" do
+      assert_select "svg[aria-hidden=true]"
+      assert_select "span", text: /Starred|Star/, count: 0
+      assert_select ".recipe-star-count", text: "1"
+    end
     delete recipe_star_url(recipes(:one))
     assert_empty @favorites.reload.recipe_ids
     assert_equal [ recipes(:one).id ], other.recipe_ids
@@ -46,5 +50,66 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
     get recipe_url(recipes(:one))
     assert_select "h1", text: "@mika / MyString"
     assert_select "a[href=?]", profile_path(@user), count: 0
+  end
+  test "public counts include only Favorites memberships and never reveal who starred" do
+    @favorites.collection_recipes.create!(recipe: recipes(:one))
+    users(:two).favorites_collection.collection_recipes.create!(recipe: recipes(:one))
+    regular = @user.collections.create!(name: "Weekend")
+    regular.collection_recipes.create!(recipe: recipes(:one))
+    get root_url
+    assert_select "#recipe_#{recipes(:one).id} .card-media .recipe-star a[href=?]", new_session_path do
+      assert_select ".recipe-star-count", text: "2"
+    end
+    get recipe_url(recipes(:one))
+    assert_select ".detail-visual .recipe-star-count", text: "2"
+    assert_select ".recipe-star [data-user-id]", count: 0
+    sign_in_as(users(:two))
+    get root_url
+    assert_select "#recipe_#{recipes(:one).id} .recipe-star-button[aria-pressed=true]"
+  end
+
+  test "JSON toggles return authoritative state and repeated requests are idempotent" do
+    sign_in_as(@user)
+    2.times do
+      post recipe_star_url(recipes(:one)), as: :json
+      assert_response :success
+      assert_equal true, response.parsed_body["starred"]
+      assert_equal 1, response.parsed_body["star_count"]
+      assert_equal recipes(:one).id, response.parsed_body["recipe_id"]
+    end
+    2.times do
+      delete recipe_star_url(recipes(:one)), as: :json
+      assert_response :success
+      assert_equal false, response.parsed_body["starred"]
+      assert_equal 0, response.parsed_body["star_count"]
+    end
+  end
+
+  test "Favorites picker changes return the same star state and count" do
+    sign_in_as(@user)
+    post collection_recipes_url, params: { collection_id: @favorites.id, recipe_id: recipes(:one).id }, as: :json
+    assert_equal true, response.parsed_body["starred"]
+    assert_equal 1, response.parsed_body["star_count"]
+    assert_equal @favorites.id, response.parsed_body["favorites_collection_id"]
+    delete collection_collection_recipe_url(@favorites, recipes(:one)), as: :json
+    assert_equal false, response.parsed_body["starred"]
+    assert_equal 0, response.parsed_body["star_count"]
+  end
+
+  test "HTML toggles return to marketplace search without losing filters" do
+    sign_in_as(@user)
+    post recipe_star_url(recipes(:one)), headers: { "HTTP_REFERER" => cocktails_url(q: "gin") }
+    assert_redirected_to cocktails_url(q: "gin")
+  end
+  test "signed out marketplace renders cached totals without reading memberships" do
+    @favorites.collection_recipes.create!(recipe: recipes(:one))
+    membership_queries = []
+    subscriber = ->(_name, _start, _finish, _id, payload) do
+      membership_queries << payload[:sql] if payload[:sql].match?(/FROM "collection_recipes"/i)
+    end
+    ActiveSupport::Notifications.subscribed(subscriber, "sql.active_record") { get root_url }
+    assert_response :success
+    assert_select "#recipe_#{recipes(:one).id} .recipe-star-count", text: "1"
+    assert_empty membership_queries
   end
 end

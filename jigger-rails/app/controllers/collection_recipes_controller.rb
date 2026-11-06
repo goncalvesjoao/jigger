@@ -1,4 +1,6 @@
 class CollectionRecipesController < ApplicationController
+  include RecipeStarring
+
   def create
     recipe = Recipe.readable_by(Current.user).find(params[:recipe_id])
     collection = nil
@@ -12,7 +14,7 @@ class CollectionRecipesController < ApplicationController
     end
     respond_to do |format|
       format.html { redirect_to collection, notice: "Recipe added to collection.", status: :see_other }
-      format.json { render json: { id: collection.id, name: collection.name, visibility: collection.visibility, saved: true } }
+      format.json { render json: { id: collection.id, name: collection.name, visibility: collection.visibility, saved: true }.merge(recipe_star_payload(recipe)) }
     end
   rescue ActiveRecord::RecordInvalid => error
     respond_to do |format|
@@ -24,9 +26,10 @@ class CollectionRecipesController < ApplicationController
   def destroy
     collection = Current.user.collections.find(params[:collection_id])
     collection.collection_recipes.find_by(recipe_id: params[:id])&.destroy!
+    recipe = Recipe.readable_by(Current.user).find_by(id: params[:id])
     respond_to do |format|
       format.html { redirect_to collection, notice: "Recipe removed from collection.", status: :see_other }
-      format.json { render json: { id: collection.id, name: collection.name, visibility: collection.visibility, saved: false } }
+      format.json { render json: { id: collection.id, name: collection.name, visibility: collection.visibility, saved: false }.merge(recipe ? recipe_star_payload(recipe) : {}) }
     end
   end
 end

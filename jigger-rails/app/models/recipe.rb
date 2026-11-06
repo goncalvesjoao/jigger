@@ -9,6 +9,7 @@ class Recipe < ApplicationRecord
   has_many :collection_recipes, dependent: :destroy
   has_many :collections, through: :collection_recipes
 
+
   belongs_to :cocktail, optional: true
   belongs_to :user
 

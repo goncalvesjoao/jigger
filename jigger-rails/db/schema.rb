@@ -183,6 +183,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.string "preparation_method"
     t.string "source_reference"
     t.string "source_url"
+    t.integer "stars_count", default: 0, null: false
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -194,6 +195,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "recipes_preparation_time"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "recipes_publication_state"
     t.check_constraint "servings IS NULL OR servings > 0", name: "recipes_positive_servings"
+    t.check_constraint "stars_count >= 0", name: "recipes_nonnegative_stars_count"
     t.check_constraint "visibility IN ('private', 'public')", name: "recipes_visibility"
   end
 

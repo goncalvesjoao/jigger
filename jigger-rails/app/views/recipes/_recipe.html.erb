@@ -11,6 +11,7 @@
       <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
     <% end %>
   <% end %>
+  <%= render "recipes/star", recipe: recipe %>
   </div>
   <div class="card-copy">
     <h3><%= link_to recipe_heading(recipe), destination %></h3>

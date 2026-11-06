@@ -22,7 +22,6 @@
     <% if recipe %>
     <div class="detail-actions">
       <%= link_to "Start mixing ↓", "#ingredients", class: "button" %>
-      <% if authenticated? %><%= render "recipes/star", recipe: recipe %><% end %>
     </div>
     <% end %>
   </div>
@@ -33,6 +32,7 @@
     <% else %>
       <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
     <% end %>
+    <% if recipe %><%= render "recipes/star", recipe: recipe %><% end %>
     <% if recipe && authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
 
   </div>

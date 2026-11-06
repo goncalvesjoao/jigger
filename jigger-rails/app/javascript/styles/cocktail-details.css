@@ -102,3 +102,17 @@
   .detail-visual { display: none; }
   .recipe-hero { display: block; }
 }
+
+/* Image actions stay legible on both light and dark photos. */
+.recipe-star { position: absolute; top: .75rem; left: .75rem; z-index: 1; max-width: calc(100% - 1.5rem); }
+.recipe-star form { margin: 0; }
+.recipe-star-button { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.9rem; padding: .6rem .85rem; margin: 0; border: 1px solid var(--border-color); border-radius: 3rem; background: var(--card-background-color); color: var(--color); font-size: .9rem; font-weight: 600; line-height: 1.2; text-decoration: none; }
+.recipe-star-button:hover { background: var(--checked-color, #eff2e7); color: var(--color); }
+.recipe-star-button[aria-pressed="true"] { color: var(--primary-color); }
+.recipe-star-button[aria-pressed="true"] svg { fill: currentColor; }
+.recipe-star-button svg { flex: 0 0 1.25rem; }
+.recipe-star-count { font-variant-numeric: tabular-nums; }
+.recipe-star-button:disabled { opacity: .65; cursor: wait; }
+@media print { .recipe-star { display: none; } }
+
+.recipe-star-status:not(.visually-hidden) { display: block; max-width: 28ch; margin-top: .5rem; padding: .5rem .75rem; border-radius: .7rem; background: var(--card-background-color); color: var(--color); font-size: .9rem; }

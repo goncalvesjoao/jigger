@@ -1,5 +1,5 @@
 <% saved_collection_ids = Current.user.collections.joins(:collection_recipes).where(collection_recipes: { recipe_id: recipe.id }).pluck(:id) %>
-<div data-controller="collection-picker" data-collection-picker-remove-url-value="<%= collection_collection_recipe_path(":collection_id", recipe) %>">
+<div data-controller="collection-picker" data-collection-picker-recipe-id-value="<%= recipe.id %>" data-action="recipe-star:changed@window->collection-picker#syncStar" data-collection-picker-remove-url-value="<%= collection_collection_recipe_path(":collection_id", recipe) %>">
   <button type="button" class="collection-trigger" aria-label="Manage collections" aria-haspopup="dialog" aria-controls="<%= dom_id(recipe, :collection_picker) %>" data-action="collection-picker#open" data-collection-picker-target="trigger"><span aria-hidden="true"><%= saved_collection_ids.any? ? "✓" : "+" %></span></button>
   <dialog id="<%= dom_id(recipe, :collection_picker) %>" class="collection-dialog" aria-labelledby="<%= dom_id(recipe, :collection_title) %>" data-collection-picker-target="dialog" data-action="click->collection-picker#backdrop">
     <div class="collection-dialog-heading"><h2 id="<%= dom_id(recipe, :collection_title) %>">Save to collection</h2><button type="button" class="collection-close" aria-label="Close" data-action="collection-picker#close">×</button></div>

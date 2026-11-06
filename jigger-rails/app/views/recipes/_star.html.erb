@@ -1,2 +1,17 @@
-<% starred = Current.user.favorites_collection.collection_recipes.exists?(recipe: recipe) %>
-<%= button_to starred ? "Unstar recipe" : "Star recipe", recipe_star_path(recipe), method: starred ? :delete : :post, class: "secondary", aria: { pressed: starred }, title: "Stars are saved in your private Favorites collection" %>
+<% signed_in = authenticated? %>
+<% starred = signed_in && recipe_starred?(recipe) %>
+<% count = recipe.stars_count %>
+<div class="recipe-star" data-controller="recipe-star" data-recipe-star-recipe-id-value="<%= recipe.id %>" data-recipe-star-recipe-name-value="<%= recipe.display_name %>" data-action="recipe-star:changed@window->recipe-star#sync">
+  <% if signed_in %>
+    <%= form_with url: recipe_star_path(recipe), method: starred ? :delete : :post, data: { action: "submit->recipe-star#toggle", recipe_star_target: "form" } do %>
+      <button type="submit" class="recipe-star-button" aria-pressed="<%= starred %>" aria-label="<%= starred ? 'Unstar' : 'Star' %> <%= recipe.display_name %>, <%= pluralize(count, 'star') %>" data-recipe-star-target="button" title="<%= starred ? 'Unstar recipe' : 'Star recipe in your private Favorites' %>">
+        <%= render "recipes/star_icon" %><span class="recipe-star-count" data-recipe-star-target="count"><%= count %></span>
+      </button>
+    <% end %>
+  <% else %>
+    <%= link_to new_session_path, class: "recipe-star-button", aria: { label: "Sign in to star #{recipe.display_name}, #{pluralize(count, 'star')}" }, title: "Sign in to star this recipe" do %>
+      <%= render "recipes/star_icon" %><span class="recipe-star-count"><%= count %></span>
+    <% end %>
+  <% end %>
+  <span class="recipe-star-status visually-hidden" role="status" data-recipe-star-target="status"></span>
+</div>

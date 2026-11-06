@@ -8,6 +8,11 @@ class Collection < ApplicationRecord
 
   validates :visibility, inclusion: { in: %w[private] }, if: -> { system_key == "favorites" }
   before_destroy :preserve_favorites
+  validate :system_identity_cannot_change, on: :update
+
+  private def system_identity_cannot_change
+    errors.add(:system_key, "cannot change") if will_save_change_to_system_key?
+  end
 
   private def preserve_favorites
     throw :abort if system_key == "favorites" && !destroyed_by_association
