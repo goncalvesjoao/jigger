@@ -13,7 +13,7 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
     2.times { post recipe_star_url(recipes(:one)) }
     assert_equal [ recipes(:one).id ], @favorites.recipe_ids
     get recipe_url(recipes(:one))
-    assert_select ".detail-visual .recipe-star-button[aria-pressed=true]" do
+    assert_select ".mixing-save-actions .recipe-star-button[aria-pressed=true]" do
       assert_select "svg[aria-hidden=true]"
       assert_select "span", text: /Starred|Star/, count: 0
       assert_select ".recipe-star-count", text: "1"
@@ -61,7 +61,7 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".recipe-star-count", text: "2"
     end
     get recipe_url(recipes(:one))
-    assert_select ".detail-visual .recipe-star-count", text: "2"
+    assert_select ".mixing-save-actions .recipe-star-count", text: "2"
     assert_select ".recipe-star [data-user-id]", count: 0
     sign_in_as(users(:two))
     get root_url

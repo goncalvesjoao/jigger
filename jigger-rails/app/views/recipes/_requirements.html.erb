@@ -4,9 +4,8 @@
     <h2>Ingredients</h2>
     <% if recipe.servings.present? %><span class="recipe-servings"><%= pluralize(recipe.servings, "serving") %></span><% end %>
   </div>
-  <progress class="checklist-progress" data-ingredients-target="progress" value="0" max="<%= [recipe.recipe_ingredients.size, 1].max %>" aria-label="Ingredients gathered" hidden></progress>
+  <progress class="checklist-progress visually-hidden" data-ingredients-target="progress" value="0" max="<%= [recipe.recipe_ingredients.size, 1].max %>" aria-label="Ingredients gathered" hidden></progress>
   <% if recipe.recipe_ingredients.any? %>
-    <div class="checklist-status" data-ingredients-target="controls" hidden><p role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
     <ul class="checklist ingredient-list">
       <% recipe.recipe_ingredients.each do |line| %>
         <li><label>
@@ -18,20 +17,18 @@
             <% if line.optional? %><small>Optional</small><% end %>
             <% unless line.mixing? %><small><%= line.role.humanize %></small><% end %>
           </span>
-          <% if line.ingredient.image.attached? %><%= image_tag ingredient_image_path(line.ingredient, size: :card), alt: "Photo of #{line.ingredient.name}", loading: "lazy", class: "requirement-photo" %><% end %>
         </label></li>
       <% end %>
     </ul>
+    <div class="checklist-status" data-ingredients-target="controls" hidden><p class="visually-hidden" role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
   <% else %><p>No ingredients listed.</p><% end %>
   <% if recipe.recipe_utensils.any? %>
     <h3>Utensils</h3>
     <ul class="utensil-list">
       <% recipe.recipe_utensils.each do |requirement| %>
         <li><span class="submitted-prose" lang="<%= requirement.language %>"><%= requirement.submitted_text %></span>
-          <% if requirement.utensil.image.attached? %><%= image_tag utensil_image_path(requirement.utensil, size: :card), alt: "Photo of #{requirement.utensil.name}", loading: "lazy", class: "requirement-photo" %><% end %>
         </li>
       <% end %>
     </ul>
   <% end %>
-  <div class="ingredients-footer"><a href="#<%= preparation_id %>">Go to preparation →</a></div>
 </section>

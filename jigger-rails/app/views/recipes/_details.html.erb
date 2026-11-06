@@ -1,25 +1,36 @@
 <% ingredients_id = "ingredients" %>
 <% preparation_id = "preparation" %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
-<article id="<%= dom_id recipe %>" class="recipe" lang="<%= recipe.language %>">
-  <%= render "cocktails/hero", cocktail: @cocktail, recipe: recipe %>
-  <%= render "cocktails/section_nav", cocktail: @cocktail, recipe_page: true %>
+<article id="<%= dom_id recipe %>" class="recipe mixing-recipe" lang="<%= recipe.language %>">
+  <% photo = recipe_photo(recipe) %>
+  <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "", class: "recipe-backdrop", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
+  <header class="mixing-header">
+    <div>
+      <h1><%= recipe_heading(recipe) %></h1>
+      <p class="recipe-attribution">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %><% if @cocktail %>, for <%= link_to @cocktail.display_name, cocktail_path(@cocktail), data: { action: "cocktail-panel#open", cocktail_panel_target: "trigger" }, aria: { haspopup: "dialog", controls: "cocktail-panel" } %><% end %></p>
+      <% unless recipe.publication_state == "published" && recipe.visibility == "public" %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
+    </div>
+    <div class="mixing-save-actions">
+      <%= render "recipes/star", recipe: recipe %>
+      <% if authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
+    </div>
+    <nav class="mixing-jumps" aria-label="Recipe sections"><a href="#preparation">Preparation</a></nav>
+  </header>
   <div class="mixing-layout">
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
     <section id="<%= preparation_id %>" class="card recipe-panel mb-0" data-controller="preparation">
       <div class="preparation-heading">
       <h2>Preparation</h2>
-      <% if recipe.recipe_steps.any? %><progress class="checklist-progress" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
+      <% if recipe.recipe_steps.any? %><progress class="checklist-progress visually-hidden" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
       </div>
-      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
-      <a href="#<%= ingredients_id %>" class="preparation-back">← Back to ingredients</a>
       <% if recipe.recipe_steps.any? %>
         <ol class="checklist steps-list">
           <% recipe.recipe_steps.each_with_index do |step, index| %>
-            <li><label><input type="checkbox" data-preparation-target="step" data-action="preparation#update"><span><span class="step-number"><%= index + 1 %></span><span class="submitted-prose step-body"><%= step.body %></span></span></label></li>
+            <li><label><input type="checkbox" data-preparation-target="step" data-action="preparation#update"><span><% if recipe.recipe_steps.size > 1 %><span class="step-number"><%= index + 1 %></span><% end %><span class="submitted-prose step-body"><%= step.body %></span></span></label></li>
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
+      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
       <%= render "recipes/techniques", recipe: recipe %>
     </section>
   </div>

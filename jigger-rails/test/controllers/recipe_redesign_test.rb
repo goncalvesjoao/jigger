@@ -34,9 +34,10 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select ".ingredient-list .submitted-prose", text: "Gin"
     assert_select ".quantity", text: "0.5 oz"
     assert_select "input[type=checkbox][data-action='preparation#update']", count: 2
-    assert_select "a.button[href='#ingredients']", text: "Start mixing ↓"
-    assert_select "#ingredients a[href='#preparation']"
-    assert_select "#preparation a[href='#ingredients']"
+    assert_select ".mixing-header h1"
+    assert_select ".mixing-header a[href='#preparation']", text: "Preparation"
+    assert_select ".detail-hero", count: 0
+    assert_operator response.body.index('id="ingredients"'), :<, response.body.index('id="preparation"')
     assert_select "progress[max='2'][aria-label='Preparation progress']"
   end
 
