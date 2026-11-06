@@ -41,8 +41,6 @@
 .recipe-editor-extra summary { display: flex; align-items: center; min-height: 2.75rem; font-size: .9rem; font-weight: 600; cursor: pointer; }
 .recipe-editor-extra summary span { margin-left: .6rem; color: var(--color-muted); font-size: .75rem; font-weight: 400; }
 .recipe-editor-extra .recipe-section-fields { padding-block: 1rem; }
-.recipe-section-fields .recipe-official-field { display: flex; align-items: center; gap: .6rem; }
-.recipe-official-field input { margin: 0; }
 .recipe-editor-actions { display: flex; align-items: center; gap: 1.5rem; padding-top: 1.5rem; margin-top: 1rem; border-top: 1px solid var(--border-color); }
 .recipe-editor-actions input { width: auto; margin: 0; }
 @media (max-width: 45rem) {

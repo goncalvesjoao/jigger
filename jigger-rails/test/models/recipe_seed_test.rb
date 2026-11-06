@@ -16,7 +16,7 @@ class RecipeSeedTest < ActiveSupport::TestCase
     assert home.collections.all? { |collection| collection.visibility == "private" }
     assert_operator home.collections.where.not(name: "Favorites").minimum(:id), :>, 0
     assert home.collections.where.not(name: "Favorites").all? { |collection| collection.recipes.count >= 3 }
-    assert bartender.collections.find_by!(name: "Halloween Special").recipes.where(user_id: nil).exists?
+    assert bartender.collections.find_by!(name: "Halloween Special").recipes.where(user: users(:jigger)).exists?
     assert_equal TheCocktailDbSeeder.find_cocktail("Sidecar"), TheCocktailDbSeeder.find_cocktail("Boston Sidecar").parent_cocktail
     counts = [ User.count, Recipe.count, Collection.count, CollectionRecipe.count ]
     DemoAccountsSeeder.seed!
@@ -27,7 +27,7 @@ class RecipeSeedTest < ActiveSupport::TestCase
     load Rails.root.join("db/seeds.rb")
     imported = Recipe.where(source_reference: "TheCocktailDB")
     assert_operator imported.marketplace.count, :>, 0
-    assert imported.all? { |recipe| recipe.user_id.nil? && recipe.official? }
+    assert imported.all? { |recipe| recipe.user == users(:jigger) }
     recipe = imported.marketplace.first
     assert recipe.cocktail.present?
     assert imported.all? { |entry| entry.cocktail.image.attached? }
@@ -56,22 +56,22 @@ class RecipeSeedTest < ActiveSupport::TestCase
     assert_equal counts, [ Cocktail.count, Recipe.count, RecipeIngredient.count, RecipeStep.count, ActiveStorage::Attachment.count ]
     assert_equal published_at, recipe.reload.published_at
     assert_equal photo_id, recipe.cocktail.image.blob.id
-    recipe.update!(official: true, name: "Curated recipe")
+    recipe.update!(user: users(:jigger), name: "Curated recipe")
     TheCocktailDbSeeder.seed!
     assert_equal "Curated recipe", recipe.reload.name
   end
 
-  test "seeds preserve official imports and leave user owned recipes unchanged" do
+  test "seeds preserve existing imports and leave user owned recipes unchanged" do
     load Rails.root.join("db/seeds.rb")
     imported = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/11007")
     owned = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/12198")
-    owned.update!(user: users(:one), official: false, name: "Personal variation")
+    owned.update!(user: users(:one), name: "Personal variation")
 
     TheCocktailDbSeeder.seed!
-    assert imported.reload.official?
-    assert_nil imported.user_id
+    assert_equal users(:jigger), imported.reload.user
+    assert_equal users(:jigger).id, imported.user_id
     assert_equal "TheCocktailDB", imported.source_reference
-    assert_not owned.reload.official?
+    assert_equal users(:one), owned.reload.user
     assert_equal users(:one), owned.user
     assert_equal "Personal variation", owned.name
   end
@@ -79,7 +79,7 @@ class RecipeSeedTest < ActiveSupport::TestCase
   test "canonical content backfills curated imports in English and preserves admin content and citations" do
     load Rails.root.join("db/seeds.rb")
     recipe = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/11007")
-    recipe.update!(official: true)
+    recipe.update!(user: users(:jigger))
     cocktail = recipe.cocktail
     english = cocktail.translation_for(:en)
     english.update!(description: "Admin description", history: nil)

@@ -20,7 +20,6 @@ class Ingredient < ApplicationRecord
     unknown: "unknown"
   }, validate: true
 
-  has_many :ingredient_aliases, dependent: :destroy, autosave: true, inverse_of: :ingredient
   has_many :recipe_ingredients, dependent: :restrict_with_error
 
   has_many :step_mentions, dependent: :restrict_with_error
@@ -34,10 +33,8 @@ class Ingredient < ApplicationRecord
     normalized = LookupName.normalize(text)
     return none if normalized.blank?
 
-    alias_ids = IngredientAlias.where(language: language, normalized_name: normalized).select(:ingredient_id)
-
     translated_ids = translation_class.where(locale: language.to_s, normalized_name: normalized).select(:ingredient_id)
 
-    usable.where(id: translated_ids).or(usable.where(id: alias_ids))
+    usable.where(id: translated_ids)
   end
 end

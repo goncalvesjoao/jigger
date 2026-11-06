@@ -4,11 +4,11 @@ require_relative "../test_helpers/photo_test_helper"
 class CanonicalTranslationsTest < ActiveSupport::TestCase
   include PhotoTestHelper
   def identity_types
-    [ [ Ingredient, :ingredient_aliases ], [ Utensil, :utensil_aliases ] ]
+    [ Ingredient, Utensil ]
   end
 
   test "English creation and updates store content only in translations and normalize names" do
-    identity_types.each do |type, association|
+    identity_types.each do |type|
       assert_not type.new.valid?
       assert_no_difference([ type.name + ".count", type.translation_class.name + ".count" ]) do
         assert_raises(ActiveRecord::RecordInvalid) { type.create!(image: photo_upload, name: " ") }
@@ -19,7 +19,6 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
       assert_equal "  ＧＩＮ  ", identity.reload.name
       assert_equal "gin", identity.translations.sole.normalized_name
       assert_equal :en, identity.translations.sole.locale
-      assert_empty identity.public_send(association)
       %w[name description history language normalized_name].each { |field| assert_not type.column_names.include?(field) }
       identity.update!(name: "  New name  ")
       assert_equal "new name", identity.reload.translations.sole.normalized_name
@@ -28,7 +27,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "localized fields fall back to English independently without affecting exact locale lookup" do
-    identity_types.each do |type, _association|
+    identity_types.each do |type|
       identity = type.create!(image: photo_upload, name: "Gin", description: "English description")
       Globalize.with_locale(:ja) do
         assert_equal "Gin", identity.name
@@ -53,7 +52,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "optional descriptions can be absent and empty localized names fall back" do
-    identity_types.each do |type, _association|
+    identity_types.each do |type|
       identity = type.create!(image: photo_upload, name: "Gin")
       assert_nil identity.description
       Globalize.with_locale(:ja) do
@@ -65,7 +64,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "saving multiple locales is atomic and failed English validation saves neither locale" do
-    identity_types.each do |type, _association|
+    identity_types.each do |type|
       identity = type.new(image: photo_upload, name: "First")
       Globalize.with_locale(:ja) { identity.name = "最初" }
       identity.save!
@@ -85,7 +84,7 @@ class CanonicalTranslationsTest < ActiveSupport::TestCase
   end
 
   test "locale uniqueness and identity references are enforced by models and database" do
-    identity_types.each do |type, _association|
+    identity_types.each do |type|
       identity = type.create!(image: photo_upload, name: "Gin")
       english = identity.translations.sole
       duplicate = english.dup

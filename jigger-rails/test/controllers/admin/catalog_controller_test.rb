@@ -137,21 +137,21 @@ class Admin::CatalogControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "admin recipe forms manage owners and retain official recipe constraints" do
-    official = recipes(:one)
-    community = recipes(:two)
-    official.update!(cocktail: @cocktail, official: true)
-    get edit_admin_recipe_url(community)
+  test "admin recipe forms manage owners and require ownership" do
+    reference = recipes(:one)
+    recipe = recipes(:two)
+    reference.update!(cocktail: @cocktail, user: users(:jigger))
+    get edit_admin_recipe_url(recipe)
     assert_select "select[name='recipe[user_id]'] option[value=?]", users(:two).id.to_s
-    patch admin_recipe_url(community), params: { recipe: { cocktail_id: @cocktail.id, official: "1" } }
+    patch admin_recipe_url(recipe), params: { recipe: { cocktail_id: @cocktail.id } }
+    assert_response :redirect
+    assert_equal users(:two), recipe.reload.user
+    patch admin_recipe_url(recipe), params: { recipe: { user_id: "" } }
     assert_response :unprocessable_content
-    assert_not community.reload.official?
-    patch admin_recipe_url(community), params: { recipe: { user_id: "", official: "0" } }
-    assert_response :unprocessable_content
-    assert_equal users(:two), community.reload.user
-    patch admin_recipe_url(community), params: { recipe: { user_id: users(:one).id, name: "Admin edited" } }
-    assert_redirected_to admin_recipe_url(community)
-    assert_equal users(:one), community.reload.user
+    assert_equal users(:two), recipe.reload.user
+    patch admin_recipe_url(recipe), params: { recipe: { user_id: users(:one).id, name: "Admin edited" } }
+    assert_redirected_to admin_recipe_url(recipe)
+    assert_equal users(:one), recipe.reload.user
     post admin_recipes_url, params: { recipe: { user_id: users(:one).id, name: "New draft", language: "en" } }
     assert_response :redirect
     assert_equal users(:one), Recipe.last.user

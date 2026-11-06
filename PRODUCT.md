@@ -24,13 +24,15 @@ Support discovering, creating, organizing, and sharing both alcoholic and non-al
 
 ## Positioning
 
+Jigger is a recipe-sharing marketplace with no sales. Professional bartenders and home creators can publish recipes and build public profiles; people can also browse published recipes while keeping their own profiles and recipes private.
+
 The product promise is relevance at the moment of mixing: give people what they are looking for, when they need it, without ads or extra fluff.
 
 The intended combination is practical discovery based on available ingredients and tools, a queue for the drinks being made now, taste-based discovery, and recipes whose ingredients and utensils can be understood in context. These are product commitments and direction, not a claim that every capability already ships or is unique in the market.
 
 ## Operating Context
 
-People may be mixing a drink while using the app and may need to search for another drink during preparation. Instructions and controls should remain easy to read and operate in that situation. Slightly enlarged text and buttons are an explicit usability commitment.
+People may be mixing a drink while using the app and may need to search for another drink during preparation. Instructions and controls should remain easy to read and operate in that situation. The active mixing interface takes inspiration from point-of-sale systems: large, easy-to-tap controls, readable instructions, and a session queue for drinks someone plans to make.
 
 Browsing and authoring can involve more detail; the active mixing experience should prioritize the recipe instructions and directly relevant help. Background stories and other secondary information should not interrupt preparation.
 
@@ -38,13 +40,17 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 
 ### Established behavior
 
-- A **Cocktail** is a canonical drink identity; a **Recipe** is a particular preparation. Official and community recipes can belong to the same cocktail.
+- A **Cocktail** is a canonical drink identity; a **Recipe** is a particular preparation. The association is optional so original recipes work independently. Automatic canonical matching is a future capability.
+- Marketplace search returns individual eligible published public recipes and opens the exact recipe, including for broad cocktail queries. Recipe names and linked canonical names remain searchable. Owners find drafts and private recipes in **My Recipes**.
+- Recipe results and pages identify the recipe as **@handle / Recipe title**. Handles remain visible on public recipes even if the author's profile is private; private profiles are not linked. Every recipe has an author. Seeded recipes belong to the public **@jigger** account and follow the same discovery, filtering, and permission rules as every other author’s recipes. Handles start from the email local part, with normalization and collision suffixes, and can be changed in profile settings. The Jigger handle is reserved for the Jigger account.
+- Recipe pages prioritize ingredients, tools, and steps. Photos prefer the recipe's image, falling back to its readable linked cocktail. Canonical history and background appear below instructions in a collapsed **More about this cocktail** section.
+- Signed-in users star and unstar individual recipes through membership in their existing private **Favorites** collection. This collection keeps a stable identity even when renamed, remains private, and cannot be deleted. No separate star storage is introduced. Public star counts and ranking by stars remain open. Forking is outside the agreed scope.
 - Discovery supports recipe/name search and filtering by available ingredient and utensil identities. Availability matching does not currently compare quantities or substitute ingredients.
 - **Collections** are user-curated groups of recipes, analogous to playlists. They can be public or private and default to private. New users receive a private **Favorites** collection. Saving a recipe to a collection is reversible.
 - Recipes have separate visibility and publication state. Public discovery shows complete, published, public recipes; owners can also access their own drafts and private recipes.
 - Profiles can be public or private and default to private. Public profiles list public collections and published public recipes. Owners see all their own content and management controls. Email addresses stay off public profiles.
 - Ingredient and utensil records, ordered recipe steps, and step mentions provide structured foundations. Automatic extraction from prose and alternative recommendations are not established user-facing capabilities.
-- Cocktail and recipe names support translations and aliases. Preserve multilingual content and original preparation prose.
+- Cocktail and recipe names support translations. Preserve multilingual content and original preparation prose.
 - Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `jigger-rails/README.md`.
 
 ### Confirmed product direction; not yet shipped as complete workflows

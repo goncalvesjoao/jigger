@@ -95,8 +95,7 @@ class RecipeTest < ActiveSupport::TestCase
     assert_not_includes Recipe.marketplace, recipe
     assert_not recipe.marketplace?
   end
-  test "recipes retain ownership requirements steps mentions and aliases" do
-    canonical = recipes(:margarita)
+  test "recipes retain ownership requirements steps and mentions" do
     variation = recipes(:one)
     assert_includes variation.user.recipes, variation
     assert_equal variation, variation.recipe_ingredients.sole.recipe
@@ -104,72 +103,42 @@ class RecipeTest < ActiveSupport::TestCase
     assert_equal variation, variation.recipe_steps.sole.recipe
     mention = variation.recipe_steps.sole.step_mentions.create!(ingredient: ingredients(:one), start_offset: 0, end_offset: 2, quoted_text: "My")
     assert_equal variation, mention.recipe
-    alternate = canonical.recipe_aliases.create!(name: "マルガリータ", language: "ja")
-    assert_equal canonical, alternate.recipe
   end
 end
 
 class UnifiedRecipeTest < ActiveSupport::TestCase
-  test "non official recipes require a user in the model and database" do
+  test "all recipes require a user in the model and database" do
     recipe = recipes(:one)
     assert_not recipe.update(user: nil)
-    assert_includes recipe.errors[:user], "can't be blank"
+    assert_includes recipe.errors[:user], "must exist"
     recipe.reload
     assert_raises(ActiveRecord::StatementInvalid) { recipe.update_columns(user_id: nil) }
     assert Recipe.new(user: users(:one)).valid?
-    assert Recipe.new(official: true).valid?
+    assert Recipe.new(user: users(:jigger)).valid?
     assert_not Recipe.new.valid?
   end
 
-  test "a cocktail has at most one official recipe including private drafts" do
+  test "Jigger recipes are owned recipes and multiple preparations can share a cocktail" do
     cocktail = Cocktail.create!(name: "Reference cocktail")
-    official = recipes(:one)
-    community = recipes(:two)
-    official.update!(cocktail: cocktail, official: true)
-    community.update!(cocktail: cocktail)
-    assert_not community.update(official: true)
-    assert_includes community.errors[:cocktail_id], "already has an official recipe"
-    community.reload
-    assert_raises(ActiveRecord::RecordNotUnique) { community.update_columns(official: true) }
-    official.update!(publication_state: "draft", visibility: "private")
-    assert_not community.update(official: true)
-    assert official.reload.valid?
-    other = Cocktail.create!(name: "Another cocktail")
-    assert community.update(cocktail: other, official: true)
-    assert_not community.update(cocktail: cocktail)
-    community.reload.update!(cocktail: nil)
-    official.update!(cocktail: nil)
-    assert_nil community.reload.cocktail_id
-    assert_nil official.reload.cocktail_id
+    recipes(:one).update!(user: users(:jigger), cocktail: cocktail)
+    recipes(:two).update!(user: users(:jigger), cocktail: cocktail)
+    assert_equal 2, Recipe.where(user: users(:jigger), cocktail: cocktail).count
+    assert recipes(:two).update(cocktail: nil)
+    assert_not recipes(:one).update(user: nil)
+    recipes(:one).reload.update!(user: users(:one))
   end
 
-  test "official recipes can be system managed without a cocktail assignment" do
-    recipe = recipes(:one)
-    recipe.update!(user: nil, cocktail: nil, official: true, source_reference: "Reference book")
-    assert recipe.marketplace?
-    assert_includes Recipe.marketplace, recipe
-    assert_nil recipe.user
-    assert_nil recipe.cocktail
-    assert recipe.official?
-    assert_not recipe.update(official: false)
-    assert_includes recipe.errors[:user], "can't be blank"
-    recipe.reload.update!(official: false, user: users(:one))
-    assert recipe.marketplace?
-    assert_not recipe.official?
-  end
-
-  test "localized recipes need no English name or cocktail assignment and search translations and aliases" do
+  test "localized recipes need no English name or cocktail assignment and search translations" do
     recipe = recipes(:one)
     Globalize.with_locale(:ja) { recipe.update!(name: "梅のカクテル") }
     recipe.translations.where(locale: "en").delete_all
-    recipe.recipe_aliases.create!(name: "Plum special", language: "en")
     assert recipe.reload.marketplace?
     assert_equal "梅のカクテル", recipe.display_name
     assert_includes Recipe.marketplace.search("梅"), recipe
-    assert_includes Recipe.marketplace.search("plum"), recipe
+    assert_empty Recipe.marketplace.search("plum")
     assert_empty Recipe.marketplace.search("%")
     recipe.update!(visibility: "private")
-    assert_not_includes Recipe.marketplace.search("plum"), recipe
+    assert_not_includes Recipe.marketplace.search("梅"), recipe
   end
 
   test "source URLs only accept HTTP links" do

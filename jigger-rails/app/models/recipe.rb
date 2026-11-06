@@ -10,8 +10,7 @@ class Recipe < ApplicationRecord
   has_many :collections, through: :collection_recipes
 
   belongs_to :cocktail, optional: true
-  belongs_to :user, optional: true
-  has_many :recipe_aliases, dependent: :destroy, autosave: true, inverse_of: :recipe
+  belongs_to :user
 
   translates :name, fallbacks_for_empty_translations: true
   translation_class.before_validation { self.normalized_name = name.present? ? LookupName.normalize(name) : nil }
@@ -27,10 +26,6 @@ class Recipe < ApplicationRecord
   before_validation :refresh_published_at
 
   validates :source_url, format: { with: /\Ahttps?:\/\/[^\s]+\z/i }, allow_blank: true
-
-  validates :user, presence: true, unless: :official?
-  validates :cocktail_id, uniqueness: { conditions: -> { where(official: true) }, message: "already has an official recipe" },
-    if: -> { official? && cocktail_id.present? }
 
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
@@ -88,16 +83,14 @@ class Recipe < ApplicationRecord
     normalized = LookupName.normalize(text)
     return none if normalized.blank?
     translated = translation_class.where(locale: language.to_s, normalized_name: normalized).select(:recipe_id)
-    aliases = RecipeAlias.where(language: language, normalized_name: normalized).select(:recipe_id)
-    where(id: translated).or(where(id: aliases))
+    where(id: translated)
   end
 
   def self.search(text)
     return all if text.blank?
     pattern = "%#{sanitize_sql_like(LookupName.normalize(text))}%"
     translated = translation_class.where("normalized_name LIKE ?", pattern).select(:recipe_id)
-    aliases = RecipeAlias.where("normalized_name LIKE ?", pattern).select(:recipe_id)
-    where(id: translated).or(where(id: aliases)).or(where(cocktail_id: Cocktail.search(text).select(:id)))
+    where(id: translated).or(where(cocktail_id: Cocktail.search(text).select(:id)))
   end
 
   private

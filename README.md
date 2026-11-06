@@ -10,7 +10,7 @@ Users create accounts and add their own cocktail recipes. Different users can ha
 
 Recipes have separate visibility and publication readiness states. Visibility is private or public. Publication readiness is draft or published; drafts are recipes that are not ready to publish.
 
-Landing-page searches filter complete, public, published recipes, then group matches by canonical cocktail. Each cocktail card counts matching non-official recipes and hides the counter when it is zero; unassigned recipes appear individually with a count of one. System-managed and user-owned recipes appear together, with official Jigger recipes identified. Private recipes and drafts do not appear in the public marketplace. Public, published official recipes always appear in full within the cocktail details, regardless of search or availability filters. They are excluded from matching counts and both community recipe-card lists. Each cocktail can have at most one official recipe, across all visibility and publication states. Every non-official recipe must belong to a user.
+Landing-page searches return individual complete, public, published recipes with author handles and exact recipe links. Recipe names and linked cocktail names are searchable. Every recipe belongs to an author; seeded recipes belong to `@jigger` and follow the same filtering and permission rules as all other recipes. Owners find private recipes and drafts in My Recipes.
 
 ## Search by availability
 
@@ -22,9 +22,8 @@ The marketplace returns public, published recipe variations whose required ingre
 
 | Concept | Meaning |
 | --- | --- |
-| Cocktail | A canonical drink identity shared by recipes, with names, aliases, description and history. |
-| Recipe | A particular way to make a drink, optionally assigned to a cocktail and optionally owned by a user. |
-| Official recipe | A recipe presented as Jigger’s reference recipe, independently of its owner. For now, userless TheCocktailDB seed imports are official. |
+| Cocktail | A canonical drink identity shared by recipes, with names, description and history. |
+| Recipe | A particular way to make a drink, optionally assigned to a cocktail and owned by a user. |
 | Canonical ingredient | A stable, unique ingredient identity shared across recipes. Ice is an ingredient. |
 | Utensil | An explicit domain object with its own database table or equivalent persistent collection. Utensils include jiggers, glasses and other glassware, and other cocktail equipment. |
 | Mention | Text in a preparation step associated with a system object, such as a canonical ingredient or utensil. The association preserves the submitted prose. |
@@ -50,7 +49,7 @@ Jev is optional. A sufficiently fast open-source alternative could serve the sam
 - How should ambiguous matches be resolved, and who confirms the intended identity?
 - What should happen when an ingredient, cocktail, or utensil mention has no match? When should Jigger create a new identity or leave a mention unresolved?
 
-Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace cocktails. Each closed ingredient and utensil picker shows “Add ingredients/utensils” when empty, a selected count for include mode, or an available count with “Only these” for availability mode; mode explanations remain inside the pickers.
+Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace recipes. Each closed ingredient and utensil picker shows “Add ingredients/utensils” when empty, a selected count for include mode, or an available count with “Only these” for availability mode; mode explanations remain inside the pickers.
 
 ## Administration
 
@@ -58,12 +57,12 @@ Administrators can open `/admin` from the Admin navigation link to list, search,
 
 Use **Content language** (for example `en` or `ja`) to edit a record’s translated fields. Forms show only the selected language’s stored values, without copying English fallback text into missing translations. Create English catalog content first. Search matches translated names across languages; photos and other shared attributes apply to all translations.
 
-Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership and one-official-recipe-per-cocktail constraints still apply.
+Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership constraints still apply.
 
-Administrate 1.0 uses Kaminari 1.2.2; marketplace grouping and pagination remain covered by the controller tests.
+Administrate 1.0 uses Kaminari 1.2.2; recipe search and pagination remain covered by the controller tests.
 
 ## Cocktail and recipe detail pages
 
-Both pages share a photo-led layout, ingredient and preparation checklists, cocktail background and public community alternatives. A cocktail page uses only its canonical photo and embeds its public official recipe when present, independently of discovery filters. A recipe page uses only its own photo, shows accessible canonical cocktail information when assigned, and excludes itself and official recipes from the community list. Private and draft alternatives stay out of both lists. Missing photos use a placeholder rather than borrowing another record’s image.
+Cocktail pages show canonical background and a single list of public recipes from all authors. Search and availability filters apply equally to every recipe. Recipe pages focus on ingredients, tools and preparation, with canonical background in a collapsed “More about this cocktail” section below instructions. Related recipes exclude the current recipe, private recipes and drafts. Recipe photos fall back to the linked readable cocktail’s photo, then to a placeholder.
 
-History and sources use native disclosure controls; section navigation links directly to the mixing, background and community sections. The layouts adapt to narrow screens and larger text, retain keyboard focus indicators, and respect reduced-motion, reduced-transparency and increased-contrast preferences.
+History and sources use native disclosure controls. The layouts adapt to narrow screens and larger text, retain keyboard focus indicators, and respect reduced-motion, reduced-transparency and increased-contrast preferences.

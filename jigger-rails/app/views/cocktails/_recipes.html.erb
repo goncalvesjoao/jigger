@@ -9,14 +9,14 @@
     <%= link_to "Show all recipes", cocktail_path(@cocktail) %>
   </section>
 <% end %>
-<section id="matching-recipes" class="community-section" aria-labelledby="recipes-heading">
-  <div class="section-heading"><div><h2 id="recipes-heading">Community recipes (<%= recipes.size %>)</h2></div></div>
-  <% if recipes.empty? %><p><%= filtered ? "No community recipes match these filters." : "No community recipes yet." %></p><% end %>
+<section id="matching-recipes" class="related-recipes-section" aria-labelledby="recipes-heading">
+  <div class="section-heading"><div><h2 id="recipes-heading">Recipes (<%= recipes.size %>)</h2></div></div>
+  <% if recipes.empty? %><p><%= filtered ? "No recipes match these filters." : "No recipes yet." %></p><% end %>
   <div class="auto-grid recipe-grid"><%= render recipes %></div>
 </section>
 <% if filtered && other_recipes.any? %>
   <details id="other-recipes" class="other-recipes">
-    <summary>Other community recipes (<%= other_recipes.size %>)</summary>
+    <summary>Other recipes (<%= other_recipes.size %>)</summary>
     <p>These public recipes do not match your current filters.</p>
     <div class="auto-grid recipe-grid"><%= render other_recipes %></div>
   </details>

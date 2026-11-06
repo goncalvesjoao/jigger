@@ -1,9 +1,19 @@
 <% password_digest = BCrypt::Password.create("password") %>
 
 one:
+  handle: mika
   email_address: one@example.com
   password_digest: <%= password_digest %>
 
 two:
+  handle: joao
   email_address: two@example.com
   password_digest: <%= password_digest %>
+
+jigger:
+  email_address: jigger@jigger.example
+  password_digest: <%= password_digest %>
+  handle: jigger
+  system_key: jigger
+  display_name: Jigger
+  profile_visibility: public

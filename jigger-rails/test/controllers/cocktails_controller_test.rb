@@ -7,20 +7,33 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).update!(cocktail: @cocktail, name: "Dry sour")
   end
 
+  test "canonical names return exact recipe results even for broad searches" do
+    get root_url, params: { q: "Margarita" }
+    assert_select ".recipe-grid article", count: 2
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@mika / Bright sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
+    sign_in_as(users(:two))
+    recipes(:two).update!(publication_state: "draft", visibility: "private")
+    get root_url, params: { q: "Margarita" }
+    assert_select ".recipe-grid article", count: 1
+    get my_recipes_url
+    assert_select "#recipe_#{recipes(:two).id}"
+  end
+
   test "ingredient and utensil matching modes are independent" do
     shaker = Utensil.new(name: "Shaker")
-    shaker.image.attach(io: StringIO.new(utensils(:jigger).image.download), filename: "shaker.png", content_type: "image/png")
+    shaker.image.attach(io: StringIO.new(File.binread(Rails.root.join("test/fixtures/files/photo.png"))), filename: "shaker.png", content_type: "image/png")
     shaker.save!
     RecipeUtensil.create!(recipe: recipes(:one), utensil: shaker, submitted_text: "Shaker", language: "en", role: "preparation")
     filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: [ utensils(:jigger).id ], ingredient_mode: "only", utensil_mode: "include" }
     get cocktails_url, params: filters
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktail_url(@cocktail), params: filters
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     get cocktails_url, params: filters.merge(utensil_mode: "only")
     assert_select ".empty-state"
     get cocktails_url, params: filters.merge(ingredient_ids: [ ingredients(:one).id, ingredients(:two).id ])
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktails_url, params: filters.merge(ingredient_mode: "include", ingredient_ids: [ ingredients(:one).id, ingredients(:two).id ])
     assert_select ".empty-state"
   end
@@ -29,13 +42,13 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     [ {}, { ingredient_ids: [ "" ], utensil_ids: [ "" ] } ].each do |filters|
       get cocktails_url, params: filters.merge(makeable: "1")
       assert_response :success
-      assert_select "h3 a", text: "Margarita"
+      assert_select "h3 a", text: "@mika / Bright sour"
       assert_select ".empty-state", count: 0
       assert_select "[data-picker-count]", text: "Add ingredients"
       assert_select "[data-picker-count]", text: "Add utensils"
     end
     get cocktails_url, params: { makeable: "1", q: "bright" }
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
   end
 
   test "marketplace search lives above results and retains selections and image badges" do
@@ -50,30 +63,30 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".marketplace-mode-summary", count: 0
       assert_select "[data-picker-count]", text: "#{Ingredient.count} available · Only these"
       assert_select "[data-picker-count]", text: "#{Utensil.count} available · Only these"
-      assert_select "label[for=marketplace-query]", text: "Search cocktails"
+      assert_select "label[for=marketplace-query]", text: "Search recipes"
       assert_select "input[type=search][name=q][value=margarita]"
       assert_select "input[type=checkbox][name='ingredient_ids[]'][checked]", count: Ingredient.count
     end
-    assert_select ".card-media .recipe-count[title='Matching recipe(s)'][aria-label='2 matching recipes']", text: "2"
+    assert_select ".recipe-grid article", count: 2
     assert_select ".card-copy .recipe-count", count: 0
   end
 
-  test "marketplace groups matching recipes and keeps unassigned creations discoverable" do
+  test "marketplace lists individual matching recipes and keeps unassigned creations discoverable" do
     get root_url
     assert_response :success
-    assert_select ".recipe-count", text: "2", count: 1
-    assert_select "h3 a[href=?]", cocktail_path(@cocktail), text: "Margarita", count: 1
+    assert_select ".recipe-grid article", count: 2
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@mika / Bright sour", count: 1
     recipes(:two).update!(cocktail: nil)
     get root_url
-    assert_select ".recipe-count", text: "1", count: 2
-    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "Dry sour"
+    assert_select ".recipe-grid article", count: 2
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
     assert_no_difference("Cocktail.count") { recipes(:two).update!(name: "My original") }
   end
 
   test "counts and detail links preserve the current search and exclude private recipes" do
     get cocktails_url, params: { q: "bright" }
-    assert_select ".recipe-count", text: "1", count: 1
-    assert_select "h3 a[href=?]", cocktail_path(@cocktail, q: "bright")
+    assert_select ".recipe-grid article", count: 1
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one))
     get cocktail_url(@cocktail), params: { q: "bright" }
     assert_response :success
     assert_select "#recipe_#{recipes(:one).id}"
@@ -81,53 +94,39 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "#other-recipes #recipe_#{recipes(:two).id}"
     recipes(:two).update!(visibility: "private")
     get root_url, params: { q: "margarita" }
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktail_url(@cocktail)
     assert_select "#recipe_#{recipes(:two).id}", count: 0
     recipes(:one).update!(publication_state: "draft")
     get root_url
-    assert_select ".recipe-count", count: 0
+    assert_select ".recipe-grid article", count: 0
     get cocktail_url(@cocktail)
     assert_response :forbidden
   end
 
-  test "matching official recipes appear in full in cocktail details without duplicate cards" do
-    recipe = recipes(:one)
-    recipe.update!(official: true, servings: 2, source_reference: "Official source")
-    get cocktail_url(@cocktail), params: { q: "margarita" }
-    assert_response :success
-    assert_select ".cocktail-details #recipe_#{recipe.id}", count: 1 do
-      assert_select "h2", text: "Bright sour"
-      assert_select "#ingredients_recipe_#{recipe.id} .ingredient-list li", count: recipe.recipe_ingredients.count
-      assert_select "#preparation_recipe_#{recipe.id} .step-body", text: recipe.recipe_steps.first.body
-      assert_select "dd", text: "2"
-      assert_select ".recipe-footer", count: 1
-      assert_select "p", text: "Official source", count: 1
-    end
-    assert_select "#matching-recipes h2", text: "Community recipes (1)"
-    assert_select "#matching-recipes #recipe_#{recipe.id}", count: 0
-    assert_select "#matching-recipes #recipe_#{recipes(:two).id}"
+  test "cocktail pages list all authors equally with exact recipe links" do
+    recipes(:one).update!(user: users(:jigger))
+    get cocktail_url(@cocktail)
+    assert_select ".mixing-layout", count: 0
+    assert_select "#matching-recipes article", count: 2
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@jigger / Bright sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
     get cocktail_url(@cocktail, format: :json)
-    assert_equal [ recipe.id ], response.parsed_body["official_recipes"].map { |entry| entry["id"] }
-    assert_equal [ recipes(:two).id ], response.parsed_body["recipes"].map { |entry| entry["id"] }
-    assert_equal 1, response.parsed_body["matching_recipe_count"]
+    assert_equal recipes(:one, :two).map(&:id).sort, response.parsed_body["recipes"].map { |entry| entry["id"] }.sort
+    assert_equal 2, response.parsed_body["matching_recipe_count"]
+    assert_not response.parsed_body.key?("official_recipes")
   end
 
-  test "official recipes ignore filters in cocktail details and never bypass public eligibility" do
-    recipes(:one).update!(official: true)
-    [ { q: "dry" }, { ingredient_ids: [ ingredients(:two).id ] }, { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" } ].each do |filters|
-      get cocktail_url(@cocktail), params: filters
-      assert_select ".cocktail-details #recipe_#{recipes(:one).id}", count: 1
-      assert_select "#matching-recipes #recipe_#{recipes(:one).id}", count: 0
-      assert_select "#other-recipes #recipe_#{recipes(:one).id}", count: 0
-      get cocktail_url(@cocktail, format: :json), params: filters
-      assert_equal [ recipes(:one).id ], response.parsed_body["official_recipes"].map { |entry| entry["id"] }
-      assert_not_includes response.parsed_body["recipes"].map { |entry| entry["id"] }, recipes(:one).id
-      assert_not_includes response.parsed_body["other_recipes"].map { |entry| entry["id"] }, recipes(:one).id
-      assert_equal(filters[:makeable] == "1" ? 0 : 1, response.parsed_body["matching_recipe_count"])
-    end
-    users(:one).update!(admin: true)
-    sign_in_as(users(:one))
+  test "filters and visibility apply equally to Jigger authored recipes" do
+    recipes(:one).update!(user: users(:jigger))
+    get cocktail_url(@cocktail), params: { q: "dry" }
+    assert_select "#matching-recipes #recipe_#{recipes(:one).id}", count: 0
+    assert_select "#other-recipes #recipe_#{recipes(:one).id}"
+    get cocktail_url(@cocktail, format: :json), params: { q: "dry" }
+    assert_equal [ recipes(:two).id ], response.parsed_body["recipes"].map { |entry| entry["id"] }
+    assert_equal [ recipes(:one).id ], response.parsed_body["other_recipes"].map { |entry| entry["id"] }
+    users(:two).update!(admin: true)
+    sign_in_as(users(:two))
     [ { visibility: "private" }, { visibility: "public", publication_state: "draft" } ].each do |state|
       recipes(:one).update!(state)
       get cocktail_url(@cocktail)
@@ -135,74 +134,52 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "marketplace excludes matching official recipes from counters and hides zero counters" do
-    recipes(:one).update!(official: true)
-    get root_url
-    assert_select ".recipe-count", text: "1", count: 1
-    assert_select ".card-meta span", text: "Official recipe"
-    get cocktails_url(format: :json)
-    assert_equal 1, response.parsed_body.sole["matching_recipe_count"]
-    get root_url, params: { q: "bright" }
-    assert_select "h3 a[href=?]", cocktail_path(@cocktail, q: "bright")
-    assert_select ".recipe-count", count: 0
-    get cocktails_url(format: :json), params: { q: "bright" }
-    assert_equal 0, response.parsed_body.sole["matching_recipe_count"]
-    get root_url, params: { q: "dry" }
-    assert_select ".recipe-count", text: "1", count: 1
-    recipes(:one).update!(cocktail: nil)
-    get root_url, params: { q: "bright" }
-    assert_select ".recipe-count", text: "1", count: 1
-  end
-
-
   test "ingredient and utensil filters count only makeable recipes" do
     recipes(:two).recipe_ingredients.update_all(ingredient_id: ingredients(:two).id)
     filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: Utensil.ids, makeable: "1" }
     get cocktails_url, params: filters
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktail_url(@cocktail), params: filters
     assert_select "#recipe_#{recipes(:one).id}"
     assert_select "#matching-recipes #recipe_#{recipes(:two).id}", count: 0
     assert_select "#other-recipes #recipe_#{recipes(:two).id}"
     get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" }
-    assert_select ".recipe-count", count: 0
+    assert_select ".recipe-grid article", count: 0
   end
 
   test "contains filters require every selection but allow additional items" do
     recipes(:one).recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "Ice", language: "en", position: 1)
     filters = { ingredient_ids: [ ingredients(:one).id ] }
     get cocktails_url, params: filters
-    assert_select ".recipe-count", text: "1"
-    assert_select "h3 a[href=?]", cocktail_path(@cocktail, filters)
+    assert_select ".recipe-grid article", count: 1
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one))
     get cocktail_url(@cocktail), params: filters
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     assert_select "#other-recipes #recipe_#{recipes(:two).id}"
     assert_select ".search-context p", text: /Contains ingredients:/
     get cocktails_url, params: filters.merge(makeable: "1", utensil_ids: Utensil.ids)
-    assert_select ".recipe-count", count: 0
+    assert_select ".recipe-grid article", count: 0
     get cocktails_url, params: { ingredient_ids: Ingredient.ids, utensil_ids: Utensil.ids }
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktails_url, params: { utensil_ids: Utensil.ids }
-    assert_select ".recipe-count", text: "1"
+    assert_select ".recipe-grid article", count: 1
     get cocktails_url, params: filters.merge(q: "dry")
-    assert_select ".recipe-count", count: 0
+    assert_select ".recipe-grid article", count: 0
     get cocktails_url, params: { ingredient_ids: [ "" ], utensil_ids: [ "" ] }
-    assert_select ".recipe-count", text: "2"
+    assert_select ".recipe-grid article", count: 2
     get cocktails_url, params: { ingredient_ids: [ "999999999" ] }
-    assert_select ".recipe-count", count: 0
+    assert_select ".recipe-grid article", count: 0
   end
 
   test "cocktail details precede matches and nonmatches are collapsed with search context" do
     @cocktail.update!(history: "A historical account", source_reference: "History book", source_url: "https://example.com/history",
       source_published_on: "1930-01-01", source_date_note: "Year confirmed")
-    @cocktail.cocktail_aliases.create!(name: "Daisy", language: "en")
     get cocktail_url(@cocktail), params: { q: "bright" }
     assert_response :success
     assert_select ".cocktail-details" do
       assert_select "h1", text: "Margarita"
       assert_select "p", text: "A classic sour"
       assert_select "p", text: "A historical account"
-      assert_select "p", text: "Also known as: Daisy"
       assert_select "a[href='https://example.com/history']", text: "History book"
       assert_select "p", text: "Historical source publication: 1930-01-01"
       assert_select "p", text: "Year confirmed"
@@ -214,10 +191,10 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_select "a.back-link[href=?]", cocktails_path(q: "bright"), text: "Cocktails"
       assert_select "li[aria-current='page']", text: "Margarita"
     end
-    assert_select "#matching-recipes h2", text: "Community recipes (1)"
+    assert_select "#matching-recipes h2", text: "Recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     assert_select "details#other-recipes:not([open])" do
-      assert_select "summary", text: "Other community recipes (1)"
+      assert_select "summary", text: "Other recipes (1)"
       assert_select "#recipe_#{recipes(:two).id}"
       assert_select "#recipe_#{recipes(:one).id}", count: 0
     end
@@ -226,7 +203,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   test "unfiltered and blank searches show all public recipes without collapsed alternatives" do
     [ {}, { q: " " } ].each do |filters|
       get cocktail_url(@cocktail), params: filters
-      assert_select "#matching-recipes h2", text: "Community recipes (2)"
+      assert_select "#matching-recipes h2", text: "Recipes (2)"
       assert_select "#matching-recipes article", count: 2
       assert_select "details#other-recipes", count: 0
       assert_select ".search-context", count: 0
@@ -238,8 +215,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "zero matching recipes still offers collapsed alternatives and names availability filters" do
     get cocktail_url(@cocktail), params: { ingredient_ids: [ "" ], utensil_ids: Utensil.ids, makeable: "1" }
-    assert_select "#matching-recipes h2", text: "Community recipes (0)"
-    assert_select "#matching-recipes p", text: "No community recipes match these filters."
+    assert_select "#matching-recipes h2", text: "Recipes (0)"
+    assert_select "#matching-recipes p", text: "No recipes match these filters."
     assert_select ".search-context p", text: "Available ingredients: None"
     assert_select ".search-context p", text: /Available utensils:/
     assert_select "details#other-recipes:not([open]) article", count: 2
@@ -263,7 +240,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ recipes(:two).id ], response.parsed_body["other_recipes"].map { |recipe| recipe["id"] }
   end
 
-  test "marketplace paginates whole groups with lazy frames and preserves filters" do
+  test "marketplace paginates individual recipes with lazy frames and preserves filters" do
     24.times do |index|
       recipe = Recipe.create!(user: users(:one), name: "Margarita variation #{index}", language: "en", steps: "Stir.")
       recipe.recipe_ingredients.create!(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
@@ -275,8 +252,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get root_url, params: filters
     assert_response :success
     assert_select ".recipe-grid article", count: 24
-    assert_select ".recipe-count", text: "2", count: 1
-    assert_select ".marketplace-results h2", text: "25 cocktails"
+    assert_select ".marketplace-results h2", text: "26 recipes"
     next_url = css_select("turbo-frame#cocktails_page_2[loading='lazy']").sole["src"]
     query = Rack::Utils.parse_nested_query(URI.parse(next_url).query)
     assert_equal "margarita", query["q"]
@@ -284,18 +260,18 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal Ingredient.ids.map(&:to_s), query["ingredient_ids"]
     assert_equal Utensil.ids.map(&:to_s), query["utensil_ids"]
     first_ids = css_select(".recipe-grid article").map { |card| card["id"] }
-    assert_select "a[href=?]", next_url, text: "Load more cocktails"
+    assert_select "a[href=?]", next_url, text: "Load more recipes"
 
     get next_url, headers: { "Turbo-Frame" => "cocktails_page_2" }
     assert_response :success
     assert_select "turbo-frame#cocktails_page_2[target='_top']"
-    assert_select ".recipe-grid article", count: 1
+    assert_select ".recipe-grid article", count: 2
     assert_empty first_ids & css_select(".recipe-grid article").map { |card| card["id"] }
     assert_select "turbo-frame[src]", count: 0
 
     get cocktails_url(format: :json), params: filters.merge(page: 2)
     assert_response :success
-    assert_equal 1, response.parsed_body.size
+    assert_equal 2, response.parsed_body.size
 
     get cocktails_url, params: filters.merge(page: 3)
     assert_response :success
@@ -323,14 +299,13 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_nil recipes(:one).reload.cocktail
   end
 
-  test "JSON discovery returns grouped matching counts without private recipes" do
+  test "JSON discovery returns individual recipes without private recipes" do
     recipes(:two).update!(visibility: "private")
     get cocktails_url(format: :json), params: { q: "bright" }
     assert_response :success
     group = response.parsed_body.sole
     assert_equal @cocktail.id, group["cocktail_id"]
-    assert_equal 1, group["matching_recipe_count"]
-    assert_equal [ recipes(:one).id ], group["recipes"].map { |recipe| recipe["id"] }
+    assert_equal recipes(:one).id, group["id"]
     get cocktail_url(@cocktail, format: :json)
     assert_response :success
     assert_equal 1, response.parsed_body["matching_recipe_count"]
@@ -353,6 +328,6 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Recipe.count") { @cocktail.destroy! }
     assert_nil recipes(:one).reload.cocktail
     get root_url
-    assert_select ".recipe-count", text: "1", count: 2
+    assert_select ".recipe-grid article", count: 2
   end
 end

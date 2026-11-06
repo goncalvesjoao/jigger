@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,18 +39,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "cocktail_aliases", force: :cascade do |t|
-    t.integer "cocktail_id", null: false
-    t.string "name", null: false
-    t.string "language", null: false
-    t.string "normalized_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cocktail_id", "language", "normalized_name"], name: "idx_on_cocktail_id_language_normalized_name_bd539623b7", unique: true
-    t.index ["language", "normalized_name"], name: "index_cocktail_aliases_on_language_and_normalized_name"
-    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "cocktail_aliases_nonblank_names"
-  end
-
   create_table "cocktail_translations", force: :cascade do |t|
     t.integer "cocktail_id", null: false
     t.string "locale", null: false
@@ -71,9 +59,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.string "source_url"
     t.date "source_published_on"
     t.text "source_date_note"
+    t.integer "parent_cocktail_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "parent_cocktail_id"
     t.index ["parent_cocktail_id"], name: "index_cocktails_on_parent_cocktail_id"
     t.check_constraint "parent_cocktail_id IS NULL OR parent_cocktail_id != id", name: "cocktails_not_own_parent"
   end
@@ -92,23 +80,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.integer "user_id", null: false
     t.string "name", null: false
     t.string "visibility", default: "private", null: false
+    t.string "system_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "system_key"], name: "index_collections_on_user_id_and_system_key", unique: true
     t.index ["user_id"], name: "index_collections_on_user_id"
     t.check_constraint "length(trim(name)) > 0", name: "collections_name"
     t.check_constraint "visibility IN ('private', 'public')", name: "collections_visibility"
-  end
-
-  create_table "ingredient_aliases", force: :cascade do |t|
-    t.integer "ingredient_id", null: false
-    t.string "name", null: false
-    t.string "language", null: false
-    t.string "normalized_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ingredient_id", "language", "normalized_name"], name: "idx_on_ingredient_id_language_normalized_name_cb083c300b", unique: true
-    t.index ["language", "normalized_name"], name: "index_ingredient_aliases_on_language_and_normalized_name"
-    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "ingredient_aliases_nonblank_names"
   end
 
   create_table "ingredient_translations", force: :cascade do |t|
@@ -135,18 +113,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.check_constraint "alcohol_by_volume IS NULL OR (alcohol_by_volume >= 0 AND alcohol_by_volume <= 100)", name: "ingredients_alcohol_by_volume_range"
     t.check_constraint "alcohol_status IN ('alcoholic', 'non_alcoholic', 'unknown')", name: "ingredients_alcohol_status"
     t.check_constraint "category IN ('spirit', 'liqueur', 'wine', 'beer', 'mixer', 'juice', 'syrup', 'fruit', 'dairy', 'herb', 'spice', 'ice', 'other')", name: "ingredients_category"
-  end
-
-  create_table "recipe_aliases", force: :cascade do |t|
-    t.integer "recipe_id", null: false
-    t.string "name", null: false
-    t.string "language", null: false
-    t.string "normalized_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["language", "normalized_name"], name: "index_recipe_aliases_on_language_and_normalized_name"
-    t.index ["recipe_id", "language", "normalized_name"], name: "idx_on_recipe_id_language_normalized_name_90bf0e2dc1", unique: true
-    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "recipe_aliases_nonblank_names"
   end
 
   create_table "recipe_ingredients", force: :cascade do |t|
@@ -208,8 +174,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
 
   create_table "recipes", force: :cascade do |t|
     t.integer "cocktail_id"
-    t.integer "user_id"
-    t.boolean "official", default: false, null: false
+    t.integer "user_id", null: false
     t.string "language", default: "und", null: false
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
@@ -222,11 +187,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cocktail_id"], name: "index_recipes_on_cocktail_id"
-    t.index ["cocktail_id"], name: "index_recipes_one_official_per_cocktail", unique: true, where: "official = 1"
     t.index ["published_at"], name: "index_recipes_on_published_at"
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_recipes_on_visibility_and_publication_state"
-    t.check_constraint "official = 1 OR user_id IS NOT NULL", name: "recipes_require_owner_unless_official"
     t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "recipes_preparation_method"
     t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "recipes_preparation_time"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "recipes_publication_state"
@@ -270,25 +233,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.string "email_address", null: false
     t.string "password_digest", null: false
     t.boolean "admin", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "handle", null: false
+    t.string "system_key"
     t.string "profile_visibility", default: "private", null: false
     t.string "display_name"
     t.text "bio"
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
-    t.check_constraint "profile_visibility IN ('private', 'public')", name: "users_profile_visibility"
-  end
-
-  create_table "utensil_aliases", force: :cascade do |t|
-    t.integer "utensil_id", null: false
-    t.string "name", null: false
-    t.string "language", null: false
-    t.string "normalized_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["language", "normalized_name"], name: "index_utensil_aliases_on_language_and_normalized_name"
-    t.index ["utensil_id", "language", "normalized_name"], name: "idx_on_utensil_id_language_normalized_name_312696a526", unique: true
-    t.check_constraint "length(trim(name)) > 0 AND length(trim(language)) > 0 AND length(trim(normalized_name)) > 0", name: "utensil_aliases_nonblank_names"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["handle"], name: "index_users_on_handle", unique: true
+    t.index ["system_key"], name: "index_users_on_system_key", unique: true
+    t.check_constraint "profile_visibility IN ('private', 'public')", name: "users_profile_visibility"
   end
 
   create_table "utensil_translations", force: :cascade do |t|
@@ -317,15 +272,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "cocktail_aliases", "cocktails"
   add_foreign_key "cocktail_translations", "cocktails"
   add_foreign_key "cocktails", "cocktails", column: "parent_cocktail_id", on_delete: :nullify
   add_foreign_key "collection_recipes", "collections"
   add_foreign_key "collection_recipes", "recipes"
   add_foreign_key "collections", "users"
-  add_foreign_key "ingredient_aliases", "ingredients"
   add_foreign_key "ingredient_translations", "ingredients"
-  add_foreign_key "recipe_aliases", "recipes"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
   add_foreign_key "recipe_steps", "recipes"
@@ -338,6 +290,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
   add_foreign_key "step_mentions", "ingredients"
   add_foreign_key "step_mentions", "recipe_steps"
   add_foreign_key "step_mentions", "utensils"
-  add_foreign_key "utensil_aliases", "utensils"
   add_foreign_key "utensil_translations", "utensils"
 end

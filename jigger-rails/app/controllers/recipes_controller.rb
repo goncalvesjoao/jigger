@@ -8,7 +8,7 @@ class RecipesController < ApplicationController
 
   # GET /recipes or /recipes.json
   def index
-    @recipes = Recipe.marketplace.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps)
+    @recipes = Recipe.marketplace.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps, :user, cocktail: [ :translations, { image_attachment: :blob } ])
   end
 
   # GET /recipes/1 or /recipes/1.json
@@ -19,8 +19,8 @@ class RecipesController < ApplicationController
     }).call
     if @recipe.cocktail && policy(@recipe.cocktail).show?
       @cocktail = @recipe.cocktail
-      @community_recipes = Recipe.marketplace.where(cocktail: @cocktail, official: false)
-        .where.not(id: @recipe.id).with_attached_image.includes(:translations)
+      @related_recipes = Recipe.marketplace.where(cocktail: @cocktail)
+        .where.not(id: @recipe.id).with_attached_image.includes(:translations, :user, cocktail: [ :translations, { image_attachment: :blob } ])
     end
   end
 
@@ -91,7 +91,7 @@ class RecipesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def recipe_params
       fields = [ :name, :language, :steps, :preparation_time_seconds, :servings, :preparation_method, :source_reference, :source_url, :visibility, :publication_state, :image ]
-      fields += [ :official, :cocktail_id ] if Current.user&.admin?
+      fields += [ :cocktail_id ] if Current.user&.admin?
       permitted = params.expect(recipe: fields)
       if permitted[:image].blank?
         permitted.delete(:image)

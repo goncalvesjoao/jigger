@@ -19,7 +19,7 @@ class RecipePolicy
   alias_method :new?, :create?
 
   def update?
-    @user.present? && (@user.admin? || (@recipe.user_id == @user.id && !@recipe.official?))
+    @user.present? && (@user.admin? || @recipe.user_id == @user.id)
   end
 
   alias_method :edit?, :update?

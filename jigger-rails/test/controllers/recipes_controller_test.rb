@@ -185,39 +185,32 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 end
 
 class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
-  test "official status and system recipes are admin managed" do
+  test "authors cannot reassign recipes and Jigger recipes require owner or admin access" do
     recipe = recipes(:one)
     sign_in_as(users(:one))
-    patch recipe_url(recipe), params: { recipe: { name: recipe.name, official: true, user_id: nil } }
+    patch recipe_url(recipe), params: { recipe: { name: recipe.name, user_id: users(:jigger).id } }
     assert_redirected_to recipe_url(recipe)
-    assert_not recipe.reload.official?
-    assert_equal users(:one), recipe.user
-    recipe.update!(official: true)
+    assert_equal users(:one), recipe.reload.user
+    recipe.update!(user: users(:jigger))
     patch recipe_url(recipe), params: { recipe: { name: "Tampered" } }
     assert_response :forbidden
-    recipe.update!(user: nil)
-    patch recipe_url(recipe), params: { recipe: { name: "Tampered" } }
-    assert_response :forbidden
-    admin = users(:two)
-    admin.update!(admin: true)
-    sign_in_as(admin)
-    patch recipe_url(recipe), params: { recipe: { name: "Curated", official: false } }
-    assert_response :unprocessable_content
-    assert recipe.reload.official?
-    assert_nil recipe.user
-    assert_not_equal "Curated", recipe.name
+    users(:two).update!(admin: true)
+    sign_in_as(users(:two))
+    patch recipe_url(recipe), params: { recipe: { name: "Curated" } }
+    assert_redirected_to recipe_url(recipe)
+    assert_equal "Curated", recipe.reload.name
+    assert_equal users(:jigger), recipe.user
   end
 
   test "homepage searches public recipes and hides private recipes" do
     reference = recipes(:one)
     alternate = recipes(:two)
-    reference.update!(name: "Negroni", official: true)
+    reference.update!(name: "Negroni", user: users(:jigger))
     alternate.update!(name: "White Negroni")
     sign_out
     get root_url, params: { q: "negroni" }
     assert_select "#recipe_#{reference.id}"
     assert_select "#recipe_#{alternate.id}"
-    assert_select ".card-meta span", text: "Official recipe"
     alternate.update!(visibility: "private")
     get root_url, params: { q: "white" }
     assert_select "#recipe_#{alternate.id}", count: 0

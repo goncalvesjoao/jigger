@@ -40,8 +40,11 @@ class CollectionsController < ApplicationController
   end
 
   def destroy
-    @collection.destroy!
-    redirect_to my_collections_path, notice: "Collection deleted.", status: :see_other
+    if @collection.destroy
+      redirect_to my_collections_path, notice: "Collection deleted.", status: :see_other
+    else
+      redirect_to @collection, alert: "Favorites is your permanent private collection.", status: :see_other
+    end
   end
 
   private

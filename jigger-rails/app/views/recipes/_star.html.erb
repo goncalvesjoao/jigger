@@ -1,0 +1,2 @@
+<% starred = Current.user.favorites_collection.collection_recipes.exists?(recipe: recipe) %>
+<%= button_to starred ? "Unstar recipe" : "Star recipe", recipe_star_path(recipe), method: starred ? :delete : :post, class: "secondary", aria: { pressed: starred }, title: "Stars are saved in your private Favorites collection" %>

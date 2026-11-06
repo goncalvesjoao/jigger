@@ -9,35 +9,31 @@
       </nav>
     <% end %>
 
-    <h1><%= recipe ? recipe.display_name : cocktail.display_name %></h1>
+    <h1><%= recipe ? recipe_heading(recipe) : cocktail.display_name %></h1>
 
-    <% if recipe %><p class="recipe-attribution"><%= recipe.official? ? "Official Jigger recipe" : "Community recipe" %><% unless recipe.publication_state == "published" && recipe.visibility == "public" %> · <%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %><% end %></p><% end %>
-    <% if recipe&.user&.public_profile? && !recipe.official? %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
+    <% if recipe && !(recipe.publication_state == "published" && recipe.visibility == "public") %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
+    <% if recipe&.user&.public_profile? %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
     <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
-    <% if cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
-    <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, mixing_recipe: mixing_recipe, recipe_page: false %><% end %>
+    <% if !recipe && cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
+    <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, recipe_page: false %><% end %>
     <% if recipe %>
       <%= render "recipes/facts", recipe: recipe %>
     <% end %>
     <% if recipe %>
     <div class="detail-actions">
-      <% if mixing_recipe %>
-        <%= link_to "Start mixing ↓", recipe ? "#ingredients" : "##{dom_id(mixing_recipe, :ingredients)}", class: "button" %>
-      <% else %>
-        <%= link_to "Explore recipes ↓", "#matching-recipes", class: "button" %>
-      <% end %>
-      <% if cocktail %><%= link_to "The story", "#cocktail-background", class: "detail-text-link" %><% end %>
+      <%= link_to "Start mixing ↓", "#ingredients", class: "button" %>
+      <% if authenticated? %><%= render "recipes/star", recipe: recipe %><% end %>
     </div>
     <% end %>
   </div>
   <div class="detail-visual">
-    <% photo = recipe || cocktail %>
+    <% photo = recipe ? recipe_photo(recipe) : cocktail %>
     <% if photo.image.attached? %>
       <%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{photo.display_name}", class: "recipe-photo", fetchpriority: "high", width: 1200, height: 1200 %>
     <% else %>
       <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
     <% end %>
-    <% if mixing_recipe && authenticated? %><%= render "collections/picker", recipe: mixing_recipe %><% end %>
+    <% if recipe && authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
 
   </div>
 </header>

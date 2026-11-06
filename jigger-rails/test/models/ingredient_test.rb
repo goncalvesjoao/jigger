@@ -21,27 +21,22 @@ class IngredientTest < ActiveSupport::TestCase
     assert_includes ingredient.errors[:alcohol_by_volume], "must be greater than or equal to 0"
   end
 
-  test "lookup supports canonical names, translations and ambiguous aliases without changing prose" do
-    [ [ Ingredient, ingredients(:one), :ingredient_aliases ],
-      [ Utensil, utensils(:jigger), :utensil_aliases ],
-      [ Recipe, recipes(:margarita), :recipe_aliases ] ].each do |type, identity, association|
-      identity.public_send(association).create!(name: "  ジガー  ", language: "ja")
+  test "lookup supports normalized translated names without changing prose" do
+    [ [ Ingredient, ingredients(:one) ], [ Utensil, utensils(:jigger) ], [ Recipe, recipes(:margarita) ] ].each do |type, identity|
+      original_name = identity.display_name
       attributes = { image: photo_upload, name: "Other" }
       attributes[:user] = users(:one) if type == Recipe
       other = type.create!(attributes)
-      other.public_send(association).create!(name: "ジガー", language: "ja")
-      assert_equal [ identity.id, other.id ].sort, type.lookup("ジガー", language: "ja").ids.sort
-      assert_equal [ identity.id ], type.lookup(identity.display_name.upcase, language: "en").ids
-      assert_empty type.lookup("ジガー", language: "en")
+      assert_equal [ identity.id ], type.lookup(original_name.upcase, language: "en").ids
+      assert_empty type.lookup("ジガー", language: "ja")
       Globalize.with_locale(:ja) do
-        identity.update!(name: "同じ名前")
-        other.update!(name: "同じ名前")
+        identity.update!(name: "  ジガー  ")
+        other.update!(name: "ジガー")
       end
-      identity.public_send(association).create!(name: "同じ名前", language: "ja")
-      assert_equal [ identity.id, other.id ].sort, type.lookup("同じ名前", language: "ja").ids.sort
-      assert_empty type.lookup("同じ名前", language: "en")
-      assert_equal "  ジガー  ", identity.public_send(association).find_by!(language: "ja", name: "  ジガー  ").name
-      assert_not identity.public_send(association).build(name: "ジガー", language: "ja").valid?
+      assert_equal [ identity.id, other.id ].sort, type.lookup("ジガー", language: "ja").ids.sort
+      assert_empty type.lookup("ジガー", language: "en")
+      assert_equal original_name, identity.reload.display_name
+      assert_equal "  ジガー  ", identity.translations.find_by!(locale: "ja").name
     end
   end
 end

@@ -42,7 +42,7 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
     draft = users(:one).recipes.create!(language: "en")
     get my_recipes_url, params: { state: "draft" }
     assert_response :success
-    assert_select "#recipe_#{draft.id} h3 a", text: "Untitled recipe"
+    assert_select "#recipe_#{draft.id} h3 a", text: "@mika / Untitled recipe"
     assert_select "a[href=?][aria-label='Edit untitled recipe']", edit_recipe_path(draft)
   end
 

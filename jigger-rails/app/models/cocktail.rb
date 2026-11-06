@@ -5,7 +5,6 @@ class Cocktail < ApplicationRecord
   validate :parent_must_not_form_cycle
 
   has_many :recipes, dependent: :nullify
-  has_many :cocktail_aliases, dependent: :destroy, autosave: true, inverse_of: :cocktail
   translates :name, :description, :history, fallbacks_for_empty_translations: true
   translation_class.before_validation { self.normalized_name = name.present? ? LookupName.normalize(name) : nil }
   translation_class.validates :name, :locale, presence: true
@@ -38,7 +37,6 @@ class Cocktail < ApplicationRecord
     return all if text.blank?
     pattern = "%#{sanitize_sql_like(LookupName.normalize(text))}%"
     translated = translation_class.where("normalized_name LIKE ?", pattern).select(:cocktail_id)
-    aliases = CocktailAlias.where("normalized_name LIKE ?", pattern).select(:cocktail_id)
-    where(id: translated).or(where(id: aliases))
+    where(id: translated)
   end
 end

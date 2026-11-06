@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :recipes
   end
   resources :recipes do
+    resource :star, only: %i[create destroy], controller: "recipe_stars"
     resource :image, only: :show, controller: "recipe_images"
   end
   resources :ingredients, only: [] do

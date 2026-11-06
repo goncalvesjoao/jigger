@@ -1,7 +1,7 @@
 <%= form_with url: cocktails_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
-  <div class="marketplace-search-bar" role="search" aria-label="Find cocktails">
+  <div class="marketplace-search-bar" role="search" aria-label="Find recipes">
     <div class="marketplace-query">
-      <%= form.label :q, "Search cocktails", for: "marketplace-query" %>
+      <%= form.label :q, "Search recipes", for: "marketplace-query" %>
       <%= form.search_field :q, id: "marketplace-query", value: params[:q], placeholder: "Try Negroni, sour, highball…", data: { action: "input->marketplace-search#search compositionend->marketplace-search#search" } %>
     </div>
     <% { ingredient_ids: ["Ingredients", Ingredient], utensil_ids: ["Utensils", Utensil] }.each do |key, (label, model)| %>

@@ -1,5 +1,15 @@
 module RecipesHelper
-  def matching_recipe_count(identity, recipes)
-    identity.is_a?(Cocktail) ? recipes.count { |recipe| !recipe.official? } : recipes.size
+  def recipe_author(recipe)
+    "@#{recipe.user.handle}"
+  end
+
+  def recipe_heading(recipe)
+    "#{recipe_author(recipe)} / #{recipe.display_name.presence || 'Untitled recipe'}"
+  end
+
+  def recipe_photo(recipe)
+    return recipe if recipe.image.attached?
+    cocktail = recipe.cocktail
+    cocktail && policy(cocktail).show? && cocktail.image.attached? ? cocktail : recipe
   end
 end

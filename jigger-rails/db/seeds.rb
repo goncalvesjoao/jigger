@@ -5,10 +5,22 @@ module TheCocktailDbSeeder
   ROOT = Rails.root.join("db", "seeds", "thecocktaildb")
 
   def self.seed!
+    seed_jigger_account!
     seed_ingredients!
     seed_cocktails!
     seed_canonical_content!
     seed_variants!
+  end
+
+  def self.seed_jigger_account!
+    User.find_or_create_by!(system_key: "jigger") do |user|
+      user.email_address = "jigger@jigger.example"
+      user.password = SecureRandom.hex(32)
+      user.handle = "jigger"
+      user.display_name = "Jigger"
+      user.profile_visibility = "public"
+      user.bio = "Recipes shared by Jigger. Source credits are preserved on each recipe."
+    end
   end
 
   def self.seed_variants!
@@ -48,16 +60,15 @@ module TheCocktailDbSeeder
       next unless local_image_available?("cocktails", name)
 
       source_url = "https://www.thecocktaildb.com/drink/#{drink.fetch("idDrink")}"
-      recipe = Recipe.find_by(source_url: source_url) ||
-        Recipe.where(user_id: nil, source_url: nil).find_by(id: Recipe.lookup(name, language: :en).select(:id)) || Recipe.new
-      # Re-running seeds must not overwrite an admin's curated recipe.
-      next if recipe.official? || recipe.user_id.present?
+      recipe = Recipe.find_by(source_url: source_url)
+      # Preserve existing imports, curation, and recipes reassigned to another author.
+      next if recipe
+      recipe = Recipe.new(user: User.jigger_account)
 
       previous_published_at = recipe.published_at
       Recipe.transaction do
         recipe.publication_state = "draft"
         recipe.language = "en"
-        recipe.official = true
         Globalize.with_locale(:en) { recipe.name = name }
         recipe.source_reference = "TheCocktailDB"
         recipe.source_url = source_url

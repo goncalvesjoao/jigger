@@ -2,9 +2,8 @@
 <% content_for :body_class, "cocktail-journal" %>
 <div class="detail-page cocktail-page">
   <article class="cocktail-details">
-    <%= render "cocktails/hero", cocktail: @cocktail, recipe: nil, mixing_recipe: @official_recipes.first %>
-    <%= render partial: "recipes/details", collection: @official_recipes, as: :recipe, locals: { embedded: true } %>
+    <%= render "cocktails/hero", cocktail: @cocktail, recipe: nil %>
     <%= render "cocktails/background", cocktail: @cocktail %>
   </article>
-  <%= render "cocktails/community", recipes: @recipes, filtered: @filtered, other_recipes: @other_recipes %>
+  <%= render "cocktails/recipes", recipes: @recipes, filtered: @filtered, other_recipes: @other_recipes %>
 </div>

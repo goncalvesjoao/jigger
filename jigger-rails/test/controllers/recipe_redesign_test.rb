@@ -16,11 +16,10 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select "a.visually-hidden-focusable[href='#main-content']", text: "Skip to content"
   end
 
-  test "cards always identify provenance and show the available preparation method" do
+  test "cards show the available preparation method" do
     recipes(:one).update!(preparation_method: "shaken")
     get recipes_url
     assert_select "#recipe_#{recipes(:one).id} .card-meta span", text: "Shaken"
-    assert_select "#recipe_#{recipes(:two).id} .card-meta span", text: "Community recipe"
     assert_select ".card-copy a", text: "Explore recipe", count: 0
     assert_not_includes response.body, "↗"
   end
@@ -41,12 +40,13 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select "progress[max='2'][aria-label='Preparation progress']"
   end
 
-  test "cards distinguish official system recipes from community recipes" do
+  test "cards identify recipes by author handles" do
     recipe = recipes(:one)
-    recipe.update!(user: nil, official: true)
+    recipe.update!(user: users(:jigger))
     get recipes_url
-    assert_select "#recipe_#{recipe.id} .card-meta span", text: "Official recipe"
-    assert_select "#recipe_#{recipes(:two).id} .card-meta span", text: "Community recipe"
+    assert_select "#recipe_#{recipe.id} h3 a", text: "@jigger / MyString"
+    assert_select "#recipe_#{recipes(:two).id} h3 a", text: "@joao / MyString"
+    assert_no_match(/Official recipe|Community recipe/, response.body)
   end
 
   test "owner can read an empty draft without broken preparation controls" do

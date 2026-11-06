@@ -1,0 +1,50 @@
+require "test_helper"
+
+class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:one)
+    @favorites = @user.favorites_collection.tap { |collection| collection.update!(name: "My renamed favorites") }
+  end
+
+  test "stars reuse favorites membership and unstar only the exact recipe" do
+    sign_in_as(@user)
+    other = @user.collections.create!(name: "Weekend")
+    other.collection_recipes.create!(recipe: recipes(:one))
+    2.times { post recipe_star_url(recipes(:one)) }
+    assert_equal [ recipes(:one).id ], @favorites.recipe_ids
+    get recipe_url(recipes(:one))
+    assert_select "button[aria-pressed=true]", text: "Unstar recipe"
+    delete recipe_star_url(recipes(:one))
+    assert_empty @favorites.reload.recipe_ids
+    assert_equal [ recipes(:one).id ], other.recipe_ids
+  end
+
+  test "stars require authentication and cannot save another owner's private recipe" do
+    post recipe_star_url(recipes(:one))
+    assert_redirected_to new_session_url
+    sign_in_as(@user)
+    recipes(:two).update!(visibility: "private")
+    post recipe_star_url(recipes(:two))
+    assert_response :not_found
+    assert_empty @favorites.recipe_ids
+  end
+
+  test "favorites stays private and cannot be deleted" do
+    assert_not @favorites.update(visibility: "public")
+    assert_not @favorites.destroy
+  end
+
+  test "Jigger recipes use the Jigger account handle" do
+    recipes(:one).update!(user: users(:jigger))
+    get recipe_url(recipes(:one))
+    assert_select "h1", text: "@jigger / MyString"
+    get root_url
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@jigger / MyString"
+  end
+
+  test "private profile retains handle without exposing a profile link" do
+    get recipe_url(recipes(:one))
+    assert_select "h1", text: "@mika / MyString"
+    assert_select "a[href=?]", profile_path(@user), count: 0
+  end
+end

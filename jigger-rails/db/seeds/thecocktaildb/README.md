@@ -14,4 +14,4 @@ To refresh the cache, run:
 
 Seeds fill missing English descriptions and histories, including existing cocktails whose imported recipes have since been curated. They preserve nonblank text and other locales. Source fields are populated only when the entire source group is blank, so an admin's citations are never mixed with seeded citations. Dates describe source publication, not the cocktail's invention; unknown dates remain empty.
 
-Userless imported recipes are marked official for now, while retaining TheCocktailDB attribution. Re-running seeds promotes existing non-official userless imports, preserves already-official recipes, and skips user-owned recipes.
+Imported recipes belong to the public `@jigger` account, while retaining TheCocktailDB attribution. Every recipe requires an author; all authors follow the same recipe rules. Re-running seeds preserves existing imports and recipes reassigned to other users. The seed account receives a random password and does not receive administrator privileges.

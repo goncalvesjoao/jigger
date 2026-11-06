@@ -4,6 +4,8 @@ class CreateCollections < ActiveRecord::Migration[8.1]
       t.references :user, null: false, foreign_key: true
       t.string :name, null: false
       t.string :visibility, null: false, default: "private"
+      t.string :system_key
+      t.index [ :user_id, :system_key ], unique: true
       t.timestamps
       t.check_constraint "visibility IN ('private', 'public')", name: "collections_visibility"
       t.check_constraint "length(trim(name)) > 0", name: "collections_name"
@@ -17,8 +19,8 @@ class CreateCollections < ActiveRecord::Migration[8.1]
     end
 
     execute <<~SQL
-      INSERT INTO collections (user_id, name, visibility, created_at, updated_at)
-      SELECT id, 'Favorites', 'private', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP FROM users
+      INSERT INTO collections (user_id, name, visibility, system_key, created_at, updated_at)
+      SELECT id, 'Favorites', 'private', 'favorites', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP FROM users
     SQL
   end
 

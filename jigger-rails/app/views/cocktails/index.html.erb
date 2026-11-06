@@ -1,21 +1,19 @@
-<% content_for :title, "Discover cocktails · Jigger" %>
+<% content_for :title, "Discover recipes · Jigger" %>
 
 <header class="explore-heading"><h1>Find your next drink</h1><p>Search by name, or choose the ingredients and utensils you have.</p></header>
 <%= render "shared/marketplace_search" %>
 <div id="marketplace-results" aria-live="polite">
-<div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "cocktail") %></h2></div>
-<% if @groups.empty? %><section class="empty-state"><h3>No cocktails found.</h3><p>Try another name or remove a filter to see more drinks.</p><%= link_to "All cocktails", cocktails_path %></section><% end %>
+<div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "recipe") %></h2></div>
+<% if @pagination.empty? %><section class="empty-state"><h3>No recipes found.</h3><p>Try another name or remove a filter to see more drinks.</p><%= link_to "All recipes", cocktails_path %></section><% end %>
 <% if policy(Cocktail).create? %><p><%= link_to "New canonical cocktail", new_admin_cocktail_path %></p><% end %>
 <%= turbo_frame_tag "cocktails_page_#{@pagination.current_page}", target: "_top" do %>
   <div id="cocktails_<%= @pagination.current_page %>" class="auto-grid recipe-grid">
-    <% @groups.each do |identity, recipes| %>
-      <%= render "recipes/recipe", recipe: recipes.find(&:official?) || recipes.first, identity: identity, matching_count: matching_recipe_count(identity, recipes) %>
-    <% end %>
+    <%= render @pagination.to_a %>
   </div>
   <% if @pagination.next_page %>
     <% next_page_url = cocktails_path(request.query_parameters.merge("page" => @pagination.next_page)) %>
     <%= turbo_frame_tag "cocktails_page_#{@pagination.next_page}", src: next_page_url, loading: :lazy, target: "_top" do %>
-      <p><%= link_to "Load more cocktails", next_page_url %></p>
+      <p><%= link_to "Load more recipes", next_page_url %></p>
     <% end %>
   <% end %>
 <% end %>

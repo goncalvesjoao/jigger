@@ -23,13 +23,13 @@ module DemoAccountsSeeder
           [ [ "Vodka", "30 ml vodka" ], [ "Kahlua", "20 ml Kahlua" ], [ "Sugar syrup", "5 ml sugar syrup" ] ],
           "Shake with ice and strain into a small glass. Compare the foam with a longer shake next time.")
 
-        collection(bartender, "Halloween Special", "public", [ midnight, ruby, official("Negroni") ])
-        collection(bartender, "Christmas", "public", [ snow, midnight, official("Old Fashioned") ])
+        collection(bartender, "Halloween Special", "public", [ midnight, ruby, seed_recipe("Negroni") ])
+        collection(bartender, "Christmas", "public", [ snow, midnight, seed_recipe("Old Fashioned") ])
         collection(bartender, "House Signatures", "public", [ midnight, ruby, snow ])
-        collection(home, "Weekend Favorites", "private", [ weekend, official("Mojito"), official("Daiquiri") ])
-        collection(home, "Dinner with Friends", "private", [ coffee, weekend, snow, official("Manhattan") ])
-        collection(home, "Want to Try", "private", [ ruby, midnight, official("Negroni"), official("Gimlet") ])
-        collection(home, "Christmas", "private", [ snow, coffee, official("Old Fashioned") ])
+        collection(home, "Weekend Favorites", "private", [ weekend, seed_recipe("Mojito"), seed_recipe("Daiquiri") ])
+        collection(home, "Dinner with Friends", "private", [ coffee, weekend, snow, seed_recipe("Manhattan") ])
+        collection(home, "Want to Try", "private", [ ruby, midnight, seed_recipe("Negroni"), seed_recipe("Gimlet") ])
+        collection(home, "Christmas", "private", [ snow, coffee, seed_recipe("Old Fashioned") ])
       end
     end
   end
@@ -59,8 +59,8 @@ module DemoAccountsSeeder
     recipe
   end
 
-  def self.official(name)
-    TheCocktailDbSeeder.find_cocktail(name)&.recipes&.marketplace&.find_by(official: true)
+  def self.seed_recipe(name)
+    TheCocktailDbSeeder.find_cocktail(name)&.recipes&.marketplace&.find_by(user: User.jigger_account)
   end
 
   def self.collection(user, name, visibility, recipes)

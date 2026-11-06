@@ -26,7 +26,7 @@ class ProfilesController < ApplicationController
 
   def update
     @profile = Current.user
-    if @profile.update(params.expect(user: [ :display_name, :bio, :profile_visibility ]))
+    if @profile.update(params.expect(user: [ :handle, :display_name, :bio, :profile_visibility ]))
       redirect_to my_profile_path, notice: "Profile updated.", status: :see_other
     else
       render :edit, status: :unprocessable_content

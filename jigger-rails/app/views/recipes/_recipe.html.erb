@@ -1,7 +1,6 @@
-<% identity = local_assigns.fetch(:identity, recipe) %>
-<% photo = identity.is_a?(Cocktail) && identity.image.attached? ? identity : recipe %>
+<% photo = recipe_photo(recipe) %>
 <% photo_path = photo.is_a?(Cocktail) ? :cocktail_image_path : :recipe_image_path %>
-<% destination = identity.is_a?(Cocktail) ? cocktail_path(identity, request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")) : recipe_path(recipe) %>
+<% destination = recipe_path(recipe) %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" lang="<%= recipe.language %>">
   <div class="card-media">
@@ -12,12 +11,10 @@
       <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
     <% end %>
   <% end %>
-  <% if local_assigns[:matching_count].to_i.positive? %><span class="recipe-count" tabindex="0" title="Matching recipe(s)" aria-label="<%= pluralize(matching_count, "matching recipe") %>"><%= matching_count %></span><% end %>
   </div>
   <div class="card-copy">
-    <h3><%= link_to identity.display_name.presence || "Untitled recipe", destination %></h3>
-    <% if identity.is_a?(Cocktail) && identity.description.present? %><p class="card-description"><%= identity.description %></p><% end %>
-    <div class="card-meta"><span><%= recipe.official? ? "Official recipe" : "Community recipe" %></span><% if recipe.preparation_method.present? %><span><%= recipe.preparation_method.humanize %></span><% end %></div>
+    <h3><%= link_to recipe_heading(recipe), destination %></h3>
+    <div class="card-meta"><% if recipe.preparation_method.present? %><span><%= recipe.preparation_method.humanize %></span><% end %></div>
   </div>
 </article>
 <% end %>

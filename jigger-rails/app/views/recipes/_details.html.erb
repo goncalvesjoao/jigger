@@ -1,17 +1,9 @@
-<% ingredients_id = embedded ? dom_id(recipe, :ingredients) : "ingredients" %>
-<% preparation_id = embedded ? dom_id(recipe, :preparation) : "preparation" %>
+<% ingredients_id = "ingredients" %>
+<% preparation_id = "preparation" %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" class="recipe" lang="<%= recipe.language %>">
-  <% if embedded %>
-    <header class="recipe-summary">
-      <div><h2><%= recipe.display_name %></h2></div>
-      <div class="recipe-attribution">Official Jigger recipe</div>
-      <%= render "recipes/facts", recipe: recipe %>
-    </header>
-  <% else %>
-    <%= render "cocktails/hero", cocktail: @cocktail, recipe: recipe, mixing_recipe: recipe %>
-    <%= render "cocktails/section_nav", cocktail: @cocktail, mixing_recipe: recipe, recipe_page: true %>
-  <% end %>
+  <%= render "cocktails/hero", cocktail: @cocktail, recipe: recipe %>
+  <%= render "cocktails/section_nav", cocktail: @cocktail, recipe_page: true %>
   <div class="mixing-layout">
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
     <section id="<%= preparation_id %>" class="card recipe-panel mb-0" data-controller="preparation">

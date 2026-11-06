@@ -2,8 +2,7 @@ class CreateRecipes < ActiveRecord::Migration[8.1]
   def change
     create_table :recipes do |t|
       t.references :cocktail, foreign_key: true
-      t.references :user, foreign_key: true
-      t.boolean :official, null: false, default: false
+      t.references :user, null: false, foreign_key: true
       t.string :language, null: false, default: "und"
       t.string :visibility, null: false, default: "private"
       t.string :publication_state, null: false, default: "draft"
