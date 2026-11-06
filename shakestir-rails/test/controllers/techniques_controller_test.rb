@@ -12,12 +12,12 @@ class TechniquesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "recipe shows only assigned guides below preparation and includes them in JSON" do
+  test "recipe shows only assigned guides beside its source and includes them in JSON" do
     recipe = recipes(:one)
     recipe.techniques << techniques(:shake)
     get recipe_url(recipe)
     assert_response :success
-    assert_select "#preparation .steps-list + .recipe-techniques" do
+    assert_select ".recipe-footer .recipe-reference-grid > .recipe-techniques" do
       assert_select "a[href=?]", technique_path(techniques(:shake)), text: "Shake"
       assert_select "a[href=?]", technique_path(techniques(:stir)), count: 0
       assert_select "dialog[aria-labelledby] .technique-instructions", text: /Seal the shaker/

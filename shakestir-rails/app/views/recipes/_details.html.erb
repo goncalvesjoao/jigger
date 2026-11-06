@@ -38,18 +38,20 @@
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
-      <%= render "recipes/techniques", recipe: recipe %>
       <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
     </section>
   </div>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>
-  <% if show_source || policy(recipe).edit? || policy(recipe).destroy? %>
+  <% if show_source || recipe.techniques.any? || policy(recipe).edit? || policy(recipe).destroy? %>
   <footer class="recipe-footer">
+    <div class="recipe-reference-grid">
     <% if show_source %>
-    <section><h2>Recipe source</h2>
+    <section class="recipe-source"><h2>Recipe source</h2>
       <% if recipe.source_url.present? %><p>Source: <%= link_to recipe.source_reference.presence || "Recipe source", recipe.source_url %></p><% elsif recipe.source_reference.present? %><p class="submitted-prose"><%= recipe.source_reference %></p><% end %>
     </section>
     <% end %>
+    <%= render "recipes/techniques", recipe: recipe %>
+    </div>
     <div class="recipe-actions">
       <% if policy(recipe).edit? %><%= link_to "Edit this recipe", edit_recipe_path(recipe) %><% end %>
       <% if policy(recipe).destroy? %><%= button_to "Delete recipe", recipe, method: :delete, class: "ghost danger", data: { turbo_confirm: "Delete this recipe? This cannot be undone." } %><% end %>

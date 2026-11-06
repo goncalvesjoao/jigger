@@ -318,3 +318,11 @@
 .recipe-grid .card-media .recipe-star-button svg { filter: none; }
 .recipe-grid .card-media .recipe-star-button:hover { background: rgb(255 254 248); color: var(--color); }
 .recipe-grid .card-media .recipe-star-button:focus-visible { outline-color: #fffef9; }
+
+.recipe-reference-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 2rem; margin-top: 1rem; }
+.recipe-reference-grid > .recipe-techniques { margin: 0; padding: 0; border: 0; }
+.recipe-reference-grid .recipe-source h2, .recipe-reference-grid .recipe-techniques h3 { margin: 0 0 .75rem; font-size: 1.125rem; }
+.recipe-reference-grid p { overflow-wrap: anywhere; }
+
+.detail-page .recipe-footer { display: block; }
+.recipe-reference-grid + .recipe-actions:not(:empty) { margin-top: 1.5rem; }
