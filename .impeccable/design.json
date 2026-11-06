@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-11-06T06:22:33.572315+00:00",
-  "title": "Design System: Jigger",
+  "title": "Design System: ShakeStir",
   "extensions": {
     "typographyMeta": {
       "headline": {
@@ -365,7 +365,7 @@
   ],
   "narrative": {
     "northStar": "Find a drink. Make it yours.",
-    "overview": "Jigger retains its warm ivory and olive interface on the Semanticus foundation. System sans-serif typography, recognizable native controls and restrained panels support finding a drink and reading its preparation while mixing.\n\nPhotographs lead discovery; working surfaces stay quiet. Existing seed photography and cached assets originate from TheCocktailDB, with credits retained in cocktail and recipe records. This document describes the Rails implementation, including its adapted administration and static recovery pages.",
+    "overview": "ShakeStir retains its warm ivory and olive interface on the Semanticus foundation. System sans-serif typography, recognizable native controls and restrained panels support finding a drink and reading its preparation while mixing.\n\nPhotographs lead discovery; working surfaces stay quiet. Existing seed photography and cached assets originate from TheCocktailDB, with credits retained in cocktail and recipe records. This document describes the Rails implementation, including its adapted administration and static recovery pages.",
     "keyCharacteristics": [
       "Warm ivory ground and olive actions.",
       "Photo-led discovery and restrained reading panels.",

@@ -1,6 +1,6 @@
-# Jigger
+# ShakeStir
 
-Jigger is a cocktail "marketplace" for discovery, with no buying or selling. This monorepo is intended to contain multiple implementations of the same product.
+ShakeStir is a cocktail "marketplace" for discovery, with no buying or selling. This monorepo is intended to contain multiple implementations of the same product.
 
 This README records the initial product vision. It does not describe the current implementation status.
 
@@ -10,11 +10,11 @@ Users create accounts and add their own cocktail recipes. Different users can ha
 
 Recipes have separate visibility and publication readiness states. Visibility is private or public. Publication readiness is draft or published; drafts are recipes that are not ready to publish.
 
-Landing-page searches return individual complete, public, published recipes with author handles and exact recipe links. Recipe names and linked cocktail names are searchable. Every recipe belongs to an author; seeded recipes belong to `@jigger` and follow the same filtering and permission rules as all other recipes. Owners find private recipes and drafts in My Recipes.
+Landing-page searches return individual complete, public, published recipes with author handles and exact recipe links. Recipe names and linked cocktail names are searchable. Every recipe belongs to an author; seeded recipes belong to `@shakestir` and follow the same filtering and permission rules as all other recipes. Owners find private recipes and drafts in My Recipes.
 
 ## Search by availability
 
-Users can enter the ingredients and utensils currently available to them, for example three ingredients plus their equipment. Jigger resolves that input to canonical ingredient and utensil identities.
+Users can enter the ingredients and utensils currently available to them, for example three ingredients plus their equipment. ShakeStir resolves that input to canonical ingredient and utensil identities.
 
 The marketplace returns public, published recipe variations whose required ingredients and utensils are all available. It checks each variation's own requirements. Extra available items do not disqualify a recipe. Ice counts as an ingredient.
 
@@ -34,9 +34,9 @@ Each recipe preserves every ingredient's exact submitted text and its language, 
 
 Original recipes need no canonical cocktail. Admins curate canonical identities and assignments; publishing does not automatically create a cocktail. Cocktails hold an optional photo, description, history, their sources and historical publication dates. Admins upload cocktail photos; cached seeds populate missing cocktail photos independently of recipe photos and preserve existing uploads. Recipes retain optional source references and URLs crediting their quantities and instructions.
 
-Preparation steps remain ordered, free-text instructions. Jigger should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
+Preparation steps remain ordered, free-text instructions. ShakeStir should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
 
-Canonical cocktail seed content includes researched English descriptions, histories and citations, with uncertainty stated explicitly. Re-running seeds fills missing content and preserves curated text and source groups; see the [seed source notes](jigger-rails/db/seeds/thecocktaildb/CANONICAL_SOURCES.md).
+Canonical cocktail seed content includes researched English descriptions, histories and citations, with uncertainty stated explicitly. Re-running seeds fills missing content and preserves curated text and source groups; see the [seed source notes](shakestir-rails/db/seeds/thecocktaildb/CANONICAL_SOURCES.md).
 
 ## Proposed entity matching
 
@@ -47,7 +47,7 @@ Jev is optional. A sufficiently fast open-source alternative could serve the sam
 ## Open questions
 
 - How should ambiguous matches be resolved, and who confirms the intended identity?
-- What should happen when an ingredient, cocktail, or utensil mention has no match? When should Jigger create a new identity or leave a mention unresolved?
+- What should happen when an ingredient, cocktail, or utensil mention has no match? When should ShakeStir create a new identity or leave a mention unresolved?
 
 Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace recipes. Each closed ingredient and utensil picker shows “Add ingredients/utensils” when empty, a selected count for include mode, or an available count with “Only these” for availability mode; mode explanations remain inside the pickers.
 

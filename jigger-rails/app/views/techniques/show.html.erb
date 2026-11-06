@@ -1,6 +1,0 @@
-<% content_for :title, "#{@technique.display_name} · Techniques · Jigger" %>
-<article class="technique-page">
-  <%= link_to "Explore recipes", recipes_path, class: "detail-text-link" %>
-  <h1><%= @technique.display_name %></h1>
-  <%= render "techniques/content", technique: @technique %>
-</article>

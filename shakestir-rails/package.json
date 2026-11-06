@@ -1,0 +1,12 @@
+{
+  "name": "shakestir-rails",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vite": "^8.3.5",
+    "vite-plugin-ruby": "^5.2.6"
+  },
+  "dependencies": {
+    "@semanticus/semanticus-css": "3.2.2"
+  }
+}

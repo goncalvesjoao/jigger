@@ -1,0 +1,54 @@
+class User < ApplicationRecord
+  include PhotoAttachment
+  validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  validates :display_name, length: { maximum: 80 }
+  validates :bio, length: { maximum: 280 }
+
+  def profile_name
+    display_name.presence || "@#{handle}"
+  end
+
+  def self.shakestir_account
+    find_by!(system_key: "shakestir")
+  end
+
+  def shakestir_account?
+    system_key == "shakestir"
+  end
+
+  before_validation :assign_handle, on: :create
+  normalizes :handle, with: ->(value) { value.strip.downcase }
+  validate { errors.add(:handle, "is reserved") if handle == "shakestir" && !shakestir_account? }
+  validates :handle, presence: true, uniqueness: true, format: { with: /\A[a-z0-9][a-z0-9_-]{2,39}\z/ }
+
+  def favorites_collection
+    collections.find_by!(system_key: "favorites")
+  end
+
+  has_secure_password
+  # Legacy likes share a join table; keep its rows from outliving the account.
+  has_and_belongs_to_many :liked_recipes, class_name: "Recipe", join_table: "recipes_users",
+    foreign_key: :user_id, association_foreign_key: :recipe_id
+  has_many :recipes, dependent: :destroy
+  has_many :collections, dependent: :destroy
+  after_create :create_favorites_collection
+
+  has_many :sessions, dependent: :destroy
+
+  normalizes :email_address, with: ->(e) { e.strip.downcase }
+  private
+    def assign_handle
+      return if handle.present?
+
+      base = email_address.to_s.split("@").first.to_s.downcase.gsub(/[^a-z0-9_-]+/, "-").sub(/\A[-_]+/, "")[0, 30]
+      base = "member" if base.length < 3 || base == "shakestir"
+      candidate = base
+      candidate = "#{base}-#{SecureRandom.hex(4)}" while User.exists?(handle: candidate)
+      self.handle = candidate
+    end
+
+    def create_favorites_collection
+      collections.create!(name: "Favorites", system_key: "favorites")
+    end
+end

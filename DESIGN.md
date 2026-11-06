@@ -1,5 +1,5 @@
 ---
-name: Jigger
+name: ShakeStir
 description: "Warm, practical cocktail discovery and readable preparation."
 colors:
   primary: "#4d5b2e"
@@ -103,13 +103,13 @@ components:
     padding: "{spacing.panel}"
 ---
 
-# Design System: Jigger
+# Design System: ShakeStir
 
 ## Overview
 
 **Creative North Star: "Find a drink. Make it yours."**
 
-Jigger retains its warm ivory and olive interface on the Semanticus foundation. System sans-serif typography, recognizable native controls and restrained panels support finding a drink and reading its preparation while mixing.
+ShakeStir retains its warm ivory and olive interface on the Semanticus foundation. System sans-serif typography, recognizable native controls and restrained panels support finding a drink and reading its preparation while mixing.
 
 Photographs lead discovery; working surfaces stay quiet. Existing seed photography and cached assets originate from TheCocktailDB, with credits retained in cocktail and recipe records. This document describes the Rails implementation, including its adapted administration and static recovery pages.
 

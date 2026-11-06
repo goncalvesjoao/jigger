@@ -1,6 +1,6 @@
-# Jigger
+# ShakeStir
 
-Jigger helps people discover cocktail recipes and find cocktails they can make.
+ShakeStir helps people discover cocktail recipes and find cocktails they can make.
 
 ## Language
 

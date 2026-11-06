@@ -1,0 +1,34 @@
+<% content_for :title, "My recipes · ShakeStir" %>
+<div class="library-page personal-recipes-page">
+  <header class="library-heading">
+    <div><h1>My recipes</h1><p class="library-description">From first ideas to your signature drinks.</p></div>
+    <%= link_to new_recipe_path, class: "button library-primary" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %>
+  </header>
+  <% if @recipe_counts.values.sum.zero? %>
+    <section class="library-empty"><span class="library-empty-symbol"><%= render "collections/icon", name: "edit" %></span><h2>Every great drink starts with an idea.</h2><p>Create your first recipe. Keep it private while you make it yours.</p><%= link_to "Create your first recipe", new_recipe_path, class: "button library-primary" %></section>
+  <% else %>
+    <div class="personal-toolbar">
+      <nav class="personal-filters" aria-label="Recipe status">
+        <% [[nil, "All recipes", @recipe_counts.values.sum], ["draft", "Drafts", @recipe_counts.fetch("draft", 0)], ["published", "Published", @recipe_counts.fetch("published", 0)]].each do |state, label, count| %>
+          <%= link_to my_recipes_path(state: state, q: params[:q].presence), aria: { current: ("page" if @publication_state == state) } do %><%= label %><span><%= count %></span><% end %>
+        <% end %>
+      </nav>
+      <%= form_with url: my_recipes_path, method: :get, class: "personal-search", role: "search" do |form| %>
+        <%= form.hidden_field :state, value: @publication_state if @publication_state %>
+        <%= form.label :q, "Search your recipes", class: "visually-hidden", for: "personal-recipe-search" %>
+        <%= form.search_field :q, value: params[:q], placeholder: "Search your recipes", id: "personal-recipe-search" %>
+        <%= form.button "Search", type: :submit %>
+      <% end %>
+    </div>
+    <div class="library-section-label"><h2><%= params[:q].present? ? "Search results" : (@publication_state == "draft" ? "Your drafts" : (@publication_state == "published" ? "Published recipes" : "All recipes")) %></h2><span><%= pluralize(@recipes.size, "recipe") %> · Recently edited first</span></div>
+    <% if @recipes.empty? %>
+      <section class="library-empty"><h2>No recipes here yet.</h2><p><%= params[:q].present? ? "Try another name or clear your search to see more recipes." : (@publication_state == "draft" ? "Start a new recipe and save your next idea." : "Your published recipes will appear here.") %></p><%= link_to "View all recipes", my_recipes_path, class: "button library-secondary" %></section>
+    <% else %>
+      <div id="recipes" class="auto-grid recipe-grid personal-recipe-grid">
+        <% @recipes.each do |recipe| %>
+          <%= render "recipes/personal_card", recipe: recipe %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,17 @@
+one_favorites:
+  user: one
+  name: Favorites
+  system_key: favorites
+  visibility: private
+
+two_favorites:
+  user: two
+  name: Favorites
+  system_key: favorites
+  visibility: private
+
+shakestir_favorites:
+  user: shakestir
+  name: Favorites
+  system_key: favorites
+  visibility: private

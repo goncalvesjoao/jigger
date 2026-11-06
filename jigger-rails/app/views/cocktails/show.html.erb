@@ -1,9 +1,0 @@
-<% content_for :title, "#{@cocktail.display_name} · Jigger" %>
-<% content_for :body_class, "cocktail-journal#{' cocktail-panel-content' if params[:panel] == '1'}" %>
-<div class="detail-page cocktail-page">
-  <article class="cocktail-details">
-    <%= render "cocktails/hero", cocktail: @cocktail, recipe: nil %>
-    <%= render "cocktails/background", cocktail: @cocktail %>
-  </article>
-  <%= render "cocktails/recipes", recipes: @recipes, filtered: @filtered, other_recipes: @other_recipes %>
-</div>

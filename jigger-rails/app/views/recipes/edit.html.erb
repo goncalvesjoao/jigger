@@ -1,6 +1,0 @@
-<% content_for :title, "Edit #{@recipe.display_name.presence || "recipe"} · Jigger" %>
-<div class="library-page recipe-editor">
-  <%= link_to my_recipes_path, class: "library-back" do %><%= render "collections/icon", name: "back" %>My recipes<% end %>
-  <header class="library-heading"><div><h1>Edit recipe</h1><p class="library-description"><%= @recipe.display_name.presence || "A little refinement goes a long way." %></p></div><%= link_to "View recipe", @recipe, class: "button library-secondary" %></header>
-  <%= render "form", recipe: @recipe %>
-</div>

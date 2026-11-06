@@ -1,10 +1,10 @@
-# Jigger
+# ShakeStir
 
 <!-- impeccable:product-schema 1 -->
 
 ## Scope
 
-This product record applies across the monorepo and its implementations. Current implementation evidence refers to `jigger-rails/`; planned capabilities remain product direction across implementations.
+This product record applies across the monorepo and its implementations. Current implementation evidence refers to `shakestir-rails/`; planned capabilities remain product direction across implementations.
 
 ## Platform
 
@@ -12,7 +12,7 @@ web
 
 ## Users
 
-Jigger serves home cocktail enthusiasts discovering and making drinks, recipe creators sharing and organizing their work, and professional bartenders managing and finding recipes. All three audiences are confirmed; their relative priority remains open.
+ShakeStir serves home cocktail enthusiasts discovering and making drinks, recipe creators sharing and organizing their work, and professional bartenders managing and finding recipes. All three audiences are confirmed; their relative priority remains open.
 
 A central usage situation is someone actively preparing a drink who needs to follow instructions, check an ingredient or utensil, or quickly find their next drink.
 
@@ -24,7 +24,7 @@ Support discovering, creating, organizing, and sharing both alcoholic and non-al
 
 ## Positioning
 
-Jigger is a recipe-sharing marketplace with no sales. Professional bartenders and home creators can publish recipes and build public profiles; people can also browse published recipes while keeping their recipes and collections private.
+ShakeStir is a recipe-sharing marketplace with no sales. Professional bartenders and home creators can publish recipes and build public profiles; people can also browse published recipes while keeping their recipes and collections private.
 
 The product promise is relevance at the moment of mixing: give people what they are looking for, when they need it, without ads or extra fluff.
 
@@ -42,7 +42,7 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 
 - A **Cocktail** is a canonical drink identity; a **Recipe** is a particular preparation. The association is optional so original recipes work independently. Automatic canonical matching is a future capability.
 - Marketplace search returns individual eligible published public recipes and opens the exact recipe, including for broad cocktail queries. Recipe names and linked canonical names remain searchable. Owners find drafts and private recipes in **My Recipes**.
-- Recipe results and pages identify the recipe as **@handle / Recipe title**. Author attribution links to their public profile. Every recipe has an author. Seeded recipes belong to the public **@jigger** account and follow the same discovery, filtering, and permission rules as every other author’s recipes. Handles start from the email local part, with normalization and collision suffixes, and can be changed in profile settings. The Jigger handle is reserved for the Jigger account.
+- Recipe results and pages identify the recipe as **@handle / Recipe title**. Author attribution links to their public profile. Every recipe has an author. Seeded recipes belong to the public **@shakestir** account and follow the same discovery, filtering, and permission rules as every other author’s recipes. Handles start from the email local part, with normalization and collision suffixes, and can be changed in profile settings. The ShakeStir handle is reserved for the ShakeStir account.
 - Recipe pages prioritize ingredients, tools, and steps. Photos prefer the recipe's image, falling back to its readable linked cocktail. The attribution links to the canonical cocktail in a right-hand sidebar showing its details page, with a full-page link fallback. Canonical history and background are not repeated below recipe instructions.
 - Signed-in users star and unstar individual recipes through membership in their existing private **Favorites** collection. This collection keeps a stable identity even when renamed, remains private, and cannot be deleted. No separate star storage is introduced. Public star totals appear beside an image-overlay star toggle in marketplace results and recipe details. Star totals use a cached counter maintained when Favorites memberships change. Individual Favorites memberships remain private; star-based ranking remains open. Forking is outside the agreed scope.
 - Discovery supports recipe/name search and filtering by available ingredient and utensil identities. Availability matching does not currently compare quantities or substitute ingredients.
@@ -53,7 +53,7 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 - Recipes can link multiple reusable **Techniques** with translated descriptions, instructions and beginner tips. Authors select them in the recipe editor. Readers open technique guides below Preparation in a keyboard-accessible dialog, with a standalone public guide as fallback. Administrators manage the guide catalog.
 - Ingredient and utensil records, ordered recipe steps, and step mentions provide structured foundations. Automatic extraction from prose and alternative recommendations are not established user-facing capabilities.
 - Cocktail and recipe names support translations. Preserve multilingual content and original preparation prose.
-- Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `jigger-rails/README.md`.
+- Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `shakestir-rails/README.md`.
 
 ### Confirmed product direction; not yet shipped as complete workflows
 
@@ -67,13 +67,13 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 
 ## Brand Commitments
 
-The product name is **Jigger**. Keep product language direct and useful, with a clean interface serving the act of making a drink. Ad-free use and freedom from distracting extra content are explicit promises.
+The product name is **ShakeStir**. Keep product language direct and useful, with a clean interface serving the act of making a drink. Ad-free use and freedom from distracting extra content are explicit promises.
 
 Previous UI work used the Apple design skill. No new palette, typography, or visual world is established by this product record; the existing implementation remains the design evidence for scoped refinements.
 
 ## Evidence on Hand
 
-The Rails application, views, models, tests, and `jigger-rails/README.md` document current implementation behavior. The root `README.md` records the product vision. Seed content and cached photos originate from TheCocktailDB; source credits are part of recipe and cocktail records.
+The Rails application, views, models, tests, and `shakestir-rails/README.md` document current implementation behavior. The root `README.md` records the product vision. Seed content and cached photos originate from TheCocktailDB; source credits are part of recipe and cocktail records.
 
 The audience and product direction above come from the product owner's init interview. No user-study results, adoption metrics, testimonials, or competitive superiority claims have been supplied.
 
