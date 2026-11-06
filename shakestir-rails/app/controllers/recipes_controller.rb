@@ -95,7 +95,7 @@ class RecipesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def recipe_params
-      fields = [ :name, :language, :steps, :preparation_time_seconds, :servings, :preparation_method, :source_reference, :source_url, :visibility, :publication_state, :image ]
+      fields = [ :name, :language, :steps, :servings, :source_reference, :source_url, :visibility, :publication_state, :image ]
       fields += [ :cocktail_id ] if Current.user&.admin?
       fields += [ { technique_ids: [] } ]
       permitted = params.expect(recipe: fields)

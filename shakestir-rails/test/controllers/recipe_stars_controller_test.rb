@@ -41,14 +41,14 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
   test "ShakeStir recipes use the ShakeStir account handle" do
     recipes(:one).update!(user: users(:shakestir))
     get recipe_url(recipes(:one))
-    assert_select "h1", text: "@shakestir / MyString"
+    assert_select "h1", text: "MyString"
     get root_url
     assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "MyString"
   end
 
   test "recipe attribution links to its author’s public profile" do
     get recipe_url(recipes(:one))
-    assert_select "h1", text: "@mika / MyString"
+    assert_select "h1", text: "MyString"
     assert_select "a[href=?]", profile_path(@user)
   end
   test "public counts include only Favorites memberships and never reveal who starred" do

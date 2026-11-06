@@ -47,7 +47,7 @@ module DemoAccountsSeeder
     return existing if existing
 
     recipe = user.recipes.create!(name: name, cocktail: TheCocktailDbSeeder.find_cocktail(cocktail_name),
-      language: "en", visibility: visibility, preparation_method: "shaken", preparation_time_seconds: 180)
+      language: "en", visibility: visibility)
     ingredients.each_with_index do |(ingredient_name, text), position|
       ingredient = Ingredient::Translation.find_by!(locale: "en", normalized_name: LookupName.normalize(ingredient_name)).globalized_model
       recipe.recipe_ingredients.create!(ingredient: ingredient, submitted_text: text, language: "en", position: position)

@@ -3,18 +3,22 @@
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" class="recipe mixing-recipe" lang="<%= recipe.language %>">
   <% photo = recipe_photo(recipe) %>
-  <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "", class: "recipe-backdrop", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
-  <header class="mixing-header">
-    <div>
-      <h1><%= recipe_heading(recipe) %></h1>
-      <p class="recipe-attribution">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %><% if @cocktail %>, for <%= link_to @cocktail.display_name, cocktail_path(@cocktail), data: { action: "cocktail-panel#open", cocktail_panel_target: "trigger" }, aria: { haspopup: "dialog", controls: "cocktail-panel" } %><% end %></p>
-      <% unless recipe.publication_state == "published" && recipe.visibility == "public" %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
-    </div>
-    <div class="mixing-save-actions">
+  <header class="cocktail-cover recipe-cover<%= " cocktail-cover-with-photo" if photo.image.attached? %>">
+    <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{recipe.display_name}", class: "cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
+    <%= link_to root_path, class: "cocktail-cover-back" do %>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" /></svg>
+      All recipes
+    <% end %>
+    <div class="recipe-cover-save-actions mixing-save-actions">
       <%= render "recipes/star", recipe: recipe %>
       <% if authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
     </div>
-    <nav class="mixing-jumps" aria-label="Recipe sections"><a href="#preparation">Preparation</a></nav>
+    <div class="cocktail-cover-copy">
+      <h1><%= recipe.display_name.presence || "Untitled recipe" %></h1>
+      <p class="recipe-attribution">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user), data: { action: "cocktail-panel#open", cocktail_panel_target: "trigger", panel_title: "#{recipe.user.profile_name} profile", panel_kind: "profile" }, aria: { haspopup: "dialog", controls: "cocktail-panel" } %><% if @cocktail %>, for <%= link_to @cocktail.display_name, cocktail_path(@cocktail), data: { action: "cocktail-panel#open", cocktail_panel_target: "trigger", panel_title: "#{@cocktail.display_name} cocktail details", panel_kind: "cocktail details" }, aria: { haspopup: "dialog", controls: "cocktail-panel" } %><% end %></p>
+      <% unless recipe.publication_state == "published" && recipe.visibility == "public" %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
+
+    </div>
   </header>
   <div class="mixing-layout">
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
@@ -24,14 +28,18 @@
       <% if recipe.recipe_steps.any? %><progress class="checklist-progress visually-hidden" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
       </div>
       <% if recipe.recipe_steps.any? %>
-        <ol class="checklist steps-list">
+        <ol class="steps-list preparation-steps" role="list">
           <% recipe.recipe_steps.each_with_index do |step, index| %>
-            <li><label><input type="checkbox" data-preparation-target="step" data-action="preparation#update"><span><% if recipe.recipe_steps.size > 1 %><span class="step-number"><%= index + 1 %></span><% end %><span class="submitted-prose step-body"><%= step.body %></span></span></label></li>
+            <li><label class="preparation-step">
+              <input class="visually-hidden" type="checkbox" aria-label="Complete step <%= index + 1 %>" data-preparation-target="step" data-action="preparation#update">
+              <span class="preparation-step-number" aria-hidden="true"><%= index + 1 %></span>
+              <span class="submitted-prose step-body"><%= step.body %></span>
+            </label></li>
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
-      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
       <%= render "recipes/techniques", recipe: recipe %>
+      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
     </section>
   </div>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>

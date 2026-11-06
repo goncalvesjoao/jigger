@@ -271,7 +271,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get root_url, params: filters
     assert_response :success
     assert_select ".recipe-grid article", count: 24
-    assert_select ".marketplace-results h2", text: "26 recipes"
+    assert_select ".section-heading.marketplace-results", count: 0
     next_url = css_select("turbo-frame#recipes_page_2[loading='lazy']").sole["src"]
     query = Rack::Utils.parse_nested_query(URI.parse(next_url).query)
     assert_equal "margarita", query["q"]

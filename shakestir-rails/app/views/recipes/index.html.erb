@@ -3,7 +3,6 @@
 <header class="explore-heading"><h1>Find your next drink</h1><p>Search by name, or choose the ingredients and utensils you have.</p></header>
 <%= render "shared/marketplace_search" %>
 <div id="marketplace-results" aria-live="polite">
-<div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "recipe") %></h2></div>
 <% if @pagination.empty? %><section class="empty-state"><h3>No recipes found.</h3><p>Try another name or remove a filter to see more drinks.</p><%= link_to "All recipes", root_path %></section><% end %>
 <%= turbo_frame_tag "recipes_page_#{@pagination.current_page}", target: "_top" do %>
   <div id="recipes_<%= @pagination.current_page %>" class="auto-grid recipe-grid">

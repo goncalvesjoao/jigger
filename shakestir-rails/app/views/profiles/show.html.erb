@@ -1,3 +1,4 @@
+<% content_for :body_class, "cocktail-panel-content profile-panel-content" if params[:panel] == "1" %>
 <% content_for :title, "#{@owned ? "My profile" : @profile.profile_name} · ShakeStir" %>
 <div class="library-page profile-page">
   <header class="profile-heading">

@@ -7,7 +7,7 @@
     <div class="recipe-section-fields">
       <div><%= form.label :name, "Recipe name" %><%= form.text_field :name, placeholder: "e.g. My Sunday Negroni" %></div>
       <div><%= form.label :language %><%= form.text_field :language, aria: { describedby: "recipe-language-help" } %><small id="recipe-language-help">The language you’re writing in, such as en for English or ja for Japanese.</small></div>
-      <div class="recipe-editor-row"><div><%= form.label :servings %><%= form.number_field :servings, min: 1, step: 1 %></div><div><%= form.label :preparation_method %><%= form.select :preparation_method, options_for_select([["Choose a method", nil]] + Recipe.preparation_methods.keys.map { |value| [value.humanize, value] }, recipe.preparation_method) %></div></div>
+<div><%= form.label :servings %><%= form.number_field :servings, min: 1, step: 1 %></div>
     </div>
   </section>
   <section class="recipe-editor-section" aria-labelledby="recipe-preparation-title">
@@ -30,7 +30,6 @@
           <p>No technique guides are available yet.</p>
         <% end %>
       </fieldset>
-      <div><%= form.label :preparation_time_seconds, "Preparation time (seconds)" %><%= form.number_field :preparation_time_seconds, min: 0, step: 1, placeholder: "e.g. 120" %></div>
     </div>
   </section>
   <section class="recipe-editor-section" aria-labelledby="recipe-photo-title">

@@ -1,11 +1,4 @@
 class Recipe < ApplicationRecord
-  enum :preparation_method, {
-    shaken: "shaken",
-    stirred: "stirred",
-    built: "built",
-    blended: "blended"
-  }, validate: { allow_nil: true }
-
   has_and_belongs_to_many :liking_users, class_name: "User", join_table: "recipes_users",
     foreign_key: :recipe_id, association_foreign_key: :user_id
   has_many :collection_recipes, dependent: :destroy
@@ -35,7 +28,6 @@ class Recipe < ApplicationRecord
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
   validates :language, presence: true
-  validates :preparation_time_seconds, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :servings, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validate :publication_requirements, if: -> { publication_state == "published" }
 

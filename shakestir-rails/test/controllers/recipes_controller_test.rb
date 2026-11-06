@@ -105,7 +105,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create recipe" do
     assert_difference("Recipe.count") do
-      post recipes_url, params: { recipe: { name: @recipe.name, preparation_time_seconds: @recipe.preparation_time_seconds, steps: @recipe.steps, user_id: users(:two).id } }
+      post recipes_url, params: { recipe: { name: @recipe.name, steps: @recipe.steps, user_id: users(:two).id } }
     end
 
     assert_redirected_to recipe_url(Recipe.last)
@@ -125,7 +125,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update recipe" do
-    patch recipe_url(@recipe), params: { recipe: { name: @recipe.name, preparation_time_seconds: @recipe.preparation_time_seconds, steps: @recipe.steps, user_id: users(:two).id, visibility: "public", publication_state: "published" } }
+    patch recipe_url(@recipe), params: { recipe: { name: @recipe.name, steps: @recipe.steps, user_id: users(:two).id, visibility: "public", publication_state: "published" } }
     assert_redirected_to recipe_url(@recipe)
     assert_equal users(:one), @recipe.reload.user
   end

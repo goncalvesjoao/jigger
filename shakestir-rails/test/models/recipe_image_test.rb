@@ -71,7 +71,7 @@ class RecipeImageTest < ActiveSupport::TestCase
     assert_not recipe.update(image: photo_upload("truncated.jpg", "image/jpeg"))
     assert_equal original.id, recipe.reload.image.blob.id
     assert_equal original.download, recipe.image.download
-    assert_not recipe.update(image: photo_upload("photo.webp", "image/webp"), preparation_time_seconds: -1)
+    assert_not recipe.update(image: photo_upload("photo.webp", "image/webp"), servings: 0)
     assert_equal original.id, recipe.reload.image.blob.id
     recipe.update!(image: photo_upload("photo.webp", "image/webp"))
     assert_not_equal original.id, recipe.reload.image.blob.id

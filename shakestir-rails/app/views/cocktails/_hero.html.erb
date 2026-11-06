@@ -9,6 +9,5 @@
   <div class="cocktail-cover-copy">
     <h1><%= cocktail.display_name %></h1>
     <% if cocktail.description.present? %><p class="cocktail-cover-description submitted-prose"><%= cocktail.description %></p><% end %>
-    <p class="cocktail-cover-meta"><%= pluralize(@recipes.size, @filtered ? "matching recipe" : "recipe") %></p>
   </div>
 </header>

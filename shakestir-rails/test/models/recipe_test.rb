@@ -12,16 +12,14 @@ class RecipeTest < ActiveSupport::TestCase
     assert_equal "Changed", recipe.reload.recipe_steps.sole.body
   end
 
-  test "servings preparation method and source reference are persisted with constraints" do
+  test "servings and source reference are persisted with constraints" do
     recipe = recipes(:one)
     assert recipe.update(
       servings: 2,
-      preparation_method: :shaken,
       source_reference: "Difford's Guide"
     )
     recipe.reload
     assert_equal 2, recipe.servings
-    assert_equal "shaken", recipe.preparation_method
     assert_equal "Difford's Guide", recipe.source_reference
     assert_not recipe.update(servings: 0)
   end

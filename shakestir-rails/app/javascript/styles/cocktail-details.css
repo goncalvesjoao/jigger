@@ -230,5 +230,91 @@
 
 .cocktail-cover-back { position: absolute; top: 1.5rem; left: 1.5rem; display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--border-color); border-radius: 3rem; background: var(--background-color); color: var(--color); text-decoration: none; font-size: .9375rem; font-weight: 600; }
 .cocktail-cover-back:hover { background: var(--card-background-color); text-decoration: underline; }
-.cocktail-cover-copy { padding-top: 4rem; }
+.cocktail-cover-copy { padding-top: 0; }
 @media print { .cocktail-cover-back { display: none; } .cocktail-cover-copy { padding-top: 0; } }
+
+/* Let the cover fill the window and dissolve into the reading surface. */
+.cocktail-journal { container-type: inline-size; }
+.cocktail-journal .page-shell { padding-top: 0; }
+.cocktail-page .cocktail-cover {
+  width: 100cqw;
+  margin-inline: calc(50% - 50cqw);
+  border-radius: 0;
+  padding-inline: max(1.5rem, calc((100cqw - 72rem) / 2));
+  padding-block: 10rem 2rem;
+}
+.cocktail-page .cocktail-cover-with-photo { min-height: clamp(26rem, 62svh, 34rem); }
+.cocktail-page .cocktail-cover-with-photo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 9rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #f7f5ee00, var(--background-color));
+}
+.cocktail-page .cocktail-cover-back { left: max(1.5rem, calc((100cqw - 72rem) / 2)); top: 1.5rem; }
+.cocktail-page .cocktail-background { margin-top: 0; border-top: 0; padding-top: 1rem; }
+@media (max-width: 45rem) {
+  .cocktail-page .cocktail-cover { padding-inline: 1rem; padding-block: 12rem 2rem; }
+  .cocktail-page .cocktail-cover-with-photo { min-height: 28rem; }
+  .cocktail-page .cocktail-cover-with-photo::after { height: 7rem; }
+  .cocktail-page .cocktail-cover-back { left: 1rem; }
+}
+@media print {
+  .cocktail-page .cocktail-cover { width: auto; margin: 0; min-height: 0; padding: 0; }
+  .cocktail-page .cocktail-cover-with-photo::after { display: none; }
+}
+
+/* Carry the photograph into ivory rather than through a dark band. */
+.cocktail-page .cocktail-cover-with-photo { background: var(--background-color); color: var(--color); }
+.cocktail-page .cocktail-cover-with-photo::before {
+  background: linear-gradient(to bottom, #f7f5ee00 12%, #f7f5ee0d 28%, #f7f5eea6 48%, #f7f5eef5 68%, var(--background-color) 94%);
+}
+.cocktail-page .cocktail-cover-with-photo::after { display: none; }
+.cocktail-page .cocktail-cover { padding-bottom: 2rem; }
+@media (max-width: 45rem) {
+  .cocktail-page .cocktail-cover-with-photo::before {
+    background: linear-gradient(to bottom, #f7f5ee00 12%, #f7f5ee26 28%, #f7f5eec9 46%, #f7f5eef7 64%, var(--background-color) 94%);
+  }
+  .cocktail-page .cocktail-cover { padding-bottom: 2rem; }
+}
+@media print { .cocktail-page .cocktail-cover { padding-bottom: 0; } }
+
+/* Panel controls float over the cover without taking space from the page. */
+.cocktail-panel-actions { position: absolute; z-index: 2; top: 1.5rem; right: 1.5rem; display: flex; gap: .5rem; }
+.cocktail-panel-actions > a, .cocktail-panel-actions > button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; min-height: 2.75rem; padding: 0; margin: 0; border: 1px solid var(--border-color); border-radius: 50%; background: var(--background-color); color: var(--color); text-decoration: none; }
+.cocktail-panel-actions > a:hover, .cocktail-panel-actions > button:hover { background: var(--card-background-color); }
+.cocktail-panel-content .cocktail-cover-back { display: none; }
+@media (max-width: 45rem) { .cocktail-panel-actions { right: 1rem; } }
+
+/* Recipes share the photo-led cover while keeping the workbench close. */
+.recipe-cover .cocktail-cover-copy { max-width: 58rem; }
+.recipe-cover h1 { font-size: clamp(2.25rem, 4.5vw, 4rem); }
+.recipe-cover .recipe-attribution { color: var(--color); margin: 0 0 1rem; font-size: 1rem; }
+.recipe-cover .recipe-attribution a { color: var(--primary-color); font-weight: 600; }
+.recipe-detail-page .mixing-layout { padding-top: 1rem; }
+
+.recipe-cover-save-actions { position: absolute; top: 1.5rem; right: max(1.5rem, calc((100cqw - 72rem) / 2)); }
+@media (max-width: 45rem) { .recipe-cover-save-actions { right: 1rem; } }
+@media print { .recipe-cover-save-actions { display: none; } }
+
+/* Step numbers are the visible controls; native checkboxes retain keyboard behavior. */
+.preparation-steps { list-style: none; margin: 0; padding: 0; }
+.preparation-steps > li { padding: 0; }
+.preparation-step { position: relative; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: .5rem; align-items: start; padding-block: .625rem; margin: 0; cursor: pointer; }
+.preparation-step-number { display: grid; place-items: center; min-height: 2rem; border-radius: 50%; color: var(--color-muted); font-size: 1.125rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.preparation-step:hover .preparation-step-number { background: #e9ecd9; color: var(--primary-color); }
+.preparation-step:has(:focus-visible) { outline: 3px solid var(--primary-outline-color); outline-offset: 4px; border-radius: .25rem; }
+.preparation-step:has(:checked) .preparation-step-number { background: var(--primary-color); color: var(--card-background-color); }
+.preparation-step:has(:checked) .step-body { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.cocktail-panel .cocktail-panel-actions .cocktail-panel-external { background: var(--background-color); color: var(--color); border: 1px solid var(--border-color); }
+.cocktail-panel .cocktail-panel-actions .cocktail-panel-external:hover { background: var(--card-background-color); }
+
+.profile-panel-content .page-shell { padding-top: 5.5rem; }
+
+.recipe-grid .card-media > .recipe-star { left: auto; right: .75rem; }
+.recipe-grid .card-media .recipe-star-button { background: rgb(255 254 248 / .5); border-color: transparent; color: var(--color); }
+.recipe-grid .card-media .recipe-star-button svg { filter: none; }
+.recipe-grid .card-media .recipe-star-button:hover { background: rgb(255 254 248); color: var(--color); }
+.recipe-grid .card-media .recipe-star-button:focus-visible { outline-color: #fffef9; }

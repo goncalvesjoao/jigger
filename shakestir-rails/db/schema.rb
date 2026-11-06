@@ -187,9 +187,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_010000) do
     t.string "language", default: "und", null: false
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
-    t.integer "preparation_time_seconds"
     t.integer "servings", default: 1
-    t.string "preparation_method"
     t.string "source_reference"
     t.string "source_url"
     t.integer "stars_count", default: 0, null: false
@@ -200,8 +198,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_010000) do
     t.index ["published_at"], name: "index_recipes_on_published_at"
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_recipes_on_visibility_and_publication_state"
-    t.check_constraint "preparation_method IS NULL OR preparation_method IN ('shaken', 'stirred', 'built', 'blended')", name: "recipes_preparation_method"
-    t.check_constraint "preparation_time_seconds IS NULL OR preparation_time_seconds >= 0", name: "recipes_preparation_time"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "recipes_publication_state"
     t.check_constraint "servings IS NULL OR servings > 0", name: "recipes_positive_servings"
     t.check_constraint "stars_count >= 0", name: "recipes_nonnegative_stars_count"

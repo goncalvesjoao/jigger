@@ -15,10 +15,9 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select "a.visually-hidden-focusable[href='#main-content']", text: "Skip to content"
   end
 
-  test "cards show the available preparation method" do
-    recipes(:one).update!(preparation_method: "shaken")
+  test "cards show recipe titles without preparation metadata" do
     get recipes_url
-    assert_select "#recipe_#{recipes(:one).id} .card-meta span", text: "Shaken"
+    assert_select "#recipe_#{recipes(:one).id} .card-meta", count: 0
     assert_select ".card-copy a", text: "Explore recipe", count: 0
     assert_not_includes response.body, "↗"
   end
@@ -32,12 +31,12 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_equal [ "Stir.\n  Keep this spacing.", "最後に注ぐ。" ], css_select(".step-body").map(&:text)
     assert_select ".ingredient-list .submitted-prose", text: "Gin"
     assert_select ".quantity", text: "0.5 oz"
-    assert_select "input[type=checkbox][data-action='preparation#update']", count: 2
-    assert_select ".mixing-header h1"
-    assert_select ".mixing-header a[href='#preparation']", text: "Preparation"
+    assert_select ".preparation-steps > li", count: 2
+    assert_select "#preparation input[type=checkbox].visually-hidden", count: 2
+    assert_select ".recipe-cover h1"
     assert_select ".detail-hero", count: 0
     assert_operator response.body.index('id="ingredients"'), :<, response.body.index('id="preparation"')
-    assert_select "progress[max='2'][aria-label='Preparation progress']"
+    assert_select "#preparation progress", count: 1
   end
 
   test "cards identify recipes by author handles" do
