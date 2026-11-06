@@ -69,7 +69,7 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(users(:one))
     get recipe_url(recipes(:one))
     assert_response :success
-    assert_select ".detail-visual button.collection-trigger[aria-haspopup='dialog']"
+    assert_select ".mixing-save-actions button.collection-trigger[aria-haspopup='dialog']"
     assert_select "dialog.collection-dialog" do
       assert_select "button[name='collection_id'][value=?]", @collection.id.to_s, text: /Weekend/
       assert_select "input[name='new_collection[name]']"

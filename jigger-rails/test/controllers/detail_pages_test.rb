@@ -30,12 +30,13 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_unique_ids_and_valid_section_links
   end
 
-  test "recipe hero uses its own photo and includes canonical background and related recipes" do
+  test "recipe context uses its own photo and includes canonical background and related recipes" do
     get recipe_url(@jigger_recipe)
     assert_response :success
-    assert_select ".detail-hero img[src=?]", recipe_image_path(@jigger_recipe, size: :detail)
-    assert_select ".detail-hero img[src=?]", cocktail_image_path(@cocktail, size: :detail), count: 0
-    assert_select ".detail-hero .detail-description", count: 0
+    assert_select ".recipe-context img[src=?]", recipe_image_path(@jigger_recipe, size: :detail)
+    assert_select ".recipe-context img[src=?]", cocktail_image_path(@cocktail, size: :detail), count: 0
+    assert_select ".mixing-header .detail-description", count: 0
+    assert_operator response.body.index('id="preparation"'), :<, response.body.index('class="recipe-context"')
     assert_select "details:not([open]) > summary", text: "More about this cocktail"
     assert_select ".cocktail-background h2 a", text: "Margarita"
     assert_select ".cocktail-background p", text: "Canonical history"
@@ -58,14 +59,14 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_select "#matching-recipes article", count: 2
     assert_select "#matching-recipes #recipe_#{@other_recipe.id}", count: 0
     assert_select "#matching-recipes #recipe_#{@jigger_recipe.id}"
-    assert_select ".detail-hero img[src=?]", recipe_image_path(@other_recipe, size: :detail)
+    assert_select ".recipe-context img[src=?]", recipe_image_path(@other_recipe, size: :detail)
     assert_unique_ids_and_valid_section_links
   end
 
   test "recipe photos fall back to canonical photos and cocktails without photos still work" do
     @other_recipe.image.purge
     get recipe_url(@other_recipe)
-    assert_select ".detail-hero img[src=?]", cocktail_image_path(@cocktail, size: :detail)
+    assert_select ".recipe-context img[src=?]", cocktail_image_path(@cocktail, size: :detail)
     @cocktail.image.purge
     @jigger_recipe.update!(user: users(:one))
     get cocktail_url(@cocktail)
@@ -83,7 +84,7 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".cocktail-background", count: 0
     assert_select "#matching-recipes", count: 0
-    assert_select ".detail-hero img[src=?]", recipe_image_path(@other_recipe, size: :detail)
+    assert_select ".recipe-context img[src=?]", recipe_image_path(@other_recipe, size: :detail)
     assert_unique_ids_and_valid_section_links
     sign_out
     get recipe_url(@other_recipe)
@@ -94,7 +95,7 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     def assert_unique_ids_and_valid_section_links
       ids = css_select("[id]").map { |element| element["id"] }
       assert_equal ids.uniq, ids
-      css_select(".detail-nav a, .detail-actions a").each do |link|
+      css_select(".detail-nav a, .detail-actions a, .mixing-jumps a").each do |link|
         href = link["href"]
         assert_includes ids, href.delete_prefix("#") if href.start_with?("#")
       end

@@ -1,9 +1,19 @@
 <% ingredients_id = "ingredients" %>
 <% preparation_id = "preparation" %>
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
-<article id="<%= dom_id recipe %>" class="recipe" lang="<%= recipe.language %>">
-  <%= render "cocktails/hero", cocktail: @cocktail, recipe: recipe %>
-  <%= render "cocktails/section_nav", cocktail: @cocktail, recipe_page: true %>
+<article id="<%= dom_id recipe %>" class="recipe mixing-recipe" lang="<%= recipe.language %>">
+  <header class="mixing-header">
+    <div>
+      <h1><%= recipe_heading(recipe) %></h1>
+      <p class="recipe-attribution">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %><% if recipe.preparation_method.present? %> · <%= recipe.preparation_method.humanize %><% end %><% if recipe.preparation_time_seconds.present? %> · <%= recipe.preparation_time_seconds %> sec<% end %></p>
+      <% unless recipe.publication_state == "published" && recipe.visibility == "public" %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
+    </div>
+    <div class="mixing-save-actions">
+      <%= render "recipes/star", recipe: recipe %>
+      <% if authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
+    </div>
+    <nav class="mixing-jumps" aria-label="Recipe sections"><a href="#ingredients">Ingredients</a><a href="#preparation">Preparation</a></nav>
+  </header>
   <div class="mixing-layout">
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
     <section id="<%= preparation_id %>" class="card recipe-panel mb-0" data-controller="preparation">
@@ -23,6 +33,13 @@
       <%= render "recipes/techniques", recipe: recipe %>
     </section>
   </div>
+  <% photo = recipe_photo(recipe) %>
+  <% if photo.image.attached? || @cocktail %>
+    <section class="recipe-context" aria-label="Recipe details">
+      <% if photo.image.attached? %><div class="detail-visual"><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{photo.display_name}", class: "recipe-photo", loading: "lazy", width: 1200, height: 1200 %></div><% end %>
+      <% if @cocktail %><div><h2>About this recipe</h2><p class="detail-parent">A recipe for <%= link_to @cocktail.display_name, cocktail_path(@cocktail) %></p><% if @cocktail.description.present? %><p class="submitted-prose"><%= @cocktail.description %></p><% end %></div><% end %>
+    </section>
+  <% end %>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>
   <% if show_source || policy(recipe).edit? || policy(recipe).destroy? %>
   <footer class="recipe-footer">
