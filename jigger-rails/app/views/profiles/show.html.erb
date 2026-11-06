@@ -2,7 +2,7 @@
 <div class="library-page profile-page">
   <header class="profile-heading">
     <div class="profile-avatar"><% if @owned %><%= image_tag gravatar_url(@profile), alt: "", width: 112, height: 112 %><% else %><span aria-hidden="true"><%= @profile.display_name.present? ? @profile.display_name.split.first(2).map { |part| part.first }.join.upcase : "J." %></span><% end %></div>
-    <div class="profile-intro"><p class="eyebrow"><%= @owned ? "Your corner of Jigger" : "From the community" %></p><h1><%= @owned && @profile.display_name.blank? ? "My profile" : @profile.profile_name %></h1>
+    <div class="profile-intro"><h1><%= @owned && @profile.display_name.blank? ? "My profile" : @profile.profile_name %></h1>
       <% if @profile.bio.present? %><p class="profile-bio"><%= @profile.bio %></p><% end %>
       <div class="profile-meta"><% if @owned %><span class="library-visibility"><%= render "collections/icon", name: @profile.profile_visibility %><%= @profile.profile_visibility.capitalize %> profile</span><% end %><span>Joined <%= @profile.created_at.strftime("%B %Y") %></span></div>
     </div>

@@ -8,9 +8,9 @@
   --inputs-border-color: #a7ad9b; --inputs-color: #202923; --inputs-placeholder-color: #62695d;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size: 100%; --line-height: 1.6; --text-underline-offset: .22em;
-  --heading-font-weight: 600; --h1-font-size: clamp(2.6rem, 6vw, 5.4rem); --h1-line-height: 1.05;
+  --heading-font-weight: 600; --h1-font-size: 2.5rem; --h1-line-height: 1.05;
   --h1-margin-top: 0; --h2-margin-top: 0; --h3-margin-top: 0;
-  --h2-font-size: clamp(1.6rem, 3vw, 2.2rem); --h3-font-size: 1.5rem;
+  --h2-font-size: 1.75rem; --h3-font-size: 1.5rem;
   --buttons-padding-block: .65rem; --buttons-padding-inline: 1.25rem;
   --primary-outline-color: #63733a; --danger-color: #9a3126;
   --progress-accent-color: #4d5b2e; --progress-track-background-color: #d9dbcf;
@@ -25,7 +25,7 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 :focus-visible { outline: 3px solid var(--primary-outline-color); outline-offset: 4px; }
 .content-grid { --content-grid-content-max-width: 78rem; --content-grid-breakout-max-width: 78rem; --content-grid-padding-inline: 1.5rem; }
 .page-shell { padding-block: 2.5rem 5rem; min-height: 70vh; }
-.site-header { padding-block: 0; margin-block: 0; position: sticky; top: 0; z-index: 10; background: #f7f5eeed; backdrop-filter: blur(22px); box-shadow: 0 1px 0 #20292315; }
+.site-header { padding-block: 0; margin-block: 0; position: sticky; top: 0; z-index: 10; background: var(--background-color); box-shadow: 0 1px 0 #20292315; }
 .site-header nav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 1.5rem; align-items: center; --nav-link-gap: .667rem; --links-color: var(--color); min-height: 4.75rem; padding-block: .5rem; }
 .site-header nav > a { display: flex; align-items: center; justify-self: start; }
 .site-header nav > ul { display: flex; align-items: center; gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
@@ -44,22 +44,22 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 .navbar-search [type=search] { flex: 1; width: 100%; min-width: 0; }
 .navbar-search-label { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .card-media { position: relative; }
-.wordmark { font-size: 1.9rem; font-weight: 750; letter-spacing: -.08em; }
+.wordmark { font-size: 1.9rem; font-weight: 750; letter-spacing: -.04em; }
 .wordmark span { color: #778545; }
 .visually-hidden-focusable:focus { position: fixed; left: 1rem; top: 1rem; z-index: 20; background: white; padding: 1rem; }
 .eyebrow { text-transform: uppercase; font-size: .72rem; letter-spacing: .14em; font-weight: 700; color: #59673e; margin: 0 0 1rem; }
-.discovery-heading { padding: 3rem 0 4rem; max-width: 54rem; }
+.discovery-heading { padding: .5rem 0 2.5rem; max-width: 54rem; }
 .discovery-heading > p:not(.eyebrow) { font-size: 1.15rem; color: var(--color-muted); }
 .search-form { margin: 2rem 0 0; max-width: 40rem; }
 .search-form label { font-size: .85rem; font-weight: 600; }
 .search-form [type=search] { min-width: 0; }
 .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .section-heading > span { color: var(--color-muted); white-space: nowrap; font-size: .85rem; }
-.recipe-grid { --auto-grid-type: auto-fill; --auto-grid-min-column: 19rem; --auto-grid-gap: 2rem; }
+.recipe-grid { --auto-grid-type: auto-fill; --auto-grid-min-column: min(100%, 18rem); --auto-grid-gap: 2rem; }
 .card-image { display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 1rem; background: #e7e8d9; }
 .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease; }
 .card-image:hover img { transform: scale(1.025); }
-.photo-placeholder { display: grid; place-content: center; height: 100%; color: #68734e; font-size: 6rem; letter-spacing: -.1em; background: radial-gradient(ellipse at 30% 20%, #f0edcf, #d9ddc9); }
+.photo-placeholder { display: grid; place-content: center; height: 100%; color: #68734e; font-size: 6rem; letter-spacing: -.04em; background: #e4e7d8; }
 .card-copy { padding: 1.2rem .15rem; }
 .card-copy .eyebrow { margin-bottom: .5rem; }
 .card-copy h3 a { color: var(--color); text-decoration: none; }
@@ -101,7 +101,7 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 .recipe-footer { display: flex; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--border-color); margin-top: 3rem; padding-top: 2rem; }
 .recipe-footer h2 { font-size: 1.3rem; }
 .recipe-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1rem; }
-.form-page { --h1-font-size: clamp(2rem, 4vw, 3rem); --card-spacing: clamp(1.25rem, 4vw, 3rem); --card-border-radius: 1.2rem; max-width: 48rem; margin: 1rem auto; }
+.form-page { --h1-font-size: 2rem; --card-spacing: clamp(1.25rem, 4vw, 3rem); --card-border-radius: 1.2rem; max-width: 48rem; margin: 1rem auto; }
 .auth-page { max-width: 32rem; margin-block: 2rem; }
 .form-page label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: .4rem; }
 .form-page form { --spacing: 1.25rem; }
@@ -109,7 +109,7 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
 .form-page textarea { min-height: 8rem; }
 .form-page img { max-height: 14rem; border-radius: .7rem; }
 .form-page p { color: var(--color-muted); }
-.empty-state { padding: 3rem; border: 1px dashed #a7ad9b; border-radius: 1rem; }
+.empty-state { padding: 2rem; border: 1px solid var(--border-color); border-radius: 1rem; }
 .site-footer { border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding-block: 2rem; color: var(--color-muted); font-size: .85rem; }
 @media (max-width: 75rem) {
  .site-header nav { gap: 1.25rem; }
@@ -175,4 +175,33 @@ button:active, .button:active, input[type=submit]:active { transform: scale(.98)
  .site-header nav > .navigation-actions { grid-column: 2; grid-row: 1; gap: .75rem; flex-wrap: nowrap; }
  .site-header .navigation-create { padding: .5rem .85rem; font-size: .8rem; }
  .primary-navigation a { padding-block: .4rem; }
+}
+
+/* Shared hierarchy and controls across discovery, libraries and account pages. */
+::selection { background: #dce3c7; color: #202923; }
+input, textarea { caret-color: var(--primary-color); }
+input::placeholder, textarea::placeholder { color: var(--inputs-placeholder-color); opacity: 1; }
+.explore-heading { margin: .5rem 0 2rem; }
+.explore-heading h1 { margin-bottom: .75rem; font-size: 2.5rem; }
+.explore-heading p { color: var(--color-muted); margin: 0; font-size: 1.0625rem; max-width: 65ch; }
+.card-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+.card-copy h3 { font-size: 1.375rem; }
+.auth-page { padding: 2rem; border: 1px solid var(--border-color); border-radius: 1rem; box-shadow: none; }
+.auth-page h1 { font-size: 2rem; line-height: 1.2; margin-bottom: .75rem; }
+.auth-page form { display: grid; gap: .5rem; margin-top: 1.75rem; }
+.auth-page form label { font-size: .9375rem; margin: .5rem 0 0; }
+.auth-page input:not([type=submit]) { width: 100%; margin: 0 0 .5rem; font-size: 1rem; min-height: 3rem; }
+.auth-page input[type=submit] { width: 100%; margin: 1rem 0 .5rem; }
+.auth-page .auth-links { display: grid; gap: .25rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.auth-links a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.auth-page .auth-help { font-size: .875rem; margin: 0; }
+.auth-page .field_with_errors { display: contents; }
+.auth-page .field_with_errors input { border-color: var(--danger-color); }
+.page-shell > [role=status] { margin-bottom: 1.5rem; }
+@media (max-width: 45rem) {
+  .explore-heading h1 { font-size: 2rem; }
+  .page-shell { padding-block: 1.5rem 3rem; }
+  .auth-page { padding: 1.5rem; margin-block: .5rem; }
+  input:not([type=checkbox], [type=radio], [type=submit]), select, textarea { font-size: 1rem; }
+  .site-footer { align-items: flex-start; gap: .5rem; }
 }

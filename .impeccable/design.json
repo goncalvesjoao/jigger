@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T06:22:33.572315+00:00",
+  "title": "Design System: Jigger",
+  "extensions": {
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Observed Rails typography role."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "Observed Rails typography role."
+      },
+      "mobile-title": {
+        "displayName": "Mobile Title",
+        "purpose": "Observed Rails typography role."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Observed Rails typography role."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Observed Rails typography role."
+      },
+      "preparation": {
+        "displayName": "Preparation",
+        "purpose": "Preparation instructions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Observed Rails typography role."
+      }
+    },
+    "shadows": [
+      {
+        "name": "header-divider",
+        "value": "0 1px 0 #20292315",
+        "purpose": "Sticky header separation."
+      },
+      {
+        "name": "picker",
+        "value": "0 .75rem 2rem #20292324",
+        "purpose": "Desktop availability picker."
+      },
+      {
+        "name": "phone-picker",
+        "value": "0 .75rem 3rem #20292340",
+        "purpose": "Fixed phone availability picker."
+      },
+      {
+        "name": "dialog",
+        "value": "0 1.5rem 5rem #20292333",
+        "purpose": "Collection dialog."
+      }
+    ],
+    "motion": [
+      {
+        "name": "photo-hover",
+        "value": "transform .25s ease",
+        "purpose": "Discovery photo hover scale."
+      },
+      {
+        "name": "library-hover",
+        "value": "transform 180ms ease-out, box-shadow 180ms ease-out",
+        "purpose": "Collection artwork hover."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "25rem",
+        "value": "25rem"
+      },
+      {
+        "name": "30rem",
+        "value": "30rem"
+      },
+      {
+        "name": "36rem",
+        "value": "36rem"
+      },
+      {
+        "name": "40rem",
+        "value": "40rem"
+      },
+      {
+        "name": "45rem",
+        "value": "45rem"
+      },
+      {
+        "name": "50rem",
+        "value": "50rem"
+      },
+      {
+        "name": "55rem",
+        "value": "55rem"
+      },
+      {
+        "name": "75rem",
+        "value": "75rem"
+      }
+    ],
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Primary",
+        "tonalRamp": [
+          "oklch(0.150 0.0297 123.37)",
+          "oklch(0.250 0.0496 123.37)",
+          "oklch(0.350 0.0694 123.37)",
+          "oklch(0.470 0.0694 123.37)",
+          "oklch(0.590 0.0694 123.37)",
+          "oklch(0.710 0.0694 123.37)",
+          "oklch(0.830 0.0472 123.37)",
+          "oklch(0.950 0.0139 123.37)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Primary Hover",
+        "tonalRamp": [
+          "oklch(0.150 0.0253 125.60)",
+          "oklch(0.250 0.0422 125.60)",
+          "oklch(0.350 0.0591 125.60)",
+          "oklch(0.470 0.0591 125.60)",
+          "oklch(0.590 0.0591 125.60)",
+          "oklch(0.710 0.0591 125.60)",
+          "oklch(0.830 0.0402 125.60)",
+          "oklch(0.950 0.0118 125.60)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Background",
+        "tonalRamp": [
+          "oklch(0.150 0.0041 93.57)",
+          "oklch(0.250 0.0068 93.57)",
+          "oklch(0.350 0.0095 93.57)",
+          "oklch(0.470 0.0095 93.57)",
+          "oklch(0.590 0.0095 93.57)",
+          "oklch(0.710 0.0095 93.57)",
+          "oklch(0.830 0.0065 93.57)",
+          "oklch(0.950 0.0019 93.57)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Text",
+        "tonalRamp": [
+          "oklch(0.150 0.0072 155.93)",
+          "oklch(0.250 0.0120 155.93)",
+          "oklch(0.350 0.0168 155.93)",
+          "oklch(0.470 0.0168 155.93)",
+          "oklch(0.590 0.0168 155.93)",
+          "oklch(0.710 0.0168 155.93)",
+          "oklch(0.830 0.0114 155.93)",
+          "oklch(0.950 0.0034 155.93)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0091 135.05)",
+          "oklch(0.250 0.0152 135.05)",
+          "oklch(0.350 0.0213 135.05)",
+          "oklch(0.470 0.0213 135.05)",
+          "oklch(0.590 0.0213 135.05)",
+          "oklch(0.710 0.0213 135.05)",
+          "oklch(0.830 0.0145 135.05)",
+          "oklch(0.950 0.0043 135.05)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "tonalRamp": [
+          "oklch(0.150 0.0070 114.41)",
+          "oklch(0.250 0.0116 114.41)",
+          "oklch(0.350 0.0163 114.41)",
+          "oklch(0.470 0.0163 114.41)",
+          "oklch(0.590 0.0163 114.41)",
+          "oklch(0.710 0.0163 114.41)",
+          "oklch(0.830 0.0111 114.41)",
+          "oklch(0.950 0.0033 114.41)"
+        ]
+      },
+      "input-surface": {
+        "role": "neutral",
+        "displayName": "Input Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0029 97.35)",
+          "oklch(0.250 0.0048 97.35)",
+          "oklch(0.350 0.0067 97.35)",
+          "oklch(0.470 0.0067 97.35)",
+          "oklch(0.590 0.0067 97.35)",
+          "oklch(0.710 0.0067 97.35)",
+          "oklch(0.830 0.0045 97.35)",
+          "oklch(0.950 0.0013 97.35)"
+        ]
+      },
+      "input-border": {
+        "role": "neutral",
+        "displayName": "Input Border",
+        "tonalRamp": [
+          "oklch(0.150 0.0112 122.07)",
+          "oklch(0.250 0.0187 122.07)",
+          "oklch(0.350 0.0262 122.07)",
+          "oklch(0.470 0.0262 122.07)",
+          "oklch(0.590 0.0262 122.07)",
+          "oklch(0.710 0.0262 122.07)",
+          "oklch(0.830 0.0178 122.07)",
+          "oklch(0.950 0.0052 122.07)"
+        ]
+      },
+      "placeholder": {
+        "role": "neutral",
+        "displayName": "Placeholder",
+        "tonalRamp": [
+          "oklch(0.150 0.0088 132.06)",
+          "oklch(0.250 0.0146 132.06)",
+          "oklch(0.350 0.0204 132.06)",
+          "oklch(0.470 0.0204 132.06)",
+          "oklch(0.590 0.0204 132.06)",
+          "oklch(0.710 0.0204 132.06)",
+          "oklch(0.830 0.0139 132.06)",
+          "oklch(0.950 0.0041 132.06)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(0.150 0.0357 122.18)",
+          "oklch(0.250 0.0595 122.18)",
+          "oklch(0.350 0.0833 122.18)",
+          "oklch(0.470 0.0833 122.18)",
+          "oklch(0.590 0.0833 122.18)",
+          "oklch(0.710 0.0833 122.18)",
+          "oklch(0.830 0.0566 122.18)",
+          "oklch(0.950 0.0167 122.18)"
+        ]
+      },
+      "danger": {
+        "role": "error",
+        "displayName": "Danger",
+        "tonalRamp": [
+          "oklch(0.150 0.0608 29.43)",
+          "oklch(0.250 0.1014 29.43)",
+          "oklch(0.350 0.1420 29.43)",
+          "oklch(0.470 0.1420 29.43)",
+          "oklch(0.590 0.1420 29.43)",
+          "oklch(0.710 0.1420 29.43)",
+          "oklch(0.830 0.0965 29.43)",
+          "oklch(0.950 0.0284 29.43)"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "tonalRamp": [
+          "oklch(0.150 0.0034 98.87)",
+          "oklch(0.250 0.0057 98.87)",
+          "oklch(0.350 0.0080 98.87)",
+          "oklch(0.470 0.0080 98.87)",
+          "oklch(0.590 0.0080 98.87)",
+          "oklch(0.710 0.0080 98.87)",
+          "oklch(0.830 0.0054 98.87)",
+          "oklch(0.950 0.0016 98.87)"
+        ]
+      },
+      "checked": {
+        "role": "neutral",
+        "displayName": "Checked",
+        "tonalRamp": [
+          "oklch(0.150 0.0064 119.11)",
+          "oklch(0.250 0.0106 119.11)",
+          "oklch(0.350 0.0149 119.11)",
+          "oklch(0.470 0.0149 119.11)",
+          "oklch(0.590 0.0149 119.11)",
+          "oklch(0.710 0.0149 119.11)",
+          "oklch(0.830 0.0101 119.11)",
+          "oklch(0.950 0.0030 119.11)"
+        ]
+      },
+      "chip": {
+        "role": "neutral",
+        "displayName": "Chip",
+        "tonalRamp": [
+          "oklch(0.150 0.0109 114.17)",
+          "oklch(0.250 0.0181 114.17)",
+          "oklch(0.350 0.0254 114.17)",
+          "oklch(0.470 0.0254 114.17)",
+          "oklch(0.590 0.0254 114.17)",
+          "oklch(0.710 0.0254 114.17)",
+          "oklch(0.830 0.0173 114.17)",
+          "oklch(0.950 0.0051 114.17)"
+        ]
+      },
+      "chip-text": {
+        "role": "neutral",
+        "displayName": "Chip Text",
+        "tonalRamp": [
+          "oklch(0.150 0.0296 124.84)",
+          "oklch(0.250 0.0493 124.84)",
+          "oklch(0.350 0.0691 124.84)",
+          "oklch(0.470 0.0691 124.84)",
+          "oklch(0.590 0.0691 124.84)",
+          "oklch(0.710 0.0691 124.84)",
+          "oklch(0.830 0.0470 124.84)",
+          "oklch(0.950 0.0138 124.84)"
+        ]
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Library primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Library primary action as implemented in the Rails interface.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Create collection</button>",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-button-primary { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; margin: 0; white-space: nowrap; font-weight: 600; font-size: .9rem; min-height: 2.9rem; padding: .7rem 1.2rem; border-radius: 3rem; text-decoration: none; background: var(--primary-background-color, #4d5b2e); color: #fffef9; border: 1px solid var(--primary-background-color, #4d5b2e); } .ds-button-primary:hover { background: var(--primary-background-color-hover, #35421e); } .ds-button-primary:active { transform: scale(.98); } @media (prefers-reduced-motion: reduce) { .ds-button-primary:active { transform: none; } } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Library secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Library secondary action as implemented in the Rails interface.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Edit collection</button>",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-button-secondary { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; margin: 0; white-space: nowrap; font-weight: 600; font-size: .9rem; min-height: 2.9rem; padding: .7rem 1.2rem; border-radius: 3rem; text-decoration: none; border: 1px solid currentColor; } .ds-button-secondary:hover { background: #eceee3; } .ds-button-secondary:active { transform: scale(.98); } @media (prefers-reduced-motion: reduce) { .ds-button-secondary:active { transform: none; } } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Editor field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Editor field as implemented in the Rails interface.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-name\">Recipe name</label><input class=\"ds-field\" id=\"ds-name\" value=\"Daiquiri\">",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-field-label { display: block; font-size: .9rem; font-weight: 600; margin-bottom: .5rem; } .ds-field { color: var(--inputs-color, #202923); background: var(--inputs-background-color, #fffef9); border: 1px solid var(--inputs-border-color, #a7ad9b); padding: .5rem .7rem; margin: 0; border-radius: .75rem; font: inherit; font-size: 1rem; caret-color: var(--primary-color, #4d5b2e); } .ds-field:hover { border-color: var(--inputs-border-color, #a7ad9b); } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Availability chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Availability chip as implemented in the Rails interface.",
+      "html": "<button type=\"button\" class=\"ds-chip\">Lime</button>",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-chip { background: #e9ecd9; color: #435226; border: 0; min-height: 2.2rem; padding: .3rem .85rem; font-size: .85rem; box-shadow: none; border-radius: 3rem; font-family: inherit; cursor: pointer; } .ds-chip::after { content: \"\u00d7\"; margin-left: .6rem; font-size: 1.1rem; } .ds-chip:active { transform: scale(.98); } @media (prefers-reduced-motion: reduce) { .ds-chip:active { transform: none; } } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Detail navigation",
+      "kind": "nav",
+      "description": "Detail navigation as implemented in the Rails interface.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"On this page\"><a href=\"#ingredients\">Ingredients</a><a href=\"#preparation\">Preparation</a></nav>",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-nav { gap: .25rem 1rem; } .ds-nav a { font-size: .875rem; color: var(--primary-color, #4d5b2e); } .ds-nav a:hover { text-decoration: underline; } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Preparation panel",
+      "kind": "card",
+      "refersTo": "recipe-panel",
+      "description": "Preparation panel as implemented in the Rails interface.",
+      "html": "<section class=\"ds-panel\"><h2>Preparation</h2><ol class=\"ds-list\"><li><label><input type=\"checkbox\"><span><span class=\"ds-step\">1</span><span class=\"ds-prose\">Shake with ice.</span></span></label></li></ol></section>",
+      "css": ":host { font-family: var(--font-family, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); color: var(--color, #202923); font-size: 1rem; line-height: 1.6; } .ds-panel { border: 0; padding: 0; margin-bottom: 2rem; } .ds-panel h2 { font-size: 1.5rem; margin: 0; } .ds-list { padding: 0; margin: 1rem 0 0; list-style: none; } .ds-list li { border-top: 1px solid var(--border-color, #d9dbcf); } .ds-list label { display: flex; align-items: flex-start; gap: .875rem; padding: 1rem .25rem; margin: 0; cursor: pointer; border-radius: .25rem; } .ds-list input { appearance: auto; position: static; width: 1.375rem; height: 1.375rem; min-width: 1.375rem; margin: .2rem 0 0; accent-color: var(--primary-color, #4d5b2e); clip-path: none; } .ds-list label:focus-within { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 2px; } .ds-list label:has(:checked) { background: #eff2e7; } .ds-list label:has(:checked) .ds-prose { text-decoration: line-through; text-decoration-thickness: 1px; } .ds-step { display: block; color: var(--color-muted, #596155); font-size: .875rem; font-weight: 600; margin-bottom: .25rem; letter-spacing: normal; text-transform: none; } .ds-step::before { content: \"Step \"; } .ds-prose { display: block; font-size: 1.25rem; line-height: 1.75; color: var(--color, #202923); } :focus-visible { outline: 3px solid var(--primary-outline-color, #63733a); outline-offset: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Find a drink. Make it yours.",
+    "overview": "Jigger retains its warm ivory and olive interface on the Semanticus foundation. System sans-serif typography, recognizable native controls and restrained panels support finding a drink and reading its preparation while mixing.\n\nPhotographs lead discovery; working surfaces stay quiet. Existing seed photography and cached assets originate from TheCocktailDB, with credits retained in cocktail and recipe records. This document describes the Rails implementation, including its adapted administration and static recovery pages.",
+    "keyCharacteristics": [
+      "Warm ivory ground and olive actions.",
+      "Photo-led discovery and restrained reading panels.",
+      "Visible native checkboxes and comfortably sized controls."
+    ],
+    "rules": [
+      {
+        "name": "The Working Surface Rule",
+        "body": "Use near-white panels and thin borders to separate tasks from the ivory ground.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reading Rule",
+        "body": "Preserve preparation prose, readable line height and visible native checkboxes.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do retain the ivory ground, olive actions and system sans-serif stack.",
+      "Do preserve recipe prose, translations and image source credits.",
+      "Do show selected, loading, empty, error and disabled states near the control or content they affect.",
+      "Do respect reduced motion and retain visible keyboard focus."
+    ],
+    "donts": [
+      "Don't introduce decorative typography or a replacement visual identity.",
+      "Don't make secondary background stories compete with preparation.",
+      "Don't replace native checkbox and radio affordances with ambiguous decoration."
+    ]
+  }
+}

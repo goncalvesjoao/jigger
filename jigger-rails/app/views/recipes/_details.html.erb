@@ -3,8 +3,9 @@
 <% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
 <article id="<%= dom_id recipe %>" class="recipe" lang="<%= recipe.language %>">
   <% if embedded %>
-    <header class="recipe-summary <%= "visually-hidden" if embedded %>">
-      <div><p class="eyebrow">Official Jigger recipe</p><h2><%= recipe.display_name %></h2></div>
+    <header class="recipe-summary">
+      <div><h2><%= recipe.display_name %></h2></div>
+      <div class="recipe-attribution">Official Jigger recipe</div>
       <%= render "recipes/facts", recipe: recipe %>
     </header>
   <% else %>
@@ -15,9 +16,10 @@
     <%= render "recipes/requirements", recipe: recipe, ingredients_id: ingredients_id, preparation_id: preparation_id %>
     <section id="<%= preparation_id %>" class="card recipe-panel mb-0" data-controller="preparation">
       <div class="preparation-heading">
-      <p class="eyebrow">02 / Craft &amp; method</p><h2>Preparation</h2>
+      <h2>Preparation</h2>
       <% if recipe.recipe_steps.any? %><progress class="checklist-progress" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
       </div>
+      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
       <a href="#<%= ingredients_id %>" class="preparation-back">← Back to ingredients</a>
       <% if recipe.recipe_steps.any? %>
         <ol class="checklist steps-list">
@@ -28,7 +30,7 @@
       <% else %><p>No preparation steps listed.</p><% end %>
     </section>
   </div>
-  <% show_source = !embedded && (recipe.source_url.present? || recipe.source_reference.present?) %>
+  <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>
   <% if show_source || policy(recipe).edit? || policy(recipe).destroy? %>
   <footer class="recipe-footer">
     <% if show_source %>
@@ -38,7 +40,7 @@
     <% end %>
     <div class="recipe-actions">
       <% if policy(recipe).edit? %><%= link_to "Edit this recipe", edit_recipe_path(recipe) %><% end %>
-      <% if policy(recipe).destroy? %><%= button_to "Destroy this recipe", recipe, method: :delete, class: "ghost danger", data: { turbo_confirm: "Delete this recipe? This cannot be undone." } %><% end %>
+      <% if policy(recipe).destroy? %><%= button_to "Delete recipe", recipe, method: :delete, class: "ghost danger", data: { turbo_confirm: "Delete this recipe? This cannot be undone." } %><% end %>
     </div>
   </footer>
   <% end %>

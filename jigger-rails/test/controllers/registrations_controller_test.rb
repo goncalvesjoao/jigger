@@ -15,7 +15,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "new@example.com", User.last.email_address
     assert cookies[:session_id]
     follow_redirect!
-    assert_select "button", text: "Log Out"
+    assert_select "a[data-turbo-method=delete]", text: "Log out"
   end
 
   test "invalid signup shows errors without creating an account" do

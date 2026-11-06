@@ -8,9 +8,10 @@
         </ol>
       </nav>
     <% end %>
-    <p class="eyebrow"><%= recipe ? (recipe.official? ? "Official Jigger recipe" : "Community recipe") : (mixing_recipe&.official? ? "Official recipe" : "Community recipe") %></p>
+
     <h1><%= recipe ? recipe.display_name : cocktail.display_name %></h1>
-    <% unless recipe %><p class="cocktail-title-accent" aria-hidden="true">Cocktail</p><% end %>
+
+    <% if recipe %><p class="recipe-attribution"><%= recipe.official? ? "Official Jigger recipe" : "Community recipe" %><% unless recipe.publication_state == "published" && recipe.visibility == "public" %> · <%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %><% end %></p><% end %>
     <% if recipe&.user&.public_profile? && !recipe.official? %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
     <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
     <% if cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
@@ -37,6 +38,6 @@
       <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
     <% end %>
     <% if mixing_recipe && authenticated? %><%= render "collections/picker", recipe: mixing_recipe %><% end %>
-    <span class="detail-image-caption"><%= recipe ? "This recipe" : "#{cocktail.display_name} · The collection" %></span>
+
   </div>
 </header>

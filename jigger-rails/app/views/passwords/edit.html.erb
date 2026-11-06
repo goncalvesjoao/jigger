@@ -1,14 +1,13 @@
-<section class="card form-page auth-page">
-<p class="eyebrow">Make yourself at home</p>
-<h1>Update your password</h1>
-
-
-<%= form_with url: password_path(params[:token]), method: :put do |form| %>
-  <%= form.label :password %>
-  <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %>
-  <%= form.label :password_confirmation %>
-  <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72 %>
-  <%= form.submit "Save", class: "w-auto mt-3" %>
-<% end %>
-
+<% content_for :title, "Update password · Jigger" %>
+<section class="card form-page auth-page" aria-labelledby="password-title">
+  <h1 id="password-title">Choose a new password</h1>
+  <p>Enter your new password twice to confirm it.</p>
+  <%= form_with url: password_path(params[:token]), method: :put do |form| %>
+    <%= form.label :password %>
+    <%= form.password_field :password, required: true, autofocus: true, autocomplete: "new-password", maxlength: 72 %>
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", maxlength: 72 %>
+    <%= form.submit "Update password", data: { turbo_submits_with: "Updating…" } %>
+  <% end %>
+  <div class="auth-links"><%= link_to "Back to sign in", new_session_path %></div>
 </section>

@@ -1,12 +1,11 @@
-<section class="card form-page auth-page">
-<p class="eyebrow">Make yourself at home</p>
-<h1>Forgot your password?</h1>
-
-
-<%= form_with url: passwords_path do |form| %>
-  <%= form.label :email_address %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
-  <%= form.submit "Email reset instructions", class: "w-auto mt-3" %>
-<% end %>
-
+<% content_for :title, "Reset password · Jigger" %>
+<section class="card form-page auth-page" aria-labelledby="reset-title">
+  <h1 id="reset-title">Reset your password</h1>
+  <p>Enter your account’s email address. We’ll send a link to choose a new password.</p>
+  <%= form_with url: passwords_path do |form| %>
+    <%= form.label :email_address %>
+    <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address] %>
+    <%= form.submit "Email reset instructions", data: { turbo_submits_with: "Sending…" } %>
+  <% end %>
+  <div class="auth-links"><%= link_to "Back to sign in", new_session_path %></div>
 </section>

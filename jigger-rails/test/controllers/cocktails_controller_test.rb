@@ -101,8 +101,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
       assert_select "#ingredients_recipe_#{recipe.id} .ingredient-list li", count: recipe.recipe_ingredients.count
       assert_select "#preparation_recipe_#{recipe.id} .step-body", text: recipe.recipe_steps.first.body
       assert_select "dd", text: "2"
-      assert_select ".recipe-footer", count: 0
-      assert_select "p", text: "Official source", count: 0
+      assert_select ".recipe-footer", count: 1
+      assert_select "p", text: "Official source", count: 1
     end
     assert_select "#matching-recipes h2", text: "Community recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipe.id}", count: 0
@@ -139,7 +139,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:one).update!(official: true)
     get root_url
     assert_select ".recipe-count", text: "1", count: 1
-    assert_select ".eyebrow", text: "Official recipe"
+    assert_select ".card-meta span", text: "Official recipe"
     get cocktails_url(format: :json)
     assert_equal 1, response.parsed_body.sole["matching_recipe_count"]
     get root_url, params: { q: "bright" }

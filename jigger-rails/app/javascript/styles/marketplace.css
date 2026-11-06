@@ -64,7 +64,7 @@
 }
 .marketplace-picker[open] .marketplace-popover { display: flex; flex-direction: column; max-height: min(32rem, calc(100dvh - 18rem)); }
 .marketplace-popover .marketplace-options { flex: 1 1 auto; min-height: 4rem; }
-.marketplace-popover > input[type=search] { flex-shrink: 0; border-radius: 2rem !important; }
+.marketplace-popover > input[type=search] { flex: 0 0 3rem; height: 3rem; min-height: 3rem; border-radius: 2rem !important; }
 .marketplace-popover .picker-help, .marketplace-popover .picker-actions { flex-shrink: 0; }
 .marketplace-popover .search-text-button { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .marketplace-search-bar .marketplace-submit { border-radius: 50% !important; }
@@ -113,3 +113,23 @@
  #picker-ingredient_ids, #picker-utensil_ids { top: 0; left: auto; right: 0; }
  .marketplace-picker[open] #picker-ingredient_ids, .marketplace-picker[open] #picker-utensil_ids { max-height: min(36rem, calc(100dvh - 11rem)); }
 }
+/* Phone pickers remain within the viewport, independent of page scroll. */
+@media (max-width: 36rem) {
+ .marketplace-picker[open] .marketplace-popover {
+   position: fixed;
+   inset: 8rem 1rem 1rem;
+   width: auto;
+   max-height: calc(100dvh - 9rem);
+   border-radius: 1rem;
+   border: 0;
+   box-shadow: 0 .75rem 3rem #20292340;
+ }
+ .marketplace-popover .picker-close, .marketplace-popover .picker-clear {
+   width: 2.75rem; min-width: 2.75rem; height: 2.75rem; min-height: 2.75rem;
+ }
+ .marketplace-popover input[type=search] { font-size: 1rem; }
+ .marketplace-options label { min-height: 2.75rem; }
+}
+
+.marketplace-feedback[role=status] { padding: .5rem 0; margin: 0; border: 0; background: transparent; box-shadow: none; color: var(--color-muted); font-size: .9375rem; }
+#marketplace-results[aria-busy=true] { opacity: .55; cursor: progress; }

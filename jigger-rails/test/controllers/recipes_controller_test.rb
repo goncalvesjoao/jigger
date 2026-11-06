@@ -217,7 +217,7 @@ class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
     get root_url, params: { q: "negroni" }
     assert_select "#recipe_#{reference.id}"
     assert_select "#recipe_#{alternate.id}"
-    assert_select "p", text: "Official Jigger recipe"
+    assert_select ".card-meta span", text: "Official recipe"
     alternate.update!(visibility: "private")
     get root_url, params: { q: "white" }
     assert_select "#recipe_#{alternate.id}", count: 0

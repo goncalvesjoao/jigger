@@ -13,6 +13,7 @@
   <section class="recipe-editor-section" aria-labelledby="recipe-preparation-title">
     <div class="recipe-section-intro"><h2 id="recipe-preparation-title">Preparation</h2><p>Make it easy to get every pour right.</p></div>
     <div class="recipe-section-fields">
+      <p class="recipe-editor-note">Ingredient and utensil editing isn’t available in this form yet. <%= recipe.recipe_ingredients.any? ? "Your existing requirements are preserved." : "Save your idea as a draft; publishing requires ingredient lines." %></p>
       <% multi_step = recipe.recipe_steps.reject(&:marked_for_destruction?).size > 1 %>
       <div><%= form.label :steps, "Preparation steps" %><% if multi_step %><p id="recipe-steps-help" class="recipe-editor-note">This recipe has multiple steps. They’re shown here for reference and can’t be changed in this editor yet.</p><% end %><%= form.textarea :steps, rows: 6, readonly: multi_step, placeholder: "Add the ingredients, stir with ice, and strain…", aria: { describedby: ("recipe-steps-help" if multi_step) } %></div>
       <div><%= form.label :preparation_time_seconds, "Preparation time (seconds)" %><%= form.number_field :preparation_time_seconds, min: 0, step: 1, placeholder: "e.g. 120" %></div>

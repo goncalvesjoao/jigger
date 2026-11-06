@@ -1,7 +1,7 @@
 <% content_for :title, "My recipes · Jigger" %>
 <div class="library-page personal-recipes-page">
   <header class="library-heading">
-    <div><p class="eyebrow">Your recipe book</p><h1>My recipes</h1><p class="library-description">From first ideas to your signature drinks.</p></div>
+    <div><h1>My recipes</h1><p class="library-description">From first ideas to your signature drinks.</p></div>
     <%= link_to new_recipe_path, class: "button library-primary" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %>
   </header>
   <% if @recipe_counts.values.sum.zero? %>

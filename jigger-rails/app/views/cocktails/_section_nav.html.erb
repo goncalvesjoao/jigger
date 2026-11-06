@@ -3,8 +3,8 @@
     <%= link_to "Ingredients", "#ingredients" %><%= link_to "Preparation", "#preparation" %>
     <% if cocktail %><%= link_to "About the cocktail", "#cocktail-background" %><%= link_to "Community recipes", "#matching-recipes" %><% end %>
   <% else %>
-    <% if mixing_recipe %><%= link_to "Recipe & Craft", "##{dom_id(mixing_recipe, :ingredients)}" %><% end %>
-    <%= link_to "Lore", "#cocktail-background" %>
-    <%= link_to "Community Recipes", "#matching-recipes" %>
+    <% if mixing_recipe %><%= link_to "Ingredients & preparation", "##{dom_id(mixing_recipe, :ingredients)}" %><% end %>
+    <%= link_to "About the cocktail", "#cocktail-background" %>
+    <%= link_to "Community recipes", "#matching-recipes" %>
   <% end %>
 </nav>

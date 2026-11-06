@@ -43,7 +43,7 @@
           <strong class="wordmark">Jigger<span aria-hidden="true">.</span></strong>
         <% end %>
         <ul class="primary-navigation">
-          <li><%= link_to "Explore", cocktails_path, aria: { current: ("page" if controller_name == "cocktails") } %></li>
+          <li><%= link_to "Explore", cocktails_path, aria: { current: ("page" if controller_name == "cocktails" || (controller_name == "recipes" && %w[index show].include?(action_name))) } %></li>
           <% if authenticated? %>
             <li><%= link_to "My recipes", my_recipes_path, aria: { current: ("page" if controller_name == "account" && action_name == "recipes") } %></li>
             <li><%= link_to "My collections", my_collections_path, aria: { current: ("page" if controller_name == "collections") } %></li>
@@ -76,6 +76,6 @@
     <main id="main-content" class="page-shell">
       <%= yield %>
     </main>
-    <footer class="site-footer"><span class="wordmark">Jigger.</span><span>A recipe. A ritual. A moment well made.</span></footer>
+    <footer class="site-footer"><span class="wordmark">Jigger.</span><span>Find a drink. Make it yours.</span></footer>
   </body>
 </html>

@@ -1,14 +1,14 @@
 <section id="cocktail-background" class="cocktail-background" aria-labelledby="cocktail-background-heading">
   <div class="background-story">
   <div class="section-heading">
-    <div><p class="eyebrow">Historical lore</p><h2 id="cocktail-background-heading">About <%= link_to cocktail.display_name, cocktail_path(cocktail) %></h2></div>
+    <div><h2 id="cocktail-background-heading">About <%= link_to cocktail.display_name, cocktail_path(cocktail) %></h2></div>
     <% if policy(cocktail).edit? %><%= link_to "Edit cocktail", edit_admin_cocktail_path(cocktail), class: "detail-text-link" %><% end %>
   </div>
   <% if cocktail.cocktail_aliases.any? %><p class="detail-aliases">Also known as: <%= cocktail.cocktail_aliases.map(&:name).join(", ") %></p><% end %>
   <% if cocktail.history.present? %><details class="detail-disclosure history-disclosure" open><summary>History</summary><p class="submitted-prose"><%= cocktail.history %></p></details><% end %>
   </div>
   <% if cocktail.source_reference.present? || cocktail.source_url.present? || cocktail.source_published_on.present? || cocktail.source_date_note.present? %>
-    <div class="background-sources"><p class="eyebrow">From the archive</p><h3>Sources &amp; provenance</h3>
+    <div class="background-sources"><h3>Sources &amp; provenance</h3>
     <details class="detail-disclosure sources-disclosure" open>
       <summary>Sources</summary>
       <% if cocktail.source_url.present? %><p>Source: <%= link_to cocktail.source_reference.presence || "Cocktail source", cocktail.source_url %></p><% elsif cocktail.source_reference.present? %><p class="submitted-prose"><%= cocktail.source_reference %></p><% end %>

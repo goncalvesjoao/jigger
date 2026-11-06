@@ -1,8 +1,8 @@
 <% content_for :title, "Discover recipes · Jigger" %>
 <section class="discovery-heading">
-  <p class="eyebrow">The recipe collection</p>
-  <h1>A little inspiration.<br>A great next drink.</h1>
-  <p>Find a recipe, gather your ingredients, make it your own.</p>
+
+  <h1>Explore recipes</h1>
+  <p>Find a preparation you like, then gather what you need.</p>
   <%= form_with url: recipes_path, method: :get, class: "search-form" do |form| %>
     <%= form.label :q, "Search recipes" %>
     <div role="search">

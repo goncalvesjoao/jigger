@@ -1,7 +1,7 @@
 <% content_for :title, "Edit profile · Jigger" %>
 <div class="library-page library-editor profile-editor">
   <%= link_to my_profile_path, class: "library-back" do %><%= render "collections/icon", name: "back" %>My profile<% end %>
-  <header class="library-heading"><div><p class="eyebrow">Make yourself at home</p><h1>Edit profile</h1><p class="library-description">A little about you. Shared on your terms.</p></div></header>
+  <header class="library-heading"><div><h1>Edit profile</h1><p class="library-description">A little about you. Shared on your terms.</p></div></header>
   <%= form_with model: @profile, url: my_profile_path, method: :patch, class: "library-form" do |form| %>
     <% if @profile.errors.any? %><div class="library-errors" role="alert"><strong>Check your profile details</strong><ul><% @profile.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
     <div class="library-form-section"><%= form.label :display_name, "Display name" %><p id="profile-name-help">The name people see on your public profile. Your email stays private.</p><%= form.text_field :display_name, maxlength: 80, autocomplete: "nickname", placeholder: "What should we call you?", aria: { describedby: "profile-name-help" } %></div>

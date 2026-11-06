@@ -16,12 +16,12 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select "a.visually-hidden-focusable[href='#main-content']", text: "Skip to content"
   end
 
-  test "cards show metadata only when a preparation method is available" do
+  test "cards always identify provenance and show the available preparation method" do
     recipes(:one).update!(preparation_method: "shaken")
     get recipes_url
-    assert_select "#recipe_#{recipes(:one).id} .card-meta", text: "Shaken"
-    assert_select "#recipe_#{recipes(:two).id} .card-meta", count: 0
-    assert_not_includes response.body, "Explore recipe"
+    assert_select "#recipe_#{recipes(:one).id} .card-meta span", text: "Shaken"
+    assert_select "#recipe_#{recipes(:two).id} .card-meta span", text: "Community recipe"
+    assert_select ".card-copy a", text: "Explore recipe", count: 0
     assert_not_includes response.body, "↗"
   end
 
@@ -45,8 +45,8 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     recipe = recipes(:one)
     recipe.update!(user: nil, official: true)
     get recipes_url
-    assert_select "#recipe_#{recipe.id} .eyebrow", text: "Official recipe"
-    assert_select "#recipe_#{recipes(:two).id} .eyebrow", text: "Community recipe"
+    assert_select "#recipe_#{recipe.id} .card-meta span", text: "Official recipe"
+    assert_select "#recipe_#{recipes(:two).id} .card-meta span", text: "Community recipe"
   end
 
   test "owner can read an empty draft without broken preparation controls" do

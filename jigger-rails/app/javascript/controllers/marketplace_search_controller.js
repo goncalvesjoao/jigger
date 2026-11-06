@@ -48,7 +48,8 @@ export default class extends Controller {
     url.search = new URLSearchParams(new FormData(this.element)).toString()
     const results = document.getElementById("marketplace-results")
     results.setAttribute("aria-busy", "true")
-    this.statusTarget.hidden = true
+    this.statusTarget.textContent = "Searching…"
+    this.statusTarget.hidden = false
     try {
       const response = await fetch(url, { signal: request.signal, headers: { Accept: "text/html" } })
       if (!response.ok) throw new Error("Search failed")
@@ -58,6 +59,7 @@ export default class extends Controller {
       if (request.signal.aborted) return
       results.replaceChildren(...updated.childNodes)
       history.replaceState(history.state, "", url)
+      this.statusTarget.hidden = true
     } catch (error) {
       if (error.name !== "AbortError") {
         this.statusTarget.textContent = "Couldn’t update results. Please try Search again."

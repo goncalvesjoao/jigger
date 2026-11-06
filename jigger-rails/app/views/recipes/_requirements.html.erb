@@ -1,11 +1,12 @@
 <section id="<%= ingredients_id %>" class="card recipe-panel ingredients-panel mb-0" data-controller="ingredients">
-  <p class="eyebrow">01 / Gather</p>
+
   <div class="ingredients-heading">
     <h2>Ingredients</h2>
     <% if recipe.servings.present? %><span class="recipe-servings"><%= pluralize(recipe.servings, "serving") %></span><% end %>
   </div>
   <progress class="checklist-progress" data-ingredients-target="progress" value="0" max="<%= [recipe.recipe_ingredients.size, 1].max %>" aria-label="Ingredients gathered" hidden></progress>
   <% if recipe.recipe_ingredients.any? %>
+    <div class="checklist-status" data-ingredients-target="controls" hidden><p role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
     <ul class="checklist ingredient-list">
       <% recipe.recipe_ingredients.each do |line| %>
         <li><label>
