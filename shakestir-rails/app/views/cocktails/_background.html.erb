@@ -1,20 +1,14 @@
-<section id="cocktail-background" class="cocktail-background" aria-labelledby="cocktail-background-heading">
+<section id="cocktail-background" class="cocktail-background" aria-label="Cocktail background">
   <div class="background-story">
-  <div class="section-heading">
-    <div><h2 id="cocktail-background-heading">About <%= link_to cocktail.display_name, cocktail_path(cocktail) %></h2></div>
-    <% if policy(cocktail).edit? %><%= link_to "Edit cocktail", edit_admin_cocktail_path(cocktail), class: "detail-text-link" %><% end %>
-  </div>
-  <% if cocktail.description.present? %><p class="submitted-prose"><%= cocktail.description %></p><% end %>
-  <% if cocktail.history.present? %><details class="detail-disclosure history-disclosure" open><summary>History</summary><p class="submitted-prose"><%= cocktail.history %></p></details><% end %>
-  </div>
+  <% if cocktail.history.present? %><section class="cocktail-history"><h2>History</h2><p class="submitted-prose"><%= cocktail.history %></p></section><% end %>
   <% if cocktail.source_reference.present? || cocktail.source_url.present? || cocktail.source_published_on.present? || cocktail.source_date_note.present? %>
-    <div class="background-sources"><h3>Sources &amp; provenance</h3>
-    <details class="detail-disclosure sources-disclosure" open>
-      <summary>Sources</summary>
+    <section class="cocktail-sources">
+      <h2>Sources</h2>
       <% if cocktail.source_url.present? %><p>Source: <%= link_to cocktail.source_reference.presence || "Cocktail source", cocktail.source_url %></p><% elsif cocktail.source_reference.present? %><p class="submitted-prose"><%= cocktail.source_reference %></p><% end %>
       <% if cocktail.source_published_on.present? %><p>Historical source publication: <%= cocktail.source_published_on %></p><% end %>
       <% if cocktail.source_date_note.present? %><p class="submitted-prose"><%= cocktail.source_date_note %></p><% end %>
-    </details>
-    </div>
+    </section>
   <% end %>
+  </div>
+  <% if policy(cocktail).edit? %><%= link_to "Edit cocktail", edit_admin_cocktail_path(cocktail), class: "detail-text-link" %><% end %>
 </section>

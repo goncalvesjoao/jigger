@@ -105,3 +105,5 @@ Development/test seeds also create fictional demo accounts (never seeded in prod
 | Alex Morgan, home bartender | alex@shakestir.example | password | Public profile, two private drafts, four private collections mixing personal and public recipes |
 
 Demo seeds preserve existing accounts and recipes, including changed passwords, and fill missing collection memberships on repeat runs. Variant seeds use names rather than database IDs and preserve existing parent assignments.
+
+Public discovery at `/` lists individual marketplace recipes with search, availability filters, and pagination. `/cocktails` is the canonical cocktail catalog: one card per identity, canonical-name search, and links to cocktail details without recipe stars or author attribution. Visitors see identities with marketplace recipes; admins can also browse identities without public recipes. Both indexes support JSON.

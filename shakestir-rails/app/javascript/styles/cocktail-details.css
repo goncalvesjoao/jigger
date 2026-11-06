@@ -196,3 +196,39 @@
 @media (max-width: 45rem) { .recipe-backdrop { width: 100%; height: 18rem; opacity: .18; } }
 @media (prefers-reduced-motion: reduce) { .cocktail-panel[open] { animation: none; } }
 @media print { .recipe-backdrop, .cocktail-panel { display: none; } }
+
+/* Canonical cocktails lead with the drink; the story follows on ivory. */
+.cocktail-cover { position: relative; isolation: isolate; display: flex; align-items: flex-end; min-height: 24rem; padding: clamp(1.5rem, 5vw, 4rem); overflow: hidden; border-radius: 1rem; background: #e9ecd9; }
+.cocktail-cover-with-photo { min-height: clamp(30rem, 55vw, 40rem); background: #202923; color: #fffef9; }
+.cocktail-cover-photo { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+.cocktail-cover-with-photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, #10180f00 15%, #10180f45 35%, #10180fd6 65%, #10180ff2 100%); }
+.cocktail-cover-copy { max-width: 46rem; }
+.cocktail-cover h1 { margin: 0 0 1rem; color: inherit; font-size: clamp(2.75rem, 6vw, 5rem); line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; overflow-wrap: anywhere; }
+.cocktail-cover-description { color: inherit; max-width: 48ch; margin: 0; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.6; overflow-wrap: anywhere; }
+.cocktail-cover-meta { color: inherit; margin: 1.5rem 0 0; font-size: .9375rem; font-weight: 600; }
+.cocktail-page .cocktail-background { margin-top: 2.5rem; }
+.cocktail-page .background-story { grid-column: 1 / -1; width: 100%; }
+.cocktail-page .detail-disclosure + .detail-disclosure { margin-top: 1rem; }
+.cocktail-panel-content .cocktail-cover { min-height: 28rem; padding: 2rem; }
+.cocktail-panel-content .cocktail-cover h1 { font-size: 3rem; }
+@media (max-width: 45rem) {
+  .cocktail-cover { min-height: 20rem; padding: 1.5rem; }
+  .cocktail-cover-with-photo { min-height: 32rem; }
+  .cocktail-cover-photo { object-position: center top; }
+  .cocktail-cover-with-photo::before { background: linear-gradient(to bottom, #10180f00, #10180f45 30%, #10180fd6 60%, #10180ff2 100%); }
+  .cocktail-page .cocktail-background { margin-top: 2rem; }
+}
+@media print {
+  .cocktail-cover { min-height: 0; padding: 0; background: transparent; color: #202923; }
+  .cocktail-cover-photo, .cocktail-cover-with-photo::before { display: none; }
+}
+
+.cocktail-history + .cocktail-sources { margin-top: 2rem; }
+.cocktail-background .cocktail-history h2, .cocktail-background .cocktail-sources h2 { margin-bottom: 1rem; }
+.cocktail-background .submitted-prose, .cocktail-sources p { max-width: none; overflow-wrap: anywhere; }
+.cocktail-background > .detail-text-link { grid-column: 1 / -1; justify-self: start; }
+
+.cocktail-cover-back { position: absolute; top: 1.5rem; left: 1.5rem; display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--border-color); border-radius: 3rem; background: var(--background-color); color: var(--color); text-decoration: none; font-size: .9375rem; font-weight: 600; }
+.cocktail-cover-back:hover { background: var(--card-background-color); text-decoration: underline; }
+.cocktail-cover-copy { padding-top: 4rem; }
+@media print { .cocktail-cover-back { display: none; } .cocktail-cover-copy { padding-top: 0; } }

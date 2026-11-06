@@ -24,3 +24,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 ## Limits
 
 Ingredient and utensil editing are not yet supported in the public recipe editor; users can save drafts and existing requirements are preserved. No queue, substitutions, taste filters or unsupported product claims are introduced. Existing seed photography is retained; no shipping raster is created or replaced.
+
+## Canonical cocktail details
+
+Read mode. The existing cocktail photograph leads as an immersive cover, with title, description and matching public recipe count over a shaded lower edge. Preserve the ivory/olive visual system below. Breadcrumbs stay above; History and Sources remain together below, followed by recipe cards. Omit repeated description and on-page tile navigation. Mobile uses a taller crop; no-photo records use a pale olive surface with dark text. Reuse existing image endpoints and credits.

@@ -1,4 +1,6 @@
 class RecipesController < ApplicationController
+  include MarketplaceSearch
+
   allow_unauthenticated_access only: %i[ index show ]
   before_action :set_recipe, only: %i[ show edit update destroy ]
 
@@ -8,7 +10,9 @@ class RecipesController < ApplicationController
 
   # GET /recipes or /recipes.json
   def index
-    @recipes = Recipe.marketplace.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps, :user, techniques: :translations, cocktail: [ :translations, { image_attachment: :blob } ])
+    @pagination = matching_recipes.reorder(published_at: :desc, created_at: :desc, id: :desc)
+      .page(params[:page]).per(24)
+    @recipes = @pagination
   end
 
   # GET /recipes/1 or /recipes/1.json

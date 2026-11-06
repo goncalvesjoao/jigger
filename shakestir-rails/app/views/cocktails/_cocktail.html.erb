@@ -1,0 +1,14 @@
+<article id="<%= dom_id cocktail %>">
+  <div class="card-media">
+    <%= link_to cocktail_path(cocktail), class: "card-image", tabindex: "-1", aria: { hidden: true } do %>
+      <% if cocktail.image.attached? %>
+        <%= image_tag cocktail_image_path(cocktail, size: :card), alt: "", loading: "lazy" %>
+      <% else %>
+        <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="card-copy">
+    <h3><%= link_to cocktail.display_name, cocktail_path(cocktail) %></h3>
+  </div>
+</article>

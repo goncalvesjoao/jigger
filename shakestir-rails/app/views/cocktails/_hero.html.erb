@@ -1,39 +1,14 @@
-<header class="detail-hero recipe-hero">
-  <div class="recipe-intro">
-    <% unless recipe %>
-      <nav class="cocktail-breadcrumb" aria-label="Breadcrumb">
-        <ol>
-          <li><%= link_to "Cocktails", cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "back-link" %></li>
-          <li aria-current="page"><%= cocktail.display_name %></li>
-        </ol>
-      </nav>
-    <% end %>
-
-    <h1><%= recipe ? recipe_heading(recipe) : cocktail.display_name %></h1>
-
-    <% if recipe && !(recipe.publication_state == "published" && recipe.visibility == "public") %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
-    <% if recipe %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
-    <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
-    <% if !recipe && cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
-    <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, recipe_page: false %><% end %>
-    <% if recipe %>
-      <%= render "recipes/facts", recipe: recipe %>
-    <% end %>
-    <% if recipe %>
-    <div class="detail-actions">
-      <%= link_to "Start mixing ↓", "#ingredients", class: "button" %>
-    </div>
-    <% end %>
-  </div>
-  <div class="detail-visual">
-    <% photo = recipe ? recipe_photo(recipe) : cocktail %>
-    <% if photo.image.attached? %>
-      <%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{photo.display_name}", class: "recipe-photo", fetchpriority: "high", width: 1200, height: 1200 %>
-    <% else %>
-      <div class="recipe-photo photo-placeholder" role="img" aria-label="No photo available">J.</div>
-    <% end %>
-    <% if recipe %><%= render "recipes/star", recipe: recipe %><% end %>
-    <% if recipe && authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
-
+<header class="cocktail-cover<%= " cocktail-cover-with-photo" if cocktail.image.attached? %>">
+  <% if cocktail.image.attached? %>
+    <%= image_tag cocktail_image_path(cocktail, size: :detail), alt: "Photo of #{cocktail.display_name}", class: "cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %>
+  <% end %>
+  <%= link_to cocktails_path(request.query_parameters.slice("q", "ingredient_ids", "utensil_ids", "makeable", "ingredient_mode", "utensil_mode")), class: "cocktail-cover-back" do %>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" /></svg>
+    Back to cocktails
+  <% end %>
+  <div class="cocktail-cover-copy">
+    <h1><%= cocktail.display_name %></h1>
+    <% if cocktail.description.present? %><p class="cocktail-cover-description submitted-prose"><%= cocktail.description %></p><% end %>
+    <p class="cocktail-cover-meta"><%= pluralize(@recipes.size, @filtered ? "matching recipe" : "recipe") %></p>
   </div>
 </header>

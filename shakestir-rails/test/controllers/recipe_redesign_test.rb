@@ -4,12 +4,11 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
   test "search groups only the search controls and retains its label and query" do
     get recipes_url, params: { q: "Gin" }
     assert_response :success
-    assert_select "form.search-form" do
-      assert_select "label[for=q]", text: "Search recipes"
+    assert_select "form.marketplace-search" do
+      assert_select "label[for=marketplace-query]", text: "Search recipes"
       assert_select "div[role=search]" do
         assert_select "input[type=search][name=q][value=Gin]"
-        assert_select "input[type=submit][value=Search]"
-        assert_select "label", count: 0
+        assert_select "button[type=submit][aria-label=Search]"
       end
     end
     assert_select "form[role=search]", count: 0

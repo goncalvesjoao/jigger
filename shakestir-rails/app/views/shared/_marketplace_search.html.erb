@@ -1,4 +1,4 @@
-<%= form_with url: cocktails_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
+<%= form_with url: root_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
   <div class="marketplace-search-bar" role="search" aria-label="Find recipes">
     <div class="marketplace-query">
       <%= form.label :q, "Search recipes", for: "marketplace-query" %>

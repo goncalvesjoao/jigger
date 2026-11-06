@@ -1,20 +1,19 @@
 <% content_for :title, "Discover recipes · ShakeStir" %>
-<section class="discovery-heading">
 
-  <h1>Explore recipes</h1>
-  <p>Find a preparation you like, then gather what you need.</p>
-  <%= form_with url: recipes_path, method: :get, class: "search-form" do |form| %>
-    <%= form.label :q, "Search recipes" %>
-    <div role="search">
-      <%= form.search_field :q, value: params[:q], placeholder: "Find your next recipe…" %>
-      <%= form.submit "Search" %>
-    </div>
+<header class="explore-heading"><h1>Find your next drink</h1><p>Search by name, or choose the ingredients and utensils you have.</p></header>
+<%= render "shared/marketplace_search" %>
+<div id="marketplace-results" aria-live="polite">
+<div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "recipe") %></h2></div>
+<% if @pagination.empty? %><section class="empty-state"><h3>No recipes found.</h3><p>Try another name or remove a filter to see more drinks.</p><%= link_to "All recipes", root_path %></section><% end %>
+<%= turbo_frame_tag "recipes_page_#{@pagination.current_page}", target: "_top" do %>
+  <div id="recipes_<%= @pagination.current_page %>" class="auto-grid recipe-grid">
+    <%= render @pagination.to_a %>
+  </div>
+  <% if @pagination.next_page %>
+    <% next_page_url = root_path(request.query_parameters.merge("page" => @pagination.next_page)) %>
+    <%= turbo_frame_tag "recipes_page_#{@pagination.next_page}", src: next_page_url, loading: :lazy, target: "_top" do %>
+      <p><%= link_to "Load more recipes", next_page_url %></p>
+    <% end %>
   <% end %>
-</section>
-<div class="section-heading"><h2 class="mb-0"><%= params[:q].present? ? "Search results" : "Discover the collection" %></h2><span><%= pluralize(@recipes.size, "recipe") %></span></div>
-<% if @recipes.empty? %>
-  <section class="empty-state"><h3>No recipes found.</h3><p>Try a different name or explore the collection.</p><%= link_to "All recipes", recipes_path %></section>
 <% end %>
-<div id="recipes" class="auto-grid recipe-grid">
-  <%= render @recipes %>
 </div>
