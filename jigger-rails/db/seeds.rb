@@ -18,7 +18,6 @@ module TheCocktailDbSeeder
       user.password = SecureRandom.hex(32)
       user.handle = "jigger"
       user.display_name = "Jigger"
-      user.profile_visibility = "public"
       user.bio = "Recipes shared by Jigger. Source credits are preserved on each recipe."
     end
   end
@@ -213,3 +212,6 @@ TheCocktailDbSeeder.seed!
 
 require_relative "seeds/demo_accounts"
 DemoAccountsSeeder.seed! if Rails.env.development? || Rails.env.test?
+
+require_relative "seeds/profile_images"
+ProfileImagesSeeder.seed!

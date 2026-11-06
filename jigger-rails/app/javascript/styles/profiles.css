@@ -5,11 +5,6 @@
 .profile-intro h1 { margin-bottom: .75rem; }
 .profile-bio { max-width: 48ch; margin: 0 0 1rem; line-height: 1.65; color: var(--color-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
 .profile-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; font-size: .8rem; color: var(--color-muted); }
-.profile-owner-note { display: flex; align-items: start; gap: 1rem; padding: 1.25rem 1.5rem; background: #edf0e4; border-radius: 1rem; margin-bottom: 2rem; }
-.profile-owner-note > .library-icon { margin-top: .15rem; color: var(--primary-color); }
-.profile-owner-note strong { font-size: .9rem; font-weight: 600; }
-.profile-owner-note p { margin: .25rem 0 .5rem; color: var(--color-muted); font-size: .85rem; max-width: 70ch; }
-.profile-owner-note a { font-size: .8rem; font-weight: 600; }
 .profile-sections { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); }
 .profile-sections a { display: inline-flex; gap: .6rem; align-items: center; padding-block: .75rem; min-height: 2.75rem; color: var(--color); text-decoration: none; font-size: .9rem; font-weight: 600; border-bottom: 2px solid transparent; }
 .profile-sections a:hover, .profile-sections a:focus-visible { border-bottom-color: var(--primary-color); }
@@ -26,18 +21,12 @@
 .profile-empty > div { flex: 1; }
 .profile-empty h3 { font-size: 1.1rem; margin: 0 0 .4rem; }
 .profile-empty p { font-size: .85rem; color: var(--color-muted); margin: 0; }
-.profile-account { padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--color-muted); font-size: .85rem; }
-.profile-account summary { min-height: 2.75rem; cursor: pointer; }
-.profile-account dl { margin-block: 1rem; }
-.profile-account dd { margin-left: 0; overflow-wrap: anywhere; color: var(--color); }
-.profile-account p { font-size: .8rem; }
 .profile-editor textarea { margin-bottom: 0; border-radius: .75rem; }
 @media (max-width: 45rem) {
   .profile-heading { flex-wrap: wrap; gap: 1.25rem; align-items: flex-start; }
   .profile-avatar { width: 4.5rem; height: 4.5rem; font-size: 1.6rem; }
   .profile-intro { flex-basis: calc(100% - 6rem); }
   .profile-heading > .button { margin-left: 5.75rem; }
-  .profile-owner-note { padding: 1rem; }
   .profile-empty { flex-wrap: wrap; padding: 1.25rem; }
   .profile-empty > .button { margin-left: 2.75rem; }
   .profile-content { scroll-margin-top: 11rem; }
@@ -47,5 +36,17 @@
   .profile-page .button:active, .profile-editor input[type=submit]:active { transform: none; }
 }
 @media (prefers-contrast: more) {
-  .profile-owner-note, .profile-empty { background: #fffef9; border: 1px solid currentColor; }
+  .profile-empty { background: #fffef9; border: 1px solid currentColor; }
 }
+
+.profile-photo-editor .profile-avatar { margin-block: .75rem 1rem; }
+.profile-photo-remove { display: flex; align-items: center; gap: .6rem; min-height: 2.9rem; margin-top: .75rem; }
+.profile-photo-remove input { margin: 0; flex: 0 0 auto; }
+
+.account-details { padding-block: 1rem; }
+.account-details h2 { font-size: 1.25rem; margin-bottom: .75rem; }
+.account-email { overflow-wrap: anywhere; }
+.account-help { color: var(--color-muted); font-size: .9rem; max-width: 60ch; }
+.account-deletion { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color); }
+.account-deletion h2 { color: var(--danger-color); margin-bottom: .75rem; }
+.account-deletion > p { max-width: 65ch; margin-block: .5rem 1.5rem; }

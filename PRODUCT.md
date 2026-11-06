@@ -24,7 +24,7 @@ Support discovering, creating, organizing, and sharing both alcoholic and non-al
 
 ## Positioning
 
-Jigger is a recipe-sharing marketplace with no sales. Professional bartenders and home creators can publish recipes and build public profiles; people can also browse published recipes while keeping their own profiles and recipes private.
+Jigger is a recipe-sharing marketplace with no sales. Professional bartenders and home creators can publish recipes and build public profiles; people can also browse published recipes while keeping their recipes and collections private.
 
 The product promise is relevance at the moment of mixing: give people what they are looking for, when they need it, without ads or extra fluff.
 
@@ -42,13 +42,14 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 
 - A **Cocktail** is a canonical drink identity; a **Recipe** is a particular preparation. The association is optional so original recipes work independently. Automatic canonical matching is a future capability.
 - Marketplace search returns individual eligible published public recipes and opens the exact recipe, including for broad cocktail queries. Recipe names and linked canonical names remain searchable. Owners find drafts and private recipes in **My Recipes**.
-- Recipe results and pages identify the recipe as **@handle / Recipe title**. Handles remain visible on public recipes even if the author's profile is private; private profiles are not linked. Every recipe has an author. Seeded recipes belong to the public **@jigger** account and follow the same discovery, filtering, and permission rules as every other author’s recipes. Handles start from the email local part, with normalization and collision suffixes, and can be changed in profile settings. The Jigger handle is reserved for the Jigger account.
+- Recipe results and pages identify the recipe as **@handle / Recipe title**. Author attribution links to their public profile. Every recipe has an author. Seeded recipes belong to the public **@jigger** account and follow the same discovery, filtering, and permission rules as every other author’s recipes. Handles start from the email local part, with normalization and collision suffixes, and can be changed in profile settings. The Jigger handle is reserved for the Jigger account.
 - Recipe pages prioritize ingredients, tools, and steps. Photos prefer the recipe's image, falling back to its readable linked cocktail. Canonical history and background appear below instructions in a collapsed **More about this cocktail** section.
 - Signed-in users star and unstar individual recipes through membership in their existing private **Favorites** collection. This collection keeps a stable identity even when renamed, remains private, and cannot be deleted. No separate star storage is introduced. Public star totals appear beside an image-overlay star toggle in marketplace results and recipe details. Star totals use a cached counter maintained when Favorites memberships change. Individual Favorites memberships remain private; star-based ranking remains open. Forking is outside the agreed scope.
 - Discovery supports recipe/name search and filtering by available ingredient and utensil identities. Availability matching does not currently compare quantities or substitute ingredients.
 - **Collections** are user-curated groups of recipes, analogous to playlists. They can be public or private and default to private. New users receive a private **Favorites** collection. Saving a recipe to a collection is reversible.
 - Recipes have separate visibility and publication state. Public discovery shows complete, published, public recipes; owners can also access their own drafts and private recipes.
-- Profiles can be public or private and default to private. Public profiles list public collections and published public recipes. Owners see all their own content and management controls. Email addresses stay off public profiles.
+- Profile photos are optional uploads with avatar fallback, shown on the profile and the account menu. Owners can replace or remove them; profile photos are public. Fictional demo users have locally cached generated portraits, and seed reruns preserve uploaded photos.
+- All profiles are public and list only public collections and eligible published public recipes, including for owners. Collection counts and previews exclude private recipes and drafts for every viewer. Private content remains in My Recipes and My Collections. Owners can edit their profile; account email appears only on the owner-only My account page.
 - Ingredient and utensil records, ordered recipe steps, and step mentions provide structured foundations. Automatic extraction from prose and alternative recommendations are not established user-facing capabilities.
 - Cocktail and recipe names support translations. Preserve multilingual content and original preparation prose.
 - Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `jigger-rails/README.md`.
@@ -60,6 +61,8 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 - Discovery by alcoholic or non-alcoholic drink. Ingredient alcohol classifications exist; a complete recipe-level discovery workflow remains to be built.
 - Smart recipe creation that analyzes preparation steps, infers ingredient and utensil references, and identifies them in the presented recipe.
 - Clickable ingredient and utensil references that explain the item and help users find alternatives. Matching rules and handling of uncertain inference remain open.
+
+- **My account** is a private, signed-in-only destination in the account menu. It shows the current user’s email and permits permanent account deletion after password confirmation. Deletion removes owned public and private recipes, recipe details and translations, collections and memberships, Favorites, legacy likes, profile and recipe photo attachments, and all sessions. Uploaded files use background purge jobs. Shared catalog records and other authors’ content remain; star counters update when Favorites memberships are removed. A failed dependent deletion rolls back the account’s database changes.
 
 ## Brand Commitments
 

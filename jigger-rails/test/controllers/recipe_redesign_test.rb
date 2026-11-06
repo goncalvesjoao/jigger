@@ -44,8 +44,8 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     recipe = recipes(:one)
     recipe.update!(user: users(:jigger))
     get recipes_url
-    assert_select "#recipe_#{recipe.id} h3 a", text: "@jigger / MyString"
-    assert_select "#recipe_#{recipes(:two).id} h3 a", text: "@joao / MyString"
+    assert_select "#recipe_#{recipe.id} h3 a", text: "MyString"
+    assert_select "#recipe_#{recipes(:two).id} h3 a", text: "MyString"
     assert_no_match(/Official recipe|Community recipe/, response.body)
   end
 

@@ -12,7 +12,7 @@
     <h1><%= recipe ? recipe_heading(recipe) : cocktail.display_name %></h1>
 
     <% if recipe && !(recipe.publication_state == "published" && recipe.visibility == "public") %><p class="recipe-attribution"><%= recipe.publication_state.capitalize %> · <%= recipe.visibility.capitalize %></p><% end %>
-    <% if recipe&.user&.public_profile? %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
+    <% if recipe %><p class="detail-parent">Recipe by <%= link_to recipe.user.profile_name, profile_path(recipe.user) %></p><% end %>
     <% if recipe && cocktail %><p class="detail-parent">A recipe for <%= link_to cocktail.display_name, cocktail_path(cocktail) %></p><% end %>
     <% if !recipe && cocktail&.description.present? %><p class="detail-description submitted-prose"><%= cocktail.description %></p><% end %>
     <% unless recipe %><%= render "cocktails/section_nav", cocktail: cocktail, recipe_page: false %><% end %>

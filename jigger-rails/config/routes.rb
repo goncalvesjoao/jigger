@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "my/account", to: "account#show", as: :my_account
+  delete "my/account", to: "account#destroy"
   get "my/recipes", to: "account#recipes", as: :my_recipes
   get "my/collections", to: "collections#index", as: :my_collections
   get "my/lists", to: redirect("/my/collections"), as: :my_lists
@@ -9,6 +11,7 @@ Rails.application.routes.draw do
   get "my/profile", to: "profiles#show", as: :my_profile
   get "my/profile/edit", to: "profiles#edit", as: :edit_my_profile
   patch "my/profile", to: "profiles#update"
+  get "profiles/:id/image", to: "profile_images#show", as: :profile_image
   get "profiles/:id", to: "profiles#show", as: :profile
 
   resource :registration, only: %i[ new create ]

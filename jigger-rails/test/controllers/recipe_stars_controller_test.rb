@@ -43,13 +43,13 @@ class RecipeStarsControllerTest < ActionDispatch::IntegrationTest
     get recipe_url(recipes(:one))
     assert_select "h1", text: "@jigger / MyString"
     get root_url
-    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@jigger / MyString"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "MyString"
   end
 
-  test "private profile retains handle without exposing a profile link" do
+  test "recipe attribution links to its author’s public profile" do
     get recipe_url(recipes(:one))
     assert_select "h1", text: "@mika / MyString"
-    assert_select "a[href=?]", profile_path(@user), count: 0
+    assert_select "a[href=?]", profile_path(@user)
   end
   test "public counts include only Favorites memberships and never reveal who starred" do
     @favorites.collection_recipes.create!(recipe: recipes(:one))

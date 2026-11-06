@@ -6,6 +6,8 @@ class Recipe < ApplicationRecord
     blended: "blended"
   }, validate: { allow_nil: true }
 
+  has_and_belongs_to_many :liking_users, class_name: "User", join_table: "recipes_users",
+    foreign_key: :recipe_id, association_foreign_key: :user_id
   has_many :collection_recipes, dependent: :destroy
   has_many :collections, through: :collection_recipes
 

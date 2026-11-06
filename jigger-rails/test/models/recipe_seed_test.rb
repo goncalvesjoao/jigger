@@ -5,10 +5,12 @@ class RecipeSeedTest < ActiveSupport::TestCase
     load Rails.root.join("db/seeds.rb")
     bartender = User.find_by!(email_address: "leo@jigger.example")
     home = User.find_by!(email_address: "alex@jigger.example")
-    assert bartender.authenticate("Showtime123!")
-    assert home.authenticate("Homebar123!")
-    assert bartender.public_profile?
-    assert_not home.public_profile?
+    [ bartender, home, User.jigger_account ].each { |user| assert user.image.attached? }
+    image_ids = [ bartender, home, User.jigger_account ].map { |user| user.image.blob_id }
+    ProfileImagesSeeder.seed!
+    assert_equal image_ids, [ bartender, home, User.jigger_account ].map { |user| user.reload.image.blob_id }
+    assert bartender.authenticate("password")
+    assert home.authenticate("password")
     assert_equal 3, bartender.recipes.marketplace.count
     assert_equal 2, home.recipes.count
     assert home.recipes.all? { |recipe| recipe.visibility == "private" && recipe.publication_state == "draft" }

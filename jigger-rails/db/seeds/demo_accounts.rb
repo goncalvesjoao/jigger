@@ -2,10 +2,10 @@ module DemoAccountsSeeder
   def self.seed!
     Globalize.with_locale(:en) do
       User.transaction do
-        bartender = account("leo@jigger.example", "Showtime123!", "Leo Sterling",
-          "public", "Fictional world-famous bartender at the Velvet Hour. Seasonal cocktails, dramatic garnishes, and a little everyday magic.")
-        home = account("alex@jigger.example", "Homebar123!", "Alex Morgan",
-          "private", "Home bartender experimenting with weekend drinks and saving ideas for friends.")
+        bartender = account("leo@jigger.example", "password", "Leo Sterling",
+          "Fictional world-famous bartender at the Velvet Hour. Seasonal cocktails, dramatic garnishes, and a little everyday magic.")
+        home = account("alex@jigger.example", "password", "Alex Morgan",
+          "Home bartender experimenting with weekend drinks and saving ideas for friends.")
 
         midnight = recipe(bartender, "Midnight Velvet", "Espresso Martini", "public", "published",
           [ [ "Vodka", "40 ml vodka" ], [ "Kahlua", "20 ml Kahlua" ], [ "Sugar syrup", "5 ml sugar syrup" ] ],
@@ -34,11 +34,10 @@ module DemoAccountsSeeder
     end
   end
 
-  def self.account(email, password, name, visibility, bio)
+  def self.account(email, password, name, bio)
     User.find_or_create_by!(email_address: email) do |user|
       user.password = password
       user.display_name = name
-      user.profile_visibility = visibility
       user.bio = bio
     end
   end

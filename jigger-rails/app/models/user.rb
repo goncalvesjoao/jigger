@@ -1,16 +1,12 @@
 class User < ApplicationRecord
+  include PhotoAttachment
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
-  validates :profile_visibility, inclusion: { in: %w[private public] }
   validates :display_name, length: { maximum: 80 }
   validates :bio, length: { maximum: 280 }
 
-  def public_profile?
-    profile_visibility == "public"
-  end
-
   def profile_name
-    display_name.presence || "Jigger member"
+    display_name.presence || "@#{handle}"
   end
 
   def self.jigger_account
@@ -31,7 +27,10 @@ class User < ApplicationRecord
   end
 
   has_secure_password
-  has_many :recipes, dependent: :restrict_with_error
+  # Legacy likes share a join table; keep its rows from outliving the account.
+  has_and_belongs_to_many :liked_recipes, class_name: "Recipe", join_table: "recipes_users",
+    foreign_key: :user_id, association_foreign_key: :recipe_id
+  has_many :recipes, dependent: :destroy
   has_many :collections, dependent: :destroy
   after_create :create_favorites_collection
 

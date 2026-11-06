@@ -8,10 +8,8 @@ class CreateUsers < ActiveRecord::Migration[8.1]
 
       t.string :handle, null: false
       t.string :system_key
-      t.string :profile_visibility, null: false, default: "private"
       t.string :display_name
       t.text :bio
-      t.check_constraint "profile_visibility IN ('private', 'public')", name: "users_profile_visibility"
       t.timestamps
     end
     add_index :users, :email_address, unique: true

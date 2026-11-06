@@ -5,7 +5,7 @@
   <header class="library-detail-heading">
     <%= render "artwork", collection: @collection, recipes: @recipes.first(4) %>
     <div class="library-detail-copy"><h1><%= @collection.name %></h1>
-      <% if @collection.user.public_profile? %><p class="profile-byline">Collected by <%= link_to @collection.user.profile_name, profile_path(@collection.user) %></p><% end %>
+      <p class="profile-byline">Collected by <%= link_to @collection.user.profile_name, profile_path(@collection.user) %></p>
       <div class="library-detail-meta"><span class="library-visibility"><%= render "icon", name: @collection.visibility %><%= @collection.visibility.capitalize %></span><span><%= pluralize(@recipes.size, "recipe") %></span></div>
       <p class="library-description"><%= @collection.visibility == "private" ? "Just for you. Only you can see this collection." : "Made to share. Anyone with the link can view this collection." %></p>
       <% if owned %><%= link_to edit_collection_path(@collection), class: "button library-secondary" do %><%= render "icon", name: "edit" %>Edit collection<% end %><% end %>

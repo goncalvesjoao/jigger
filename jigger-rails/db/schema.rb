@@ -237,7 +237,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.boolean "admin", default: false, null: false
     t.string "handle", null: false
     t.string "system_key"
-    t.string "profile_visibility", default: "private", null: false
     t.string "display_name"
     t.text "bio"
     t.datetime "created_at", null: false
@@ -245,7 +244,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_000000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["handle"], name: "index_users_on_handle", unique: true
     t.index ["system_key"], name: "index_users_on_system_key", unique: true
-    t.check_constraint "profile_visibility IN ('private', 'public')", name: "users_profile_visibility"
   end
 
   create_table "utensil_translations", force: :cascade do |t|

@@ -1,19 +1,16 @@
 <% content_for :title, "#{@owned ? "My profile" : @profile.profile_name} · Jigger" %>
 <div class="library-page profile-page">
   <header class="profile-heading">
-    <div class="profile-avatar"><% if @owned %><%= image_tag gravatar_url(@profile), alt: "", width: 112, height: 112 %><% else %><span aria-hidden="true"><%= @profile.display_name.present? ? @profile.display_name.split.first(2).map { |part| part.first }.join.upcase : "J." %></span><% end %></div>
-    <div class="profile-intro"><h1><%= @owned && @profile.display_name.blank? ? "My profile" : @profile.profile_name %></h1>
+    <div class="profile-avatar"><%= profile_avatar(@profile) %></div>
+    <div class="profile-intro"><h1><%= @profile.profile_name %></h1>
       <% if @profile.bio.present? %><p class="profile-bio"><%= @profile.bio %></p><% end %>
-      <div class="profile-meta"><% if @owned %><span class="library-visibility"><%= render "collections/icon", name: @profile.profile_visibility %><%= @profile.profile_visibility.capitalize %> profile</span><% end %><span>Joined <%= @profile.created_at.strftime("%B %Y") %></span></div>
+      <div class="profile-meta"><span>@<%= @profile.handle %></span><span>Joined <%= @profile.created_at.strftime("%B %Y") %></span></div>
     </div>
     <% if @owned %><%= link_to edit_my_profile_path, class: "button library-secondary" do %><%= render "collections/icon", name: "edit" %>Edit profile<% end %><% end %>
   </header>
-  <% if @owned %>
-    <aside class="profile-owner-note"><%= render "collections/icon", name: @profile.profile_visibility %><div><strong><%= @profile.public_profile? ? "Your profile is public" : "Your profile is private" %></strong><p><%= @profile.public_profile? ? "You can see everything here. Visitors only see your public collections and published public recipes." : "Only you can view this profile. Your recipes and collections keep their own sharing settings." %></p><% if @profile.public_profile? %><%= link_to "Profile link", profile_path(@profile) %><% else %><%= link_to "Change profile visibility", edit_my_profile_path %><% end %></div></aside>
-  <% end %>
   <nav class="profile-sections" aria-label="Profile sections"><a href="#profile-collections">Collections <span><%= @collections.size %></span></a><a href="#profile-recipes">Recipes <span><%= @recipes.size %></span></a></nav>
   <section id="profile-collections" class="profile-content" aria-labelledby="profile-collections-title">
-    <div class="library-section-label"><h2 id="profile-collections-title"><%= @owned ? "Your collections" : "Public collections" %></h2><% if @owned %><%= link_to new_collection_path, class: "profile-section-action" do %><%= render "collections/icon", name: "plus" %>Create collection<% end %><% end %></div>
+    <div class="library-section-label"><h2 id="profile-collections-title">Public collections</h2><% if @owned %><%= link_to new_collection_path, class: "profile-section-action" do %><%= render "collections/icon", name: "plus" %>Create collection<% end %><% end %></div>
     <% if @collections.empty? %>
       <div class="profile-empty"><%= render "collections/icon", name: "collection" %><div><h3><%= @owned ? "Keep your favorites together." : "No public collections yet." %></h3><p><%= @owned ? "Create a collection for an occasion, a mood, or a drink you love." : "This member hasn’t shared a collection yet." %></p></div><% if @owned %><%= link_to "Create collection", new_collection_path, class: "button library-secondary" %><% end %></div>
     <% else %>
@@ -22,13 +19,12 @@
     <% if @owned && @collections.any? %><%= link_to "Manage all collections →", my_collections_path, class: "profile-all-link" %><% end %>
   </section>
   <section id="profile-recipes" class="profile-content" aria-labelledby="profile-recipes-title">
-    <div class="library-section-label"><h2 id="profile-recipes-title"><%= @owned ? "Your recipes" : "Public recipes" %></h2><% if @owned %><%= link_to new_recipe_path, class: "profile-section-action" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %><% end %></div>
+    <div class="library-section-label"><h2 id="profile-recipes-title">Public recipes</h2><% if @owned %><%= link_to new_recipe_path, class: "profile-section-action" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %><% end %></div>
     <% if @recipes.empty? %>
       <div class="profile-empty"><%= render "collections/icon", name: "edit" %><div><h3><%= @owned ? "Your signature drink starts here." : "No public recipes yet." %></h3><p><%= @owned ? "Capture an idea and refine it at your own pace." : "Come back to discover what’s mixed next." %></p></div><% if @owned %><%= link_to "Create recipe", new_recipe_path, class: "button library-secondary" %><% end %></div>
     <% else %>
-      <div class="auto-grid recipe-grid personal-recipe-grid"><% @recipes.each do |recipe| %><% if @owned %><%= render "recipes/personal_card", recipe: recipe %><% else %><%= render "recipes/recipe", recipe: recipe %><% end %><% end %></div>
+      <div class="auto-grid recipe-grid personal-recipe-grid"><% @recipes.each do |recipe| %><%= render "recipes/recipe", recipe: recipe %><% end %></div>
     <% end %>
     <% if @owned && @recipes.any? %><%= link_to "Manage all recipes →", my_recipes_path, class: "profile-all-link" %><% end %>
   </section>
-  <% if @owned %><details class="profile-account"><summary>Account details</summary><dl><dt>Email address</dt><dd><%= @profile.email_address %></dd></dl><p>Your email address is never shown on your public profile.</p></details><% end %>
 </div>

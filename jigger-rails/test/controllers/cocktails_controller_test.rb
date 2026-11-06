@@ -10,8 +10,9 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   test "canonical names return exact recipe results even for broad searches" do
     get root_url, params: { q: "Margarita" }
     assert_select ".recipe-grid article", count: 2
-    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@mika / Bright sour"
-    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
+    assert_select "#recipe_#{recipes(:one).id} .recipe-author-link[href=?]", profile_path(users(:one)), text: "@mika"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "Bright sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "Dry sour"
     sign_in_as(users(:two))
     recipes(:two).update!(publication_state: "draft", visibility: "private")
     get root_url, params: { q: "Margarita" }
@@ -42,7 +43,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     [ {}, { ingredient_ids: [ "" ], utensil_ids: [ "" ] } ].each do |filters|
       get cocktails_url, params: filters.merge(makeable: "1")
       assert_response :success
-      assert_select "h3 a", text: "@mika / Bright sour"
+      assert_select "h3 a", text: "Bright sour"
       assert_select ".empty-state", count: 0
       assert_select "[data-picker-count]", text: "Add ingredients"
       assert_select "[data-picker-count]", text: "Add utensils"
@@ -75,11 +76,11 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get root_url
     assert_response :success
     assert_select ".recipe-grid article", count: 2
-    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@mika / Bright sour", count: 1
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "Bright sour", count: 1
     recipes(:two).update!(cocktail: nil)
     get root_url
     assert_select ".recipe-grid article", count: 2
-    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "Dry sour"
     assert_no_difference("Cocktail.count") { recipes(:two).update!(name: "My original") }
   end
 
@@ -109,8 +110,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get cocktail_url(@cocktail)
     assert_select ".mixing-layout", count: 0
     assert_select "#matching-recipes article", count: 2
-    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "@jigger / Bright sour"
-    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "@joao / Dry sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:one)), text: "Bright sour"
+    assert_select "h3 a[href=?]", recipe_path(recipes(:two)), text: "Dry sour"
     get cocktail_url(@cocktail, format: :json)
     assert_equal recipes(:one, :two).map(&:id).sort, response.parsed_body["recipes"].map { |entry| entry["id"] }.sort
     assert_equal 2, response.parsed_body["matching_recipe_count"]
