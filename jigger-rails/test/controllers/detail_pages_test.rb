@@ -30,17 +30,16 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_unique_ids_and_valid_section_links
   end
 
-  test "recipe context uses its own photo and includes canonical background and related recipes" do
+  test "recipe uses a backdrop and opens canonical details in a sidebar" do
     get recipe_url(@jigger_recipe)
     assert_response :success
-    assert_select ".recipe-context img[src=?]", recipe_image_path(@jigger_recipe, size: :detail)
-    assert_select ".recipe-context img[src=?]", cocktail_image_path(@cocktail, size: :detail), count: 0
+    assert_select "img.recipe-backdrop[src=?]", recipe_image_path(@jigger_recipe, size: :detail)
+    assert_select "img.recipe-backdrop[src=?]", cocktail_image_path(@cocktail, size: :detail), count: 0
     assert_select ".mixing-header .detail-description", count: 0
-    assert_operator response.body.index('id="preparation"'), :<, response.body.index('class="recipe-context"')
-    assert_select "details:not([open]) > summary", text: "More about this cocktail"
-    assert_select ".cocktail-background h2 a", text: "Margarita"
-    assert_select ".cocktail-background p", text: "Canonical history"
-    assert_select ".cocktail-background a[href='https://example.com/cocktail']", text: "Cocktail history"
+    assert_select ".recipe-context, .detail-disclosure", count: 0
+    assert_select ".recipe-attribution a[href=?][data-action='cocktail-panel#open']", cocktail_path(@cocktail), text: "Margarita"
+    assert_select "dialog#cocktail-panel iframe[title='Margarita cocktail details']"
+    assert_select "#recipes-heading", text: "Related recipes"
     assert_select "#matching-recipes #recipe_#{@other_recipe.id}"
     assert_select "#matching-recipes #recipe_#{@jigger_recipe.id}", count: 0
     assert_unique_ids_and_valid_section_links
@@ -59,14 +58,14 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_select "#matching-recipes article", count: 2
     assert_select "#matching-recipes #recipe_#{@other_recipe.id}", count: 0
     assert_select "#matching-recipes #recipe_#{@jigger_recipe.id}"
-    assert_select ".recipe-context img[src=?]", recipe_image_path(@other_recipe, size: :detail)
+    assert_select "img.recipe-backdrop[src=?]", recipe_image_path(@other_recipe, size: :detail)
     assert_unique_ids_and_valid_section_links
   end
 
   test "recipe photos fall back to canonical photos and cocktails without photos still work" do
     @other_recipe.image.purge
     get recipe_url(@other_recipe)
-    assert_select ".recipe-context img[src=?]", cocktail_image_path(@cocktail, size: :detail)
+    assert_select "img.recipe-backdrop[src=?]", cocktail_image_path(@cocktail, size: :detail)
     @cocktail.image.purge
     @jigger_recipe.update!(user: users(:one))
     get cocktail_url(@cocktail)
@@ -84,7 +83,7 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".cocktail-background", count: 0
     assert_select "#matching-recipes", count: 0
-    assert_select ".recipe-context img[src=?]", recipe_image_path(@other_recipe, size: :detail)
+    assert_select "img.recipe-backdrop[src=?]", recipe_image_path(@other_recipe, size: :detail)
     assert_unique_ids_and_valid_section_links
     sign_out
     get recipe_url(@other_recipe)

@@ -10,7 +10,7 @@
   </section>
 <% end %>
 <section id="matching-recipes" class="related-recipes-section" aria-labelledby="recipes-heading">
-  <div class="section-heading"><div><h2 id="recipes-heading">Recipes (<%= recipes.size %>)</h2></div></div>
+  <div class="section-heading"><div><h2 id="recipes-heading"><%= local_assigns[:heading] || "Recipes (#{recipes.size})" %></h2></div></div>
   <% if recipes.empty? %><p><%= filtered ? "No recipes match these filters." : "No recipes yet." %></p><% end %>
   <div class="auto-grid recipe-grid"><%= render recipes %></div>
 </section>

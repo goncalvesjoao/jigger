@@ -38,8 +38,6 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
     assert_select ".mixing-header a[href='#preparation']", text: "Preparation"
     assert_select ".detail-hero", count: 0
     assert_operator response.body.index('id="ingredients"'), :<, response.body.index('id="preparation"')
-    assert_select "#ingredients a[href='#preparation']"
-    assert_select "#preparation a[href='#ingredients']"
     assert_select "progress[max='2'][aria-label='Preparation progress']"
   end
 

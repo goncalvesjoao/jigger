@@ -1,11 +1,13 @@
 <% content_for :title, "#{@recipe.display_name} · Jigger" %>
-<div class="detail-page">
+<div class="detail-page" data-controller="cocktail-panel" data-action="turbo:before-cache@window->cocktail-panel#close">
   <%= link_to "← All recipes", cocktails_path, class: "back-link" %>
   <%= render "details", recipe: @recipe %>
   <% if @cocktail %>
-    <details class="detail-disclosure"><summary>More about this cocktail</summary>
-      <%= render "cocktails/background", cocktail: @cocktail %>
-    </details>
-    <%= render "cocktails/recipes", recipes: @related_recipes, filtered: false, other_recipes: [] %>
+    <%= render "cocktails/recipes", recipes: @related_recipes, filtered: false, other_recipes: [], heading: "Related recipes" %>
+    <dialog id="cocktail-panel" class="cocktail-panel" aria-labelledby="cocktail-panel-title" data-cocktail-panel-target="dialog" data-action="click->cocktail-panel#backdrop close->cocktail-panel#restoreFocus">
+      <header class="cocktail-panel-heading"><h2 id="cocktail-panel-title"><%= @cocktail.display_name %></h2><button type="button" class="cocktail-panel-close" data-action="cocktail-panel#close">Close</button></header>
+      <iframe title="<%= @cocktail.display_name %> cocktail details" data-cocktail-panel-target="frame"></iframe>
+      <%= link_to "Open cocktail page", cocktail_path(@cocktail), class: "cocktail-panel-page-link" %>
+    </dialog>
   <% end %>
 </div>
