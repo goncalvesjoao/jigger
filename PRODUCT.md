@@ -2,6 +2,10 @@
 
 <!-- impeccable:product-schema 1 -->
 
+## Scope
+
+This product record applies across the monorepo and its implementations. Current implementation evidence refers to `jigger-rails/`; planned capabilities remain product direction across implementations.
+
 ## Platform
 
 web
@@ -41,7 +45,7 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 - Profiles can be public or private and default to private. Public profiles list public collections and published public recipes. Owners see all their own content and management controls. Email addresses stay off public profiles.
 - Ingredient and utensil records, ordered recipe steps, and step mentions provide structured foundations. Automatic extraction from prose and alternative recommendations are not established user-facing capabilities.
 - Cocktail and recipe names support translations and aliases. Preserve multilingual content and original preparation prose.
-- Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing implementation details and operational commands live in the repository and README.md.
+- Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `jigger-rails/README.md`.
 
 ### Confirmed product direction; not yet shipped as complete workflows
 
@@ -59,7 +63,7 @@ Previous UI work used the Apple design skill. No new palette, typography, or vis
 
 ## Evidence on Hand
 
-The running application, Rails views, models, tests, and README.md document current behavior. Seed content and cached photos originate from TheCocktailDB; source credits are part of recipe and cocktail records.
+The Rails application, views, models, tests, and `jigger-rails/README.md` document current implementation behavior. The root `README.md` records the product vision. Seed content and cached photos originate from TheCocktailDB; source credits are part of recipe and cocktail records.
 
 The audience and product direction above come from the product owner's init interview. No user-study results, adoption metrics, testimonials, or competitive superiority claims have been supplied.
 
