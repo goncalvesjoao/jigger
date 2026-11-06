@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_010000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_010000) do
     t.text "source_date_note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "parent_cocktail_id"
+    t.index ["parent_cocktail_id"], name: "index_cocktails_on_parent_cocktail_id"
+    t.check_constraint "parent_cocktail_id IS NULL OR parent_cocktail_id != id", name: "cocktails_not_own_parent"
   end
 
   create_table "collection_recipes", force: :cascade do |t|
@@ -316,6 +319,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_010000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cocktail_aliases", "cocktails"
   add_foreign_key "cocktail_translations", "cocktails"
+  add_foreign_key "cocktails", "cocktails", column: "parent_cocktail_id", on_delete: :nullify
   add_foreign_key "collection_recipes", "collections"
   add_foreign_key "collection_recipes", "recipes"
   add_foreign_key "collections", "users"

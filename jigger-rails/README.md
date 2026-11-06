@@ -21,7 +21,7 @@ separately in `config/vite.json`.
 
 ## Recipes and ownership
 
-`Cocktail` represents a canonical drink identity with translated names, description, history and aliases. It has many recipes.
+`Cocktail` represents a canonical drink identity with translated names, description, history and aliases. It has many recipes. An optional `parent_cocktail_id` links a variant to its parent cocktail; `variants` exposes its children. Cycles are rejected, and deleting a parent clears the link on its variants. Admin cocktail forms can edit the parent.
 
 `Recipe` is the model for system-managed recipes, community recipes, and official recipes. It contains optional `user_id` and `cocktail_id`, an independent `official` flag, preparation metadata, ingredients, utensils, ordered steps, translations, aliases, and an optional photo. Servings default to one.
 
@@ -84,3 +84,12 @@ bin/rails zeitwerk:check
 ```
 
 Use the project's mise Ruby. Tests do not verify production assets or browser appearance.
+
+Development/test seeds also create fictional demo accounts (never seeded in production):
+
+| Account | Email | Password | Content |
+| --- | --- | --- | --- |
+| Leo Sterling, fictional star bartender | leo@jigger.example | Showtime123! | Public profile, three published signature recipes, Halloween Special, Christmas, and House Signatures collections |
+| Alex Morgan, home bartender | alex@jigger.example | Homebar123! | Private profile, two private drafts, four private collections mixing personal and public recipes |
+
+Demo seeds preserve existing accounts and recipes, including changed passwords, and fill missing collection memberships on repeat runs. Variant seeds use names rather than database IDs and preserve existing parent assignments.

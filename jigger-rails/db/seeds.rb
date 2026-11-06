@@ -8,6 +8,21 @@ module TheCocktailDbSeeder
     seed_ingredients!
     seed_cocktails!
     seed_canonical_content!
+    seed_variants!
+  end
+
+  def self.seed_variants!
+    load_json("canonical_cocktails.json").each do |name, content|
+      next unless content["parent_cocktail"]
+
+      cocktail = find_cocktail(name)
+      parent = find_cocktail(content.fetch("parent_cocktail"))
+      cocktail.update!(parent_cocktail: parent) if cocktail && parent && cocktail.parent_cocktail_id.nil?
+    end
+  end
+
+  def self.find_cocktail(name)
+    Cocktail::Translation.find_by(locale: "en", normalized_name: LookupName.normalize(name))&.globalized_model
   end
 
   def self.seed_canonical_content!
@@ -184,3 +199,6 @@ module TheCocktailDbSeeder
 end
 
 TheCocktailDbSeeder.seed!
+
+require_relative "seeds/demo_accounts"
+DemoAccountsSeeder.seed! if Rails.env.development? || Rails.env.test?

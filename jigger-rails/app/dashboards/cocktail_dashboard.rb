@@ -8,6 +8,8 @@ class CocktailDashboard < Administrate::BaseDashboard
     history: TranslatedField.with_options(multiline: true),
     image: PhotoField,
     recipes: Field::HasMany,
+    parent_cocktail: Field::BelongsTo.with_options(class_name: "Cocktail"),
+    variants: Field::HasMany.with_options(class_name: "Cocktail"),
     source_reference: Field::String,
     source_url: Field::Url,
     source_published_on: Field::Date,
@@ -18,7 +20,7 @@ class CocktailDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[id name image].freeze
   SHOW_PAGE_ATTRIBUTES = ATTRIBUTE_TYPES.keys.freeze
-  FORM_ATTRIBUTES = %i[name description history image source_reference source_url source_published_on source_date_note].freeze
+  FORM_ATTRIBUTES = %i[parent_cocktail name description history image source_reference source_url source_published_on source_date_note].freeze
 
   def display_resource(resource)
     resource.display_name.presence || "Cocktail #{resource.id}"

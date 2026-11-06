@@ -1,6 +1,28 @@
 require "test_helper"
 
 class RecipeSeedTest < ActiveSupport::TestCase
+  test "demo accounts have public signatures and private drafts with repeatable collections" do
+    load Rails.root.join("db/seeds.rb")
+    bartender = User.find_by!(email_address: "leo@jigger.example")
+    home = User.find_by!(email_address: "alex@jigger.example")
+    assert bartender.authenticate("Showtime123!")
+    assert home.authenticate("Homebar123!")
+    assert bartender.public_profile?
+    assert_not home.public_profile?
+    assert_equal 3, bartender.recipes.marketplace.count
+    assert_equal 2, home.recipes.count
+    assert home.recipes.all? { |recipe| recipe.visibility == "private" && recipe.publication_state == "draft" }
+    assert_empty home.recipes.marketplace
+    assert home.collections.all? { |collection| collection.visibility == "private" }
+    assert_operator home.collections.where.not(name: "Favorites").minimum(:id), :>, 0
+    assert home.collections.where.not(name: "Favorites").all? { |collection| collection.recipes.count >= 3 }
+    assert bartender.collections.find_by!(name: "Halloween Special").recipes.where(user_id: nil).exists?
+    assert_equal TheCocktailDbSeeder.find_cocktail("Sidecar"), TheCocktailDbSeeder.find_cocktail("Boston Sidecar").parent_cocktail
+    counts = [ User.count, Recipe.count, Collection.count, CollectionRecipe.count ]
+    DemoAccountsSeeder.seed!
+    assert_equal counts, [ User.count, Recipe.count, Collection.count, CollectionRecipe.count ]
+  end
+
   test "cached imports publish complete system recipes and repeat without duplication or overwriting curation" do
     load Rails.root.join("db/seeds.rb")
     imported = Recipe.where(source_reference: "TheCocktailDB")

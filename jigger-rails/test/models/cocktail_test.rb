@@ -14,6 +14,18 @@ class CocktailTest < ActiveSupport::TestCase
     assert_equal "A classic sour", cocktail.reload.history
     assert_not Cocktail.new(name: " ").valid?
   end
+  test "variants have optional parents, reject cycles and survive parent deletion" do
+    parent = Cocktail.create!(name: "Sidecar")
+    child = Cocktail.create!(name: "Boston Sidecar", parent_cocktail: parent)
+    assert_equal [ child ], parent.variants.to_a
+    parent.parent_cocktail = child
+    assert_not parent.valid?
+    child.parent_cocktail = child
+    assert_not child.valid?
+    parent.reload.destroy!
+    assert_nil child.reload.parent_cocktail
+  end
+
   test "cocktail source URLs accept only HTTP links" do
     cocktail = Cocktail.new(name: "Margarita", source_url: "javascript:alert(1)")
     assert_not cocktail.valid?
