@@ -67,6 +67,8 @@ Availability checks required ingredient and utensil identities, ignores optional
 
 Ingredient photos must exist in the cache for referenced ingredients. Refresh using `ruby db/seeds/thecocktaildb/build_seed_cache.rb`, which downloads the selected cocktail responses plus ingredients and photos required by those recipes. Imported measurement wording is preserved in `submitted_text`; numeric quantities are not inferred from ambiguous source measurements.
 
+The seeds also load a [59-entry utensil catalog](db/seeds/utensils/README.md) with original English descriptions and a separate generated photo for each entry. It covers mixing, measuring, straining, prep, ice, specialty tools and glassware. Repeat runs preserve existing utensil curation and fill missing descriptions or photos. All assets are checked in; seeding needs no image-generation credentials or network access.
+
 ## Photos
 
 Recipe images are optional; catalog ingredient and utensil images are required. Uploads must be fresh file bytes, not existing blobs or signed IDs. Still JPEG, PNG, and WebP are accepted, up to 10 MB and 25 megapixels. The validator decodes bytes with libvips, rejects corrupt/animated files, and retains the saved image when a replacement fails.

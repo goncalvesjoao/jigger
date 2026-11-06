@@ -215,3 +215,6 @@ DemoAccountsSeeder.seed! if Rails.env.development? || Rails.env.test?
 
 require_relative "seeds/profile_images"
 ProfileImagesSeeder.seed!
+
+require_relative "seeds/utensils"
+UtensilsSeeder.seed!
