@@ -1,12 +1,9 @@
-module ProfileImagesSeeder
-  IMAGES = {
-    "shakestir@shakestir.example" => "shakestir.webp",
-    "leo@shakestir.example" => "leo.webp",
-    "alex@shakestir.example" => "alex.webp"
-  }.freeze
+require "json"
 
+module ProfileImagesSeeder
   def self.seed!
-    IMAGES.each do |email, filename|
+    images = JSON.parse(Rails.root.parent.join("db/seeds/avatars/profiles.json").read)
+    images.each do |email, filename|
       user = User.find_by(email_address: email)
       next unless user && !user.image.attached?
 

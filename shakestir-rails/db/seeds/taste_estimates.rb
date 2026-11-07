@@ -5,7 +5,8 @@ require "digest"
 # Source recipe credit and prose are never changed by this loader.
 module TasteEstimatesSeeder
   FIELDS = %w[sweetness sourness bitterness].freeze
-  DEMO_EMAILS = %w[leo@shakestir.example alex@shakestir.example].freeze
+  DEMO_EMAILS = JSON.parse(Rails.root.parent.join("db/seeds/demo_accounts.json").read)
+    .fetch("accounts").map { |entry| entry.fetch("email_address") }.freeze
 
   def self.entries
     @entries ||= JSON.parse(Rails.root.parent.join("db/seeds/taste/recipe_estimates.json").read).fetch("recipes").tap do |entries|

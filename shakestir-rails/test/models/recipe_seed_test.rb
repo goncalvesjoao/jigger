@@ -9,6 +9,7 @@ class RecipeSeedTest < ActiveSupport::TestCase
     image_ids = [ bartender, home, User.shakestir_account ].map { |user| user.image.blob_id }
     ProfileImagesSeeder.seed!
     assert_equal image_ids, [ bartender, home, User.shakestir_account ].map { |user| user.reload.image.blob_id }
+    assert User.shakestir_account.authenticate("password")
     assert bartender.authenticate("password")
     assert home.authenticate("password")
     assert_equal 3, bartender.recipes.marketplace.count

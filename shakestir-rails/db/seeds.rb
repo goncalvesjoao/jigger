@@ -16,12 +16,9 @@ module TheCocktailDbSeeder
   end
 
   def self.seed_shakestir_account!
-    User.find_or_create_by!(system_key: "shakestir") do |user|
-      user.email_address = "shakestir@shakestir.example"
-      user.password = SecureRandom.hex(32)
-      user.handle = "shakestir"
-      user.display_name = "ShakeStir"
-      user.bio = "Recipes shared by ShakeStir. Source credits are preserved on each recipe."
+    attributes = JSON.parse(Rails.root.parent.join("db/seeds/system_account.json").read)
+    User.find_or_create_by!(system_key: attributes.fetch("system_key")) do |user|
+      user.assign_attributes(attributes.except("system_key"))
     end
   end
 

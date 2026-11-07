@@ -1,0 +1,267 @@
+{
+  "accounts": [
+    {
+      "email_address": "leo@shakestir.example",
+      "password": "password",
+      "display_name": "Leo Sterling",
+      "bio": "Fictional world-famous bartender at the Velvet Hour. Seasonal cocktails, dramatic garnishes, and a little everyday magic."
+    },
+    {
+      "email_address": "alex@shakestir.example",
+      "password": "password",
+      "display_name": "Alex Morgan",
+      "bio": "Home bartender experimenting with weekend drinks and saving ideas for friends."
+    }
+  ],
+  "recipes": [
+    {
+      "user": "leo@shakestir.example",
+      "name": "Midnight Velvet",
+      "cocktail": "Espresso Martini",
+      "visibility": "public",
+      "publication_state": "published",
+      "ingredients": [
+        [
+          "Vodka",
+          "40 ml vodka"
+        ],
+        [
+          "Kahlua",
+          "20 ml Kahlua"
+        ],
+        [
+          "Sugar syrup",
+          "5 ml sugar syrup"
+        ]
+      ],
+      "steps": "Shake all ingredients hard with ice until frothy. Double strain into a chilled coupe and garnish with three coffee beans."
+    },
+    {
+      "user": "leo@shakestir.example",
+      "name": "Ruby Masquerade",
+      "cocktail": "Margarita",
+      "visibility": "public",
+      "publication_state": "published",
+      "ingredients": [
+        [
+          "Tequila",
+          "45 ml tequila"
+        ],
+        [
+          "Triple sec",
+          "20 ml triple sec"
+        ],
+        [
+          "Lime juice",
+          "25 ml lime juice"
+        ],
+        [
+          "Strawberries",
+          "2 ripe strawberries"
+        ]
+      ],
+      "steps": "Muddle the strawberries, then shake with the remaining ingredients and ice. Double strain into a chilled glass over fresh ice and garnish with a lime wheel for a ruby-red Halloween sour."
+    },
+    {
+      "user": "leo@shakestir.example",
+      "name": "Snowfall Sidecar",
+      "cocktail": "Sidecar",
+      "visibility": "public",
+      "publication_state": "published",
+      "ingredients": [
+        [
+          "Cognac",
+          "45 ml cognac"
+        ],
+        [
+          "Triple sec",
+          "20 ml triple sec"
+        ],
+        [
+          "Lemon juice",
+          "20 ml lemon juice"
+        ]
+      ],
+      "steps": "Chill a coupe and coat half its rim with fine sugar. Shake the ingredients with ice, strain into the coupe, and finish with a lemon twist."
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "My Weekend Margarita",
+      "cocktail": "Margarita",
+      "visibility": "private",
+      "publication_state": "draft",
+      "ingredients": [
+        [
+          "Tequila",
+          "40 ml tequila"
+        ],
+        [
+          "Triple sec",
+          "15 ml triple sec"
+        ],
+        [
+          "Lime juice",
+          "25 ml lime juice"
+        ]
+      ],
+      "steps": "Shake with ice and pour over fresh ice. Try a little less lime next time."
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "After Dinner Experiment",
+      "cocktail": "Espresso Martini",
+      "visibility": "private",
+      "publication_state": "draft",
+      "ingredients": [
+        [
+          "Vodka",
+          "30 ml vodka"
+        ],
+        [
+          "Kahlua",
+          "20 ml Kahlua"
+        ],
+        [
+          "Sugar syrup",
+          "5 ml sugar syrup"
+        ]
+      ],
+      "steps": "Shake with ice and strain into a small glass. Compare the foam with a longer shake next time."
+    }
+  ],
+  "collections": [
+    {
+      "user": "leo@shakestir.example",
+      "name": "Halloween Special",
+      "visibility": "public",
+      "recipes": [
+        {
+          "user": "leo@shakestir.example",
+          "name": "Midnight Velvet"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Ruby Masquerade"
+        },
+        {
+          "cocktail": "Negroni"
+        }
+      ]
+    },
+    {
+      "user": "leo@shakestir.example",
+      "name": "Christmas",
+      "visibility": "public",
+      "recipes": [
+        {
+          "user": "leo@shakestir.example",
+          "name": "Snowfall Sidecar"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Midnight Velvet"
+        },
+        {
+          "cocktail": "Old Fashioned"
+        }
+      ]
+    },
+    {
+      "user": "leo@shakestir.example",
+      "name": "House Signatures",
+      "visibility": "public",
+      "recipes": [
+        {
+          "user": "leo@shakestir.example",
+          "name": "Midnight Velvet"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Ruby Masquerade"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Snowfall Sidecar"
+        }
+      ]
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "Weekend Favorites",
+      "visibility": "private",
+      "recipes": [
+        {
+          "user": "alex@shakestir.example",
+          "name": "My Weekend Margarita"
+        },
+        {
+          "cocktail": "Mojito"
+        },
+        {
+          "cocktail": "Daiquiri"
+        }
+      ]
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "Dinner with Friends",
+      "visibility": "private",
+      "recipes": [
+        {
+          "user": "alex@shakestir.example",
+          "name": "After Dinner Experiment"
+        },
+        {
+          "user": "alex@shakestir.example",
+          "name": "My Weekend Margarita"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Snowfall Sidecar"
+        },
+        {
+          "cocktail": "Manhattan"
+        }
+      ]
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "Want to Try",
+      "visibility": "private",
+      "recipes": [
+        {
+          "user": "leo@shakestir.example",
+          "name": "Ruby Masquerade"
+        },
+        {
+          "user": "leo@shakestir.example",
+          "name": "Midnight Velvet"
+        },
+        {
+          "cocktail": "Negroni"
+        },
+        {
+          "cocktail": "Gimlet"
+        }
+      ]
+    },
+    {
+      "user": "alex@shakestir.example",
+      "name": "Christmas",
+      "visibility": "private",
+      "recipes": [
+        {
+          "user": "leo@shakestir.example",
+          "name": "Snowfall Sidecar"
+        },
+        {
+          "user": "alex@shakestir.example",
+          "name": "After Dinner Experiment"
+        },
+        {
+          "cocktail": "Old Fashioned"
+        }
+      ]
+    }
+  ]
+}
