@@ -11,7 +11,6 @@
 <div id="marketplace-results" aria-live="polite">
 <div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "cocktail") %></h2></div>
 <% if @pagination.empty? %><section class="empty-state"><h3>No cocktails found.</h3><p>Try another name to find a cocktail.</p><%= link_to "All cocktails", cocktails_path %></section><% end %>
-<% if policy(Cocktail).create? %><p><%= link_to "New canonical cocktail", new_admin_cocktail_path %></p><% end %>
 <%= turbo_frame_tag "cocktails_page_#{@pagination.current_page}", target: "_top" do %>
   <div id="cocktails_<%= @pagination.current_page %>" class="auto-grid recipe-grid">
     <%= render @pagination.to_a %>

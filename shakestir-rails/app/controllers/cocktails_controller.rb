@@ -8,7 +8,7 @@ class CocktailsController < ApplicationController
 
   def index
     cocktails = Cocktail.all
-    cocktails = cocktails.where(id: Recipe.marketplace.select(:cocktail_id)) unless Current.user&.admin?
+    cocktails = cocktails.where(id: Recipe.marketplace.select(:cocktail_id))
     @pagination = cocktails.search(params[:q]).order(:id)
       .with_attached_image.page(params[:page]).per(24)
   end

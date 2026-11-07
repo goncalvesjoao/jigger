@@ -47,14 +47,13 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
     assert_unique_ids_and_valid_section_links
   end
 
-  test "recipe pages omit related recipes even for admins" do
+  test "recipe pages omit related recipes for signed in users" do
     [ { visibility: "private" }, { publication_state: "draft" }, {} ].each do |state|
       recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Another variation", steps: "Shake.")
       recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin")
       recipe.assign_attributes({ visibility: "public", publication_state: "published" }.merge(state))
       recipe.save!
     end
-    users(:one).update!(admin: true)
     sign_in_as(users(:one))
     get recipe_url(@other_recipe)
     assert_select "#matching-recipes", count: 0

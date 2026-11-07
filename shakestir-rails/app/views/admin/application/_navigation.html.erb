@@ -1,6 +1,0 @@
-<nav class="navigation" aria-label="Admin navigation">
-  <%= link_to "Back to ShakeStir", root_path, class: "button button--alt button--nav" %>
-  <% Administrate::Namespace.new(namespace).resources_with_index_route.each do |resource| %>
-    <%= link_to display_resource_name(resource), resource_index_route(resource), class: "navigation__link navigation__link--#{nav_link_state(resource)}" %>
-  <% end %>
-</nav>

@@ -77,25 +77,25 @@ class RecipeSeedTest < ActiveSupport::TestCase
     assert_equal "Personal variation", owned.name
   end
 
-  test "canonical content backfills curated imports and preserves admin content and citations" do
+  test "canonical content backfills curated imports and preserves curated content and citations" do
     load Rails.root.join("db/seeds.rb")
     recipe = Recipe.find_by!(source_url: "https://www.thecocktaildb.com/drink/11007")
     recipe.update!(user: users(:shakestir))
     cocktail = recipe.cocktail
-    cocktail.update!(description: "Admin description", history: nil)
+    cocktail.update!(description: "Curated description", history: nil)
     cocktail.update!(source_reference: nil, source_url: nil, source_published_on: nil, source_date_note: nil)
 
     TheCocktailDbSeeder.seed!
     expected = TheCocktailDbSeeder.load_json("canonical_cocktails.json").fetch("Margarita")
-    assert_equal "Admin description", cocktail.reload.description
+    assert_equal "Curated description", cocktail.reload.description
     assert_equal expected.fetch("history"), cocktail.history
     assert_equal expected.fetch("source_url"), cocktail.reload.source_url
 
-    cocktail.update!(history: "Admin history")
-    cocktail.update!(source_reference: "Admin source", source_url: nil, source_date_note: nil)
+    cocktail.update!(history: "Curated history")
+    cocktail.update!(source_reference: "Curated source", source_url: nil, source_date_note: nil)
     TheCocktailDbSeeder.seed_canonical_content!
-    assert_equal "Admin history", cocktail.reload.history
-    assert_equal "Admin source", cocktail.reload.source_reference
+    assert_equal "Curated history", cocktail.reload.history
+    assert_equal "Curated source", cocktail.reload.source_reference
     assert_nil cocktail.source_url
     assert_nil cocktail.source_date_note
   end

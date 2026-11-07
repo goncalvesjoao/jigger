@@ -37,7 +37,7 @@ class Recipe < ApplicationRecord
       .where.not(id: RecipeUtensil.where.not(utensil_id: Utensil.usable.select(:id)).select(:recipe_id))
       .order(published_at: :desc, created_at: :desc)
   }
-  scope :readable_by, ->(user) { user&.admin? ? all : (user ? marketplace.or(where(user_id: user.id)) : marketplace) }
+  scope :readable_by, ->(user) { user ? marketplace.or(where(user_id: user.id)) : marketplace }
 
   def self.makeable_with(ingredient_ids:, utensil_ids:)
     missing_ingredients = RecipeIngredient.where(optional: false).where.not(ingredient_id: ingredient_ids).select(:recipe_id)

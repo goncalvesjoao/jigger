@@ -185,7 +185,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 end
 
 class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
-  test "authors cannot reassign recipes and ShakeStir recipes require owner or admin access" do
+  test "authors cannot reassign recipes and ShakeStir recipes require owner access" do
     recipe = recipes(:one)
     sign_in_as(users(:one))
     patch recipe_url(recipe), params: { recipe: { name: recipe.name, user_id: users(:shakestir).id } }
@@ -194,12 +194,10 @@ class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
     recipe.update!(user: users(:shakestir))
     patch recipe_url(recipe), params: { recipe: { name: "Tampered" } }
     assert_response :forbidden
-    users(:two).update!(admin: true)
     sign_in_as(users(:two))
     patch recipe_url(recipe), params: { recipe: { name: "Curated" } }
-    assert_redirected_to recipe_url(recipe)
-    assert_equal "Curated", recipe.reload.name
-    assert_equal users(:shakestir), recipe.user
+    assert_response :forbidden
+    assert_equal users(:shakestir), recipe.reload.user
   end
 
   test "homepage searches public recipes and hides private recipes" do

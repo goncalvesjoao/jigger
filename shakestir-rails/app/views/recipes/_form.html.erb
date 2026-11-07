@@ -46,8 +46,5 @@
     </div>
   </section>
   <details class="recipe-editor-extra"><summary>Source &amp; inspiration <span>Optional</span></summary><div class="recipe-section-fields"><div><%= form.label :source_reference, "Source or credit" %><%= form.text_field :source_reference, placeholder: "A book, a bartender, an inspiration…" %></div><div><%= form.label :source_url, "Source link" %><%= form.url_field :source_url, placeholder: "https://" %></div></div></details>
-  <% if Current.user&.admin? %>
-    <details class="recipe-editor-extra"><summary>Catalog settings</summary><div class="recipe-section-fields"><div><%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %><%= form.collection_select :cocktail_id, Cocktail.all.to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %></div></div></details>
-  <% end %>
   <div class="recipe-editor-actions"><%= form.submit recipe.persisted? ? "Save changes" : "Create recipe", class: "library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", recipe.persisted? ? recipe_path(recipe) : my_recipes_path, class: "library-cancel" %></div>
 <% end %>

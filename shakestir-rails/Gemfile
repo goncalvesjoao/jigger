@@ -71,4 +71,3 @@ gem "pundit", "~> 2.5"
 
 
 gem "kaminari", "~> 1.2.2"
-gem "administrate", "~> 1.0"

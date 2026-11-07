@@ -20,14 +20,6 @@ Rails.application.routes.draw do
   resources :cocktails, only: %i[ index show ] do
     resource :image, only: :show, controller: "cocktail_images"
   end
-  namespace :admin do
-    root to: "cocktails#index"
-    resources :cocktails
-    resources :ingredients
-    resources :utensils
-    resources :techniques
-    resources :recipes
-  end
   resources :techniques, only: :show
   resources :recipes do
     resource :star, only: %i[create destroy], controller: "recipe_stars"

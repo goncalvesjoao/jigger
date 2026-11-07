@@ -18,7 +18,6 @@ Kept Semanticus and the established ivory/olive visual language. Replacing the f
 | Embedded official recipes omitted their own source credits | Recipe-level source credits remain visible alongside cocktail-level provenance. |
 | Account forms lacked consistent hierarchy and recovery paths | Consistent form surfaces, direct explanations, submission feedback and links between account flows. |
 | Libraries and profiles diverged in scale and surface treatment | Shared heading scale, working surfaces and consistent privacy controls. |
-| Catalog administration was visually disconnected and cramped on phones | ShakeStir colors and typography, usable form controls, stacked phone layouts and horizontally scrollable data regions. |
 | Phone filter search consumed excessive vertical space | Explicit search-field height; options receive the flexible scrolling area. Menus fit within the viewport. |
 | Default Rails error pages lacked ShakeStir identity and recovery actions | Self-contained branded 400, 404, 406, 422 and 500 pages with truthful explanations and working home links. |
 
@@ -29,10 +28,9 @@ Kept Semanticus and the established ivory/olive visual language. Replacing the f
 - Collection index, empty and populated detail, new/edit forms, validation errors, save/remove dialog.
 - Owner profile, profile editing, public profile and public collection views with owner controls excluded.
 - Sign in, registration, password-reset request and password-update forms.
-- Cocktail, ingredient, utensil and recipe catalog administration: index, show, new and edit page families.
 - Standalone recovery pages: 400, 404, unsupported browser, 422 and 500.
 
-The main route matrix captured 33 routes at 1440px and 390px: 66 successful checks, no horizontal page overflow, no broken images and no browser JavaScript exceptions. Additional admin show/edit checks covered 320px and 768px as well as desktop and phone widths; public views were also checked at 320px and 768px. Source images and full-page renders were inspected, with the collection dialog recaptured after entrance motion settled.
+The main route matrix captured 33 routes at 1440px and 390px: 66 successful checks, no horizontal page overflow, no broken images and no browser JavaScript exceptions. Public views were also checked at 320px and 768px. Source images and full-page renders were inspected, with the collection dialog recaptured after entrance motion settled.
 
 Interaction checks passed for ingredient text filtering, availability selections, live results, removable filter chips, Escape dismissal, empty-search recovery, ingredient/step completion and reset, reversible collection saves, invalid collection and recipe submissions, and public owner-control exclusion.
 

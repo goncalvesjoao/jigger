@@ -1,6 +1,0 @@
-<div class="field-unit__label"><%= f.label field.attribute, "Photo" %></div>
-<div class="field-unit__field">
-  <%= f.file_field field.attribute, accept: "image/jpeg,image/png,image/webp", aria: { describedby: "photo-help" } %>
-  <p id="photo-help">JPEG, PNG or WebP, up to 10 MB. Leave blank to keep the current photo.</p>
-  <%= render "fields/photo_field/show", field: field if field.resource.persisted? %>
-</div>

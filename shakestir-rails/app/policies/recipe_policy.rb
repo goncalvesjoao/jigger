@@ -9,7 +9,7 @@ class RecipePolicy
   end
 
   def show?
-    (@user.present? && (@user.admin? || @recipe.user_id == @user.id)) || @recipe.marketplace?
+    (@user.present? && @recipe.user_id == @user.id) || @recipe.marketplace?
   end
 
   def create?
@@ -19,7 +19,7 @@ class RecipePolicy
   alias_method :new?, :create?
 
   def update?
-    @user.present? && (@user.admin? || @recipe.user_id == @user.id)
+    @user.present? && @recipe.user_id == @user.id
   end
 
   alias_method :edit?, :update?

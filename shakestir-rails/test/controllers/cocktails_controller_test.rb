@@ -144,7 +144,6 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get cocktail_url(@cocktail, format: :json), params: { q: "dry" }
     assert_equal [ recipes(:two).id ], response.parsed_body["recipes"].map { |entry| entry["id"] }
     assert_equal [ recipes(:one).id ], response.parsed_body["other_recipes"].map { |entry| entry["id"] }
-    users(:two).update!(admin: true)
     sign_in_as(users(:two))
     [ { visibility: "private" }, { visibility: "public", publication_state: "draft" } ].each do |state|
       recipes(:one).update!(state)
@@ -238,14 +237,13 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "details#other-recipes:not([open]) article", count: 2
   end
 
-  test "alternative recipes exclude private drafts and other cocktails even for admins" do
+  test "alternative recipes exclude private drafts and other cocktails for signed in users" do
     [ { visibility: "private" }, { publication_state: "draft" }, { cocktail: nil } ].each do |state|
       recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Hidden alternative", steps: "Stir.")
       recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin")
       recipe.assign_attributes({ visibility: "public", publication_state: "published" }.merge(state))
       recipe.save!
     end
-    users(:one).update!(admin: true)
     sign_in_as(users(:one))
     get cocktail_url(@cocktail), params: { q: "bright" }
     assert_select "#matching-recipes article", count: 1
@@ -295,24 +293,10 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame[src]", count: 0
   end
 
-  test "only admins curate identities and assign recipes" do
+  test "authors cannot change canonical assignment" do
     sign_in_as(users(:one))
-    assert_no_difference("Cocktail.count") do
-      post admin_cocktails_url, params: { cocktail: { name: "New drink" } }
-      assert_response :forbidden
-    end
     patch recipe_url(recipes(:one)), params: { recipe: { cocktail_id: "" } }
     assert_equal @cocktail, recipes(:one).reload.cocktail
-    users(:two).update!(admin: true)
-    sign_in_as(users(:two))
-    assert_difference("Cocktail.count") do
-      post admin_cocktails_url, params: { cocktail: { name: "New drink" } }
-      assert_response :redirect
-    end
-    patch recipe_url(recipes(:one)), params: { recipe: { cocktail_id: Cocktail.last.id } }
-    assert_equal Cocktail.last, recipes(:one).reload.cocktail
-    patch recipe_url(recipes(:one)), params: { recipe: { cocktail_id: "" } }
-    assert_nil recipes(:one).reload.cocktail
   end
 
   test "JSON discovery returns individual recipes without private recipes" do
@@ -325,19 +309,6 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get cocktail_url(@cocktail, format: :json)
     assert_response :success
     assert_equal 1, response.parsed_body["matching_recipe_count"]
-  end
-
-  test "admins can use canonical creation and assignment forms" do
-    users(:two).update!(admin: true)
-    sign_in_as(users(:two))
-    get new_admin_cocktail_url
-    assert_response :success
-    assert_select "input[name='cocktail[name]']"
-    get edit_admin_cocktail_url(@cocktail)
-    assert_response :success
-    get edit_recipe_url(recipes(:one))
-    assert_response :success
-    assert_select "select[name='recipe[cocktail_id]'] option[value=?][selected]", @cocktail.id.to_s
   end
 
   test "deleting an identity preserves recipes as standalone results" do

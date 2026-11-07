@@ -32,7 +32,7 @@ The marketplace returns public, published recipe variations whose required ingre
 
 Each recipe preserves every ingredient's exact submitted text, including names in any writing system and misspellings. Internally, that text maps to a canonical ingredient identity shared across recipes. Matching must not replace or correct what the user wrote.
 
-Original recipes need no canonical cocktail. Admins curate canonical identities and assignments; publishing does not automatically create a cocktail. Cocktails hold an optional photo, description, history, their sources and historical publication dates. Admins upload cocktail photos; cached seeds populate missing cocktail photos independently of recipe photos and preserve existing uploads. Recipes retain optional source references and URLs crediting their quantities and instructions.
+Original recipes need no canonical cocktail. Seeds or trusted model access maintain canonical identities and assignments; publishing does not automatically create a cocktail. Cocktails hold an optional photo, description, history, their sources and historical publication dates. Cached seeds populate missing cocktail photos independently of recipe photos and preserve existing uploads. Recipes retain optional source references and URLs crediting their quantities and instructions.
 
 Preparation steps remain ordered, free-text instructions. ShakeStir should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
 
@@ -51,15 +51,9 @@ Jev is optional. A sufficiently fast open-source alternative could serve the sam
 
 Marketplace search expands from the navbar into searchable ingredient and utensil selections with removable chips. By default, results contain every selected ingredient and utensil, with additional items allowed. “Only show recipes I can make” instead treats selections as the user's available ingredients and utensils: all required items must be available, while optional ingredients are ignored. Text search combines with either mode; filters remain in detail and pagination links. Clearing filters returns to all marketplace recipes. Each closed ingredient and utensil picker shows “Add ingredients/utensils” when empty, a selected count for include mode, or an available count with “Only these” for availability mode; mode explanations remain inside the pickers.
 
-## Administration
+## Catalog maintenance
 
-Administrators can open `/admin` from the Admin navigation link to list, search, create, edit and delete cocktails, ingredients, utensils and recipes. Administrate uses the existing sign-in and admin flag; no separate admin account system is created. Recipe owners are selectable without exposing user-management screens.
-
-Content is saved exactly as entered, in any writing system. Each record has a single name and set of content fields; there are no translations or language codes. Search matches normalized stored names.
-
-Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership constraints still apply.
-
-Administrate 1.0 uses Kaminari 1.2.2; recipe search and pagination remain covered by the controller tests.
+Catalog records and canonical assignments are maintained through seeds or trusted model access. Authors manage their own recipes through the recipe editor.
 
 ## Cocktail and recipe detail pages
 

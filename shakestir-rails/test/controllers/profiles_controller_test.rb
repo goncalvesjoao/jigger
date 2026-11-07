@@ -38,15 +38,12 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", collection_path(@private_collection)
   end
 
-  test "signed in visitors and admins receive the same public content" do
-    [ false, true ].each do |admin|
-      users(:two).update!(admin: admin)
-      sign_in_as(users(:two))
-      get profile_url(@user)
-      assert_response :success
-      assert_public_content_only
-      assert_select "a[href=?]", edit_my_profile_path, count: 0
-    end
+  test "signed in visitors receive the same public content" do
+    sign_in_as(users(:two))
+    get profile_url(@user)
+    assert_response :success
+    assert_public_content_only
+    assert_select "a[href=?]", edit_my_profile_path, count: 0
   end
 
   test "profile edits require authentication and only update permitted own attributes" do
@@ -59,11 +56,10 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "input[name='user[profile_visibility]']", count: 0
     assert_not_includes response.body, @user.email_address
-    patch my_profile_url, params: { id: users(:two).id, user: { display_name: "New name", bio: "New bio", profile_visibility: "private", admin: true, email_address: "changed@example.com" } }
+    patch my_profile_url, params: { id: users(:two).id, user: { display_name: "New name", bio: "New bio", profile_visibility: "private", email_address: "changed@example.com" } }
     assert_redirected_to my_profile_url
     assert_equal "New name", @user.reload.display_name
     assert_equal "New bio", @user.bio
-    assert_not @user.admin?
     assert_equal "one@example.com", @user.email_address
     assert_nil users(:two).display_name
     sign_out
