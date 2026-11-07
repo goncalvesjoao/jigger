@@ -2,22 +2,22 @@
 
 ## Local development
 
-With the project's mise Ruby active and npm dependencies installed, set up the
-Ruby dependencies, Foreman, and database:
+With the project's mise Ruby active, set up the Ruby dependencies and database:
 
 ```sh
 bin/setup --skip-server
 bin/dev
 ```
 
-This starts Rails at `http://localhost:3000` and the Vite dev server at
-`http://localhost:3036`, with combined logs. Press Ctrl+C to stop both processes.
-`bin/setup` installs Foreman if it is missing. `bin/dev` reports an error with
-setup instructions when Foreman is unavailable; it does not install dependencies.
-Foreman runs outside the application's bundle and does not need a Gemfile entry.
+This starts Rails at `http://localhost:3000`. Press Ctrl+C to stop it.
+To use a different port, run `PORT=3001 bin/dev`.
 
-To use a different Rails port, run `PORT=3001 bin/dev`. Vite's port is configured
-separately in `config/vite.json`.
+Stylesheets are served by Rails through Propshaft; Node and npm are not required.
+Semanticus CSS 3.2.2 is vendored in `app/assets/stylesheets/semanticus.css` from
+`@semanticus/semanticus-css`'s `dist/semanticus.css`. Its license and notices are
+in `vendor/semanticus/`. To update it, replace the compiled CSS and notices from
+the desired npm release. The layout loads it before the local stylesheets in
+an explicit order.
 
 ## Recipes and ownership
 
@@ -90,7 +90,7 @@ Profile settings support optional JPEG, PNG, or WebP photo uploads with the same
 Public registration is at `/registration/new`; sign-in is at `/session/new`. Password resets require Action Mailer configuration.
 
 ```sh
-VITE_RUBY_AUTO_BUILD=false PARALLEL_WORKERS=1 bin/rails test
+PARALLEL_WORKERS=1 bin/rails test
 bin/rubocop
 bin/rails zeitwerk:check
 ```

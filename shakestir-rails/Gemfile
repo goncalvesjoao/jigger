@@ -65,8 +65,6 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "vite_rails", ">= 3.11.1"
-
 gem "pundit", "~> 2.5"
 
 
