@@ -76,7 +76,7 @@ components:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.input-surface}"
     rounded: "{rounded.pill}"
-    padding: ".7rem 1.2rem"
+    padding: ".65rem 1.25rem"
     height: "2.9rem"
   button-primary-hover:
     backgroundColor: "{colors.primary-hover}"
@@ -84,7 +84,7 @@ components:
     backgroundColor: "{colors.input-surface}"
     textColor: "{colors.text}"
     rounded: "{rounded.pill}"
-    padding: ".7rem 1.2rem"
+    padding: ".65rem 1.25rem"
     height: "2.9rem"
   field:
     backgroundColor: "{colors.input-surface}"
@@ -191,4 +191,12 @@ Pill actions and search controls contrast with softly rounded rectangular panels
 
 ## Semanticus implementation maintenance
 
-Rails uses vendored Semanticus 3.2.2 utilities for invariant layout and resets, and `.auto-grid` for collection, recipe-reference and technique-option grids. App selectors retain brand, composition and responsive/state rules. Keep utility `!important` precedence in mind: avoid zero-margin, full-width or display utilities where contextual, hidden or print styles must override them. The migration evidence and proposed framework additions are in `shakestir-rails/docs/semanticus-css-audit.md`.
+Rails uses vendored Semanticus 3.4.1 utilities for invariant layout and resets, and `.auto-grid` for collection, recipe-reference and technique-option grids. App selectors retain brand, composition and responsive/state rules. Keep utility `!important` precedence in mind: avoid zero-margin, full-width or display utilities where contextual, hidden or print styles must override them. The migration evidence and proposed framework additions are in `shakestir-rails/docs/semanticus-css-audit.md`.
+
+Compact filter chips and checklist resets use Semanticus `.size-sm`; library actions and recipe stars explicitly use `.size-md`. Normal actions consume themed button font/padding tokens; local minimum heights preserve tap targets.
+
+Native button appearance is configured through Semanticus public `--buttons-*` slots and `--buttons-border-radius` and scoped `--font-weight` / `--line-height` tokens. Custom component CSS retains geometry, borders and product states. Navigation anchors use Semanticus’s built-in `.button` class to consume those same slots without button roles; hover/focus/active states share each component's themed colors.
+
+Secondary native buttons and button-styled navigation links share the near-white `#fffef9` action surface, `#eceee3` hover/focus surface, dark foreground and quiet border through scoped Semanticus secondary tokens. Secondary cards/alerts retain their framework palettes. Library actions use a shared `.library-action` layout hook with `.primary` or `.secondary`; card-image stars keep their local translucent secondary surface. Quiet text actions remain the tertiary treatment.
+
+Semanticus 3.4.1 separates button radius from general component radius: `--buttons-border-radius: 3rem` defines pill actions, while `--border-radius: .7rem` remains the general default. Circular icon controls and rectangular selection controls customize the button-specific token locally; file-selector buttons share the action radius.

@@ -46,5 +46,5 @@
     </div>
   </section>
   <details class="m-0 recipe-editor-extra"><summary>Source &amp; inspiration <span>Optional</span></summary><div class="d-grid recipe-section-fields"><div><%= form.label :source_reference, "Source or credit" %><%= form.text_field :source_reference, placeholder: "A book, a bartender, an inspiration…" %></div><div><%= form.label :source_url, "Source link" %><%= form.url_field :source_url, placeholder: "https://" %></div></div></details>
-  <div class="d-flex align-items-center recipe-editor-actions"><%= form.submit recipe.persisted? ? "Save changes" : "Create recipe", class: "d-inline-flex justify-content-center align-items-center m-0 library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", recipe.persisted? ? recipe_path(recipe) : my_recipes_path, class: "d-inline-flex align-items-center library-cancel" %></div>
+  <div class="d-flex align-items-center recipe-editor-actions"><%= form.submit recipe.persisted? ? "Save changes" : "Create recipe", class: "d-inline-flex justify-content-center align-items-center m-0 library-action primary size-md", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", recipe.persisted? ? recipe_path(recipe) : my_recipes_path, class: "d-inline-flex align-items-center library-cancel" %></div>
 <% end %>

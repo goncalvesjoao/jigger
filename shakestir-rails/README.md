@@ -13,11 +13,22 @@ This starts Rails at `http://localhost:3000`. Press Ctrl+C to stop it.
 To use a different port, run `PORT=3001 bin/dev`.
 
 Stylesheets are served by Rails through Propshaft; Node and npm are not required.
-Semanticus CSS 3.2.2 is vendored in `app/assets/stylesheets/semanticus.css` from
+Semanticus CSS 3.4.1 is vendored in `app/assets/stylesheets/semanticus.css` from
 `@semanticus/semanticus-css`'s `dist/semanticus.css`. Its license and notices are
 in `vendor/semanticus/`. To update it, replace the compiled CSS and notices from
 the desired npm release. The layout loads it before the local stylesheets in
-an explicit order.
+an explicit order. This 3.4.1 bundle was built with `npm run build:full` from
+the Semanticus source commit `c0187a7` because npm did not yet expose that version
+at update time. Built-in `.button` support now styles navigation anchors; the local
+button-style adapter has been removed. The theme sets `--buttons-border-radius`
+to `3rem`, independently of the general `.7rem` radius; circular and rectangular
+controls override that button-specific token locally. The vendored version banner
+was corrected to 3.4.1 because the source banner still identified 3.4.0.
+Compact filter chips and checklist resets use Semanticus `.size-sm`; library actions
+and star controls use `.size-md` with the theme defaults. App-specific minimum tap
+targets remain in the local stylesheets.
+Secondary buttons and button-styled navigation links share a scoped near-white
+Semanticus `.secondary` theme; other secondary components retain their palettes.
 
 ## Recipes and ownership
 
@@ -27,7 +38,7 @@ an explicit order.
 
 Every recipe belongs to a user. Seeded recipes belong to the public `@shakestir` account, identified by a trusted `system_key` of `shakestir`. ShakeStir-authored recipes follow the same rules and appear in the same lists as every other recipe. Recipes have no parent or variant relationship; cocktail assignment groups versions of the same drink.
 
-`RecipePolicy` permits public reads of complete, public, published recipes. Owners can read their own drafts and private recipes and edit their recipes. The authoring endpoint always assigns new recipes to the signed-in user. Seeds create the ShakeStir account with a random password; public forms cannot set its system identity.
+`RecipePolicy` permits public reads of complete, public, published recipes. Owners can read their own drafts and private recipes and edit their recipes. The authoring endpoint always assigns new recipes to the signed-in user. Seeds create the ShakeStir account with the password `password`; public forms cannot set its system identity.
 
 ## Database setup
 

@@ -128,7 +128,7 @@ export default class extends Controller {
       const chip = document.createElement("button")
       chip.type = "button"
       chip.textContent = choice.dataset.label
-      chip.className = "marketplace-chip"
+      chip.className = "marketplace-chip size-sm"
       chip.setAttribute("aria-label", `Remove ${choice.dataset.label}`)
       chip.addEventListener("click", () => {
         const next = chip.nextElementSibling || chip.previousElementSibling

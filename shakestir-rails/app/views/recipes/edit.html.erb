@@ -1,6 +1,6 @@
 <% content_for :title, "Edit #{@recipe.display_name.presence || "recipe"} · ShakeStir" %>
 <div class="library-page recipe-editor">
   <%= link_to my_recipes_path, class: "d-inline-flex align-items-center library-back" do %><%= render "collections/icon", name: "back" %>My recipes<% end %>
-  <header class="d-flex justify-content-between library-heading"><div><h1>Edit recipe</h1><p class="m-0 library-description"><%= @recipe.display_name.presence || "A little refinement goes a long way." %></p></div><%= link_to "View recipe", @recipe, class: "d-inline-flex justify-content-center align-items-center button library-secondary" %></header>
+  <header class="d-flex justify-content-between library-heading"><div><h1>Edit recipe</h1><p class="m-0 library-description"><%= @recipe.display_name.presence || "A little refinement goes a long way." %></p></div><%= link_to "View recipe", @recipe, class: "d-inline-flex justify-content-center align-items-center button library-action secondary size-md" %></header>
   <%= render "form", recipe: @recipe %>
 </div>

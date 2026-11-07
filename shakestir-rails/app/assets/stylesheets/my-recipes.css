@@ -7,7 +7,13 @@
 .personal-filters a span { font-size: .75rem; min-width: 1.2rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 400; }
 .personal-search { gap: .5rem; flex: 0 1 24rem; }
 .personal-search input[type=search] { margin: 0; min-width: 0; height: 2.9rem; border-radius: 3rem; font-size: .85rem; }
-.personal-search button { margin: 0; background: #fffef9; color: var(--primary-color); border: 1px solid var(--border-color); font-size: .85rem; min-height: 2.9rem; padding: .5rem 1rem; }
+.personal-search button {
+  margin: 0;
+  --buttons-font-size: .85rem;
+  min-height: 2.9rem;
+  --buttons-padding-block: .5rem;
+  --buttons-padding-inline: 1rem;
+}
 .personal-recipe { min-width: 0; }
 .personal-recipe-status { top: .85rem; left: .85rem; right: .85rem; display: flex; gap: .5rem; pointer-events: none; }
 .personal-state, .personal-visibility { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .65rem; border-radius: 2rem; font-size: .72rem; font-weight: 600; letter-spacing: .015em; background: #fffef9; color: #34452b; box-shadow: 0 2px 8px #20292310; }

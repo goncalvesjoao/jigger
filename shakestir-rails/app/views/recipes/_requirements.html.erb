@@ -20,7 +20,7 @@
         </label></li>
       <% end %>
     </ul>
-    <div class="align-items-center checklist-status" data-ingredients-target="controls" hidden><p class="visually-hidden" role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
+    <div class="align-items-center checklist-status" data-ingredients-target="controls" hidden><p class="visually-hidden" role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset size-sm" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
   <% else %><p>No ingredients listed.</p><% end %>
   <% if recipe.recipe_utensils.any? %>
     <h3>Utensils</h3>

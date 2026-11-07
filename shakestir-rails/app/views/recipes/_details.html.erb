@@ -4,7 +4,7 @@
   <% photo = recipe_photo(recipe) %>
   <header class="position-relative d-flex align-items-end overflow-hidden cocktail-cover recipe-cover<%= " cocktail-cover-with-photo" if photo.image.attached? %>">
     <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{recipe.display_name}", class: "position-absolute w-100 h-100 object-fit-cover cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
-    <%= link_to root_path, class: "position-absolute align-items-center cocktail-cover-back" do %>
+    <%= link_to root_path, class: "d-inline-flex position-absolute align-items-center cocktail-cover-back secondary button" do %>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" /></svg>
       All recipes
     <% end %>
@@ -37,7 +37,7 @@
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
-      <% if recipe.recipe_steps.any? %><div class="align-items-center checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
+      <% if recipe.recipe_steps.any? %><div class="align-items-center checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset size-sm" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
     </section>
   </div>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>

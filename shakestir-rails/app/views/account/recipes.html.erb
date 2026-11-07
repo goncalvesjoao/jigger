@@ -2,10 +2,10 @@
 <div class="library-page personal-recipes-page">
   <header class="d-flex justify-content-between library-heading">
     <div><h1>My recipes</h1><p class="m-0 library-description">From first ideas to your signature drinks.</p></div>
-    <%= link_to new_recipe_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-primary" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %>
+    <%= link_to new_recipe_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-action primary size-md" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %>
   </header>
   <% if @recipe_counts.values.sum.zero? %>
-    <section class="flex-column align-items-center text-center library-empty"><span class="library-empty-symbol"><%= render "collections/icon", name: "edit" %></span><h2>Every great drink starts with an idea.</h2><p>Create your first recipe. Keep it private while you make it yours.</p><%= link_to "Create your first recipe", new_recipe_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-primary" %></section>
+    <section class="flex-column align-items-center text-center library-empty"><span class="library-empty-symbol"><%= render "collections/icon", name: "edit" %></span><h2>Every great drink starts with an idea.</h2><p>Create your first recipe. Keep it private while you make it yours.</p><%= link_to "Create your first recipe", new_recipe_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-action primary size-md" %></section>
   <% else %>
     <div class="d-flex align-items-center justify-content-between flex-wrap personal-toolbar">
       <nav class="d-flex flex-wrap personal-filters" aria-label="Recipe status">
@@ -17,12 +17,12 @@
         <%= form.hidden_field :state, value: @publication_state if @publication_state %>
         <%= form.label :q, "Search your recipes", class: "visually-hidden", for: "personal-recipe-search" %>
         <%= form.search_field :q, value: params[:q], placeholder: "Search your recipes", id: "personal-recipe-search" %>
-        <%= form.button "Search", type: :submit %>
+        <%= form.button "Search", type: :submit, class: "secondary" %>
       <% end %>
     </div>
     <div class="d-flex align-items-baseline justify-content-between flex-wrap library-section-label"><h2><%= params[:q].present? ? "Search results" : (@publication_state == "draft" ? "Your drafts" : (@publication_state == "published" ? "Published recipes" : "All recipes")) %></h2><span><%= pluralize(@recipes.size, "recipe") %> · Recently edited first</span></div>
     <% if @recipes.empty? %>
-      <section class="flex-column align-items-center text-center library-empty"><h2>No recipes here yet.</h2><p><%= params[:q].present? ? "Try another name or clear your search to see more recipes." : (@publication_state == "draft" ? "Start a new recipe and save your next idea." : "Your published recipes will appear here.") %></p><%= link_to "View all recipes", my_recipes_path, class: "d-inline-flex justify-content-center align-items-center button library-secondary" %></section>
+      <section class="flex-column align-items-center text-center library-empty"><h2>No recipes here yet.</h2><p><%= params[:q].present? ? "Try another name or clear your search to see more recipes." : (@publication_state == "draft" ? "Start a new recipe and save your next idea." : "Your published recipes will appear here.") %></p><%= link_to "View all recipes", my_recipes_path, class: "d-inline-flex justify-content-center align-items-center button library-action secondary size-md" %></section>
     <% else %>
       <div id="recipes" class="auto-grid recipe-grid personal-recipe-grid">
         <% @recipes.each do |recipe| %>

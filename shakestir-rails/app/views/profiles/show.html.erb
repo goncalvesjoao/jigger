@@ -7,13 +7,13 @@
       <% if @profile.bio.present? %><p class="profile-bio"><%= @profile.bio %></p><% end %>
       <div class="d-flex flex-wrap align-items-center profile-meta"><span>@<%= @profile.handle %></span><span>Joined <%= @profile.created_at.strftime("%B %Y") %></span></div>
     </div>
-    <% if @owned %><%= link_to edit_my_profile_path, class: "d-inline-flex justify-content-center align-items-center button library-secondary" do %><%= render "collections/icon", name: "edit" %>Edit profile<% end %><% end %>
+    <% if @owned %><%= link_to edit_my_profile_path, class: "d-inline-flex justify-content-center align-items-center button library-action secondary size-md" do %><%= render "collections/icon", name: "edit" %>Edit profile<% end %><% end %>
   </header>
   <nav class="d-flex profile-sections" aria-label="Profile sections"><a href="#profile-collections">Collections <span><%= @collections.size %></span></a><a href="#profile-recipes">Recipes <span><%= @recipes.size %></span></a></nav>
   <section id="profile-collections" class="profile-content" aria-labelledby="profile-collections-title">
     <div class="d-flex align-items-baseline justify-content-between flex-wrap library-section-label"><h2 id="profile-collections-title">Public collections</h2><% if @owned %><%= link_to new_collection_path, class: "d-inline-flex align-items-center profile-section-action" do %><%= render "collections/icon", name: "plus" %>Create collection<% end %><% end %></div>
     <% if @collections.empty? %>
-      <div class="align-items-center profile-empty"><%= render "collections/icon", name: "collection" %><div><h3><%= @owned ? "Keep your favorites together." : "No public collections yet." %></h3><p><%= @owned ? "Create a collection for an occasion, a mood, or a drink you love." : "This member hasn’t shared a collection yet." %></p></div><% if @owned %><%= link_to "Create collection", new_collection_path, class: "d-inline-flex justify-content-center align-items-center button library-secondary" %><% end %></div>
+      <div class="align-items-center profile-empty"><%= render "collections/icon", name: "collection" %><div><h3><%= @owned ? "Keep your favorites together." : "No public collections yet." %></h3><p><%= @owned ? "Create a collection for an occasion, a mood, or a drink you love." : "This member hasn’t shared a collection yet." %></p></div><% if @owned %><%= link_to "Create collection", new_collection_path, class: "d-inline-flex justify-content-center align-items-center button library-action secondary size-md" %><% end %></div>
     <% else %>
       <div class="auto-grid library-grid"><% @collections.each do |collection| %><div><%= render "collections/card", collection: collection %><% if @owned %><%= link_to edit_collection_path(collection), class: "d-inline-flex align-items-center profile-manage", aria: { label: "Edit #{collection.name}" } do %><%= render "collections/icon", name: "edit" %>Edit collection<% end %><% end %></div><% end %></div>
     <% end %>
@@ -22,7 +22,7 @@
   <section id="profile-recipes" class="profile-content" aria-labelledby="profile-recipes-title">
     <div class="d-flex align-items-baseline justify-content-between flex-wrap library-section-label"><h2 id="profile-recipes-title">Public recipes</h2><% if @owned %><%= link_to new_recipe_path, class: "d-inline-flex align-items-center profile-section-action" do %><%= render "collections/icon", name: "plus" %>New recipe<% end %><% end %></div>
     <% if @recipes.empty? %>
-      <div class="align-items-center profile-empty"><%= render "collections/icon", name: "edit" %><div><h3><%= @owned ? "Your signature drink starts here." : "No public recipes yet." %></h3><p><%= @owned ? "Capture an idea and refine it at your own pace." : "Come back to discover what’s mixed next." %></p></div><% if @owned %><%= link_to "Create recipe", new_recipe_path, class: "d-inline-flex justify-content-center align-items-center button library-secondary" %><% end %></div>
+      <div class="align-items-center profile-empty"><%= render "collections/icon", name: "edit" %><div><h3><%= @owned ? "Your signature drink starts here." : "No public recipes yet." %></h3><p><%= @owned ? "Capture an idea and refine it at your own pace." : "Come back to discover what’s mixed next." %></p></div><% if @owned %><%= link_to "Create recipe", new_recipe_path, class: "d-inline-flex justify-content-center align-items-center button library-action secondary size-md" %><% end %></div>
     <% else %>
       <div class="auto-grid recipe-grid personal-recipe-grid"><% @recipes.each do |recipe| %><%= render "recipes/recipe", recipe: recipe %><% end %></div>
     <% end %>

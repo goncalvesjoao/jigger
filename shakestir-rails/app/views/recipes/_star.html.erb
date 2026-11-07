@@ -4,12 +4,12 @@
 <div class="recipe-star" data-controller="recipe-star" data-recipe-star-recipe-id-value="<%= recipe.id %>" data-recipe-star-recipe-name-value="<%= recipe.display_name %>" data-action="recipe-star:changed@window->recipe-star#sync">
   <% if signed_in %>
     <%= form_with url: recipe_star_path(recipe), method: starred ? :delete : :post, data: { action: "submit->recipe-star#toggle", recipe_star_target: "form" } do %>
-      <button type="submit" class="d-inline-flex align-items-center m-0 recipe-star-button" aria-pressed="<%= starred %>" aria-label="<%= starred ? 'Unstar' : 'Star' %> <%= recipe.display_name %>, <%= pluralize(count, 'star') %>" data-recipe-star-target="button" title="<%= starred ? 'Unstar recipe' : 'Star recipe in your private Favorites' %>">
+      <button type="submit" class="d-inline-flex align-items-center m-0 recipe-star-button size-md secondary" aria-pressed="<%= starred %>" aria-label="<%= starred ? 'Unstar' : 'Star' %> <%= recipe.display_name %>, <%= pluralize(count, 'star') %>" data-recipe-star-target="button" title="<%= starred ? 'Unstar recipe' : 'Star recipe in your private Favorites' %>">
         <%= render "recipes/star_icon" %><span class="recipe-star-count" data-recipe-star-target="count"><%= count %></span>
       </button>
     <% end %>
   <% else %>
-    <%= link_to new_session_path, class: "d-inline-flex align-items-center m-0 recipe-star-button", aria: { label: "Sign in to star #{recipe.display_name}, #{pluralize(count, 'star')}" }, title: "Sign in to star this recipe" do %>
+    <%= link_to new_session_path, class: "d-inline-flex align-items-center m-0 recipe-star-button button size-md secondary", aria: { label: "Sign in to star #{recipe.display_name}, #{pluralize(count, 'star')}" }, title: "Sign in to star this recipe" do %>
       <%= render "recipes/star_icon" %><span class="recipe-star-count"><%= count %></span>
     <% end %>
   <% end %>

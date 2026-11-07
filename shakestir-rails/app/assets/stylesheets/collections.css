@@ -5,11 +5,9 @@
 .library-page h1 { font-size: 2.5rem; line-height: 1.08; letter-spacing: -.035em; margin-bottom: .9rem; overflow-wrap: anywhere; }
 .library-page .eyebrow { margin-bottom: .75rem; }
 .library-description { color: var(--color-muted); max-width: 45ch; line-height: 1.65; }
-.library-primary, .library-secondary { margin: 0; gap: .5rem; white-space: nowrap; font-weight: 600; font-size: .9rem; min-height: 2.9rem; padding: .7rem 1.2rem; border-radius: 3rem; text-decoration: none; }
-.library-page .library-primary { background: var(--primary-background-color); color: #fffef9; border: 1px solid var(--primary-background-color); }
-.library-page .library-primary:hover { background: var(--primary-background-color-hover); }
-.library-page .library-secondary { background: #fffef9; color: var(--color); border: 1px solid var(--border-color); }
-.library-page .library-secondary:hover { background: #eceee3; }
+.library-action { margin: 0; gap: .5rem; white-space: nowrap; --font-weight: 600; min-height: 2.9rem; }
+.library-action.primary { --buttons-color: #fffef9; --buttons-color-hover: #fffef9; border: 1px solid var(--primary-background-color); }
+
 .library-section-label { gap: .75rem; margin-bottom: 1.5rem; }
 .library-section-label h2 { margin: 0; font-size: 1.15rem; letter-spacing: -.02em; }
 .library-section-label > span { color: var(--color-muted); font-size: .85rem; }
@@ -36,7 +34,7 @@
 .library-detail-heading .library-artwork { aspect-ratio: 1; }
 .library-detail-meta { margin-bottom: 1rem; }
 .library-detail-copy .library-description { font-size: .9rem; }
-.library-detail-copy .library-secondary { margin-top: 1.25rem; }
+.library-detail-copy .secondary { margin-top: 1.25rem; }
 .library-empty { display: flex; padding: clamp(2rem, 6vw, 4rem) 1.5rem; border: 1px dashed #bdc4af; border-radius: 1rem; background: #fffef950; }
 .library-empty-symbol { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 1rem; background: #e9ecdf; color: var(--primary-color); margin-bottom: 1.5rem; }
 .library-empty-symbol .library-icon { width: 1.7rem; height: 1.7rem; }
@@ -44,8 +42,20 @@
 .library-empty p { max-width: 40ch; color: var(--color-muted); margin-bottom: 1.5rem; }
 .library-recipe { min-width: 0; }
 .library-recipe > form { margin: 0; }
-.library-page .library-remove { background: transparent; color: var(--color-muted); border: 0; box-shadow: none; font-size: .85rem; padding: .4rem .6rem; margin: 0; min-height: 2.75rem; }
-.library-page .library-remove:hover { color: var(--danger-color); background: #9a31260a; }
+.library-page .library-remove {
+  --buttons-background-color-hover: #9a31260a;
+  --buttons-color-hover: var(--danger-color);
+  --buttons-background-color: transparent;
+  --buttons-color: var(--color-muted);
+  border: 0;
+  box-shadow: none;
+  --buttons-font-size: .85rem;
+  --buttons-padding-block: .4rem;
+  --buttons-padding-inline: .6rem;
+  margin: 0;
+  min-height: 2.75rem;
+}
+
 .library-editor { max-width: 42rem; }
 .library-editor .library-heading { margin-block: .5rem 2rem; }
 .library-editor h1 { font-size: 2rem; }
@@ -74,7 +84,7 @@
 .library-danger > summary::after { content: "+"; margin-left: auto; background: none; transform: none; }
 .library-danger[open] > summary::after { content: "−"; }
 .library-danger p { max-width: 48ch; }
-.library-page .library-delete { background: transparent; color: var(--danger-color); border: 1px solid #9a312660; font-size: .85rem; }
+.library-page .library-delete { --buttons-background-color: transparent; --buttons-color: var(--danger-color); border: 1px solid #9a312660; --buttons-font-size: .85rem; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .library-card .library-artwork { transition: transform 180ms ease-out, box-shadow 180ms ease-out; }
   .library-card:hover .library-artwork { transform: translateY(-3px); box-shadow: 0 .6rem 1.5rem #20292310; }
@@ -97,7 +107,7 @@
   .library-page .library-artwork, .library-page button:active, .library-page .button:active, .library-page input[type=submit]:active { transform: none; }
 }
 @media (prefers-contrast: more) {
-  .library-card, .library-artwork, .library-form, .library-empty, .library-privacy-option, .library-page .library-secondary { border: 1px solid currentColor; }
+  .library-card, .library-artwork, .library-form, .library-empty, .library-privacy-option { border: 1px solid currentColor; }
   .library-empty, .library-privacy-option:has(:checked) { background: #fffef9; }
 }
 
