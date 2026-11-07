@@ -10,7 +10,7 @@ module ProfileImagesSeeder
       user = User.find_by(email_address: email)
       next unless user && !user.image.attached?
 
-      path = Rails.root.join("db/seeds/avatars", filename)
+      path = Rails.root.parent.join("db/seeds/avatars", filename)
       File.open(path, "rb") do |file|
         user.image.attach(io: file, filename: filename, content_type: "image/webp")
       end

@@ -2,7 +2,7 @@
 
 59 English entries cover hand tools, small appliances, preparation and service accessories, and cocktail glassware. This is a broad practical catalog rather than every brand, size or specialist laboratory instrument. Existing schema categories are retained: preparation, ice and dispensing tools use `other`. Capacities are intentionally unset because they vary by model; the jigger description identifies the pictured example.
 
-Run the complete seeds with `mise exec ruby@4.0.9 -- ruby bin/rails db:seed`, or just this catalog with:
+Run the complete seeds with `mise exec ruby@4.0.9 -- ruby bin/rails db:seed`, or just this catalog with (from `shakestir-rails/`):
 
 ```sh
 mise exec ruby@4.0.9 -- ruby bin/rails runner 'require Rails.root.join("db/seeds/utensils"); UtensilsSeeder.seed!'

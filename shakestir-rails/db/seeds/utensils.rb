@@ -2,7 +2,7 @@ require "json"
 require "stringio"
 
 module UtensilsSeeder
-  ROOT = Rails.root.join("db", "seeds", "utensils")
+  ROOT = Rails.root.parent.join("db", "seeds", "utensils")
 
   def self.catalog
     JSON.parse(ROOT.join("catalog.json").read)

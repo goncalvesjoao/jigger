@@ -2,7 +2,7 @@ require "json"
 require "pathname"
 
 module TheCocktailDbSeeder
-  ROOT = Rails.root.join("db", "seeds", "thecocktaildb")
+  ROOT = Rails.root.parent.join("db", "seeds", "thecocktaildb")
 
   def self.seed!
     seed_shakestir_account!

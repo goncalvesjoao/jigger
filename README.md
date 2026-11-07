@@ -36,7 +36,7 @@ Original recipes need no canonical cocktail. Seeds or trusted model access maint
 
 Preparation steps remain ordered, free-text instructions. ShakeStir should recognize mentions within those steps and associate the relevant text with system objects while preserving the original prose. Utensil mentions should resolve to utensil identities.
 
-Canonical cocktail seed content includes researched English descriptions, histories and citations, with uncertainty stated explicitly. Re-running seeds fills missing content and preserves curated text and source groups; see the [seed source notes](shakestir-rails/db/seeds/thecocktaildb/CANONICAL_SOURCES.md).
+Canonical cocktail seed content includes researched English descriptions, histories and citations, with uncertainty stated explicitly. Re-running seeds fills missing content and preserves curated text and source groups; see the [seed source notes](db/seeds/thecocktaildb/CANONICAL_SOURCES.md).
 
 ## Proposed entity matching
 

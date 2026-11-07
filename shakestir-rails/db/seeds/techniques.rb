@@ -1,7 +1,7 @@
 require "json"
 
 module TechniquesSeeder
-  ROOT = Rails.root.join("db", "seeds", "techniques")
+  ROOT = Rails.root.parent.join("db", "seeds", "techniques")
 
   def self.seed!
     JSON.parse(ROOT.join("catalog.json").read).each do |entry|
@@ -20,7 +20,7 @@ module TechniquesSeeder
     # Only apply reviewed mappings to unchanged system imports. Never infer
     # technique assignments from arbitrary user prose or rewrite curated links.
     links = JSON.parse(ROOT.join("recipe_links.json").read)
-    drinks = JSON.parse(Rails.root.join("db/seeds/thecocktaildb/cocktails.json").read).fetch("drinks")
+    drinks = JSON.parse(Rails.root.parent.join("db/seeds/thecocktaildb/cocktails.json").read).fetch("drinks")
     system_user = User.find_by(system_key: "shakestir")
     return unless system_user
 

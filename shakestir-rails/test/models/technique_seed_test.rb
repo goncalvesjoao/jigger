@@ -18,7 +18,7 @@ class TechniqueSeedTest < ActiveSupport::TestCase
   end
 
   test "reviewed links apply only to untouched system imports and preserve assignments" do
-    drink = JSON.parse(Rails.root.join("db/seeds/thecocktaildb/cocktails.json").read).fetch("drinks").find { |entry| entry["strDrink"] == "Daiquiri" }
+    drink = JSON.parse(Rails.root.parent.join("db/seeds/thecocktaildb/cocktails.json").read).fetch("drinks").find { |entry| entry["strDrink"] == "Daiquiri" }
     recipe = recipes(:one)
     recipe.update!(user: users(:shakestir), source_url: "https://www.thecocktaildb.com/drink/#{drink.fetch("idDrink")}")
     recipe.recipe_steps.sole.update!(body: drink.fetch("strInstructions").strip)
