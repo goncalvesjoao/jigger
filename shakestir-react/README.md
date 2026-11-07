@@ -1,78 +1,38 @@
-# React + TypeScript + Vite
+# ShakeStir React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript marketplace using React Router, TanStack Query, and Vitest.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Run the Rails application from `../shakestir-rails` on port 3000 (`bin/rails server`), then run:
 
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Vite proxies `/api/*` to `http://localhost:3000/*`. The marketplace at `/` uses the existing `/recipes.json`, `/ingredients.json`, and `/utensils.json` endpoints. Rails remains responsible for matching filters, optional ingredient handling, visibility, ordering, and pagination.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Search, ingredient selections, utensil selections, and each picker’s include/only mode live in URL search parameters and support browser history. Legacy `makeable=1` links are also supported. More results load with an explicit button. Recipe links open the Rails recipe page; other React pages and authenticated actions are outside this first page’s scope.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Configuration
 
+Optional Vite environment variables:
+
+- `VITE_API_BASE_URL`: API prefix (default `/api`).
+- `VITE_BACKEND_URL`: Rails origin for recipe detail links (default `http://localhost:3000`).
+
+For production, configure a same-origin reverse proxy for `/api/*` (removing `/api` before forwarding), and set `VITE_BACKEND_URL` to the deployed Rails origin at build time. Using a separate API origin instead requires Rails CORS and cookie configuration. Vite’s development proxy does not apply to production or `vite preview`.
+
+## Checks
+
+```sh
+npm test
+npm run test:watch
+npm run lint
+npm run build
 ```
+
+Vitest and Testing Library cover filter URL serialization, selection and removal, match modes, browser history, pagination, empty results, and failure/retry behavior. Tests mock the HTTP boundary; they require no running Rails server.
+
+Styling is deliberately minimal so a later design pass can replace it.
