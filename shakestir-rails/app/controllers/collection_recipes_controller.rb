@@ -19,7 +19,7 @@ class CollectionRecipesController < ApplicationController
   rescue ActiveRecord::RecordInvalid => error
     respond_to do |format|
       format.html { redirect_to my_collections_path, alert: error.record.errors.full_messages.to_sentence }
-      format.json { render json: { error: error.record.errors.full_messages.to_sentence }, status: :unprocessable_content }
+      format.json { render_json_errors(error.record.errors.to_hash, status: :unprocessable_content) }
     end
   end
 

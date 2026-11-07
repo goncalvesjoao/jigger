@@ -20,15 +20,15 @@ Rails.application.routes.draw do
   resources :cocktails, only: %i[ index show ] do
     resource :image, only: :show, controller: "cocktail_images"
   end
-  resources :techniques, only: :show
+  resources :techniques, only: %i[index show]
   resources :recipes do
     resource :star, only: %i[create destroy], controller: "recipe_stars"
     resource :image, only: :show, controller: "recipe_images"
   end
-  resources :ingredients, only: [] do
+  resources :ingredients, only: :index do
     resource :image, only: :show, controller: "ingredient_images"
   end
-  resources :utensils, only: [] do
+  resources :utensils, only: :index do
     resource :image, only: :show, controller: "utensil_images"
   end
   scope ActiveStorage.routes_prefix do
@@ -46,4 +46,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "recipes#index"
+  match "*path", to: "errors#not_found", via: :all, constraints: ->(request) { request.format.json? }
 end

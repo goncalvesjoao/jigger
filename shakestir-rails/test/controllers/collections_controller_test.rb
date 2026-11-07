@@ -62,7 +62,7 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
       post collection_recipes_url, params: { recipe_id: recipes(:one).id, new_collection: { name: "", visibility: "private" } }, as: :json
     end
     assert_response :unprocessable_content
-    assert_match "Name", response.parsed_body["error"]
+    assert_equal [ "can't be blank" ], response.parsed_body.fetch("errors").fetch("name")
   end
 
   test "recipe image has a dialog picker for the signed in users collections" do

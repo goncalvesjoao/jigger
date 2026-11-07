@@ -30,6 +30,8 @@ module Authentication
     end
 
     def request_authentication
+      return render_json_errors("Sign in to continue.", status: :unauthorized) if request.format.json?
+
       session[:return_to_after_authenticating] = request.url
       redirect_to new_session_path
     end
@@ -39,6 +41,7 @@ module Authentication
     end
 
     def start_new_session_for(user)
+      reset_csrf_token(request)
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
@@ -48,5 +51,7 @@ module Authentication
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_id)
+      Current.session = nil
+      reset_csrf_token(request)
     end
 end

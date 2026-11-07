@@ -3,6 +3,9 @@ class RecipesController < ApplicationController
 
   allow_unauthenticated_access only: %i[ index show ]
   before_action :set_recipe, only: %i[ show edit update destroy ]
+  before_action only: %i[index show] do
+    response.headers["Cache-Control"] = "private, no-store" if request.format.json?
+  end
 
   before_action :authorize_recipe
   after_action :verify_authorized
@@ -48,7 +51,7 @@ class RecipesController < ApplicationController
         format.json { render :show, status: :created, location: @recipe }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @recipe.errors, status: :unprocessable_content }
+        format.json { render_json_errors(@recipe.errors.to_hash, status: :unprocessable_content) }
       end
     end
   end
@@ -61,7 +64,7 @@ class RecipesController < ApplicationController
         format.json { render :show, status: :ok, location: @recipe }
       else
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @recipe.errors, status: :unprocessable_content }
+        format.json { render_json_errors(@recipe.errors.to_hash, status: :unprocessable_content) }
       end
     end
   end

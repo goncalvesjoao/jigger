@@ -17,9 +17,9 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     get cocktails_url, params: { q: "bright" }
     assert_select ".empty-state"
     get cocktails_url(format: :json), params: { q: "margarita" }
-    assert_equal [ @cocktail.id ], response.parsed_body.map { |entry| entry["id"] }
-    assert_equal "Margarita", response.parsed_body.sole["name"]
-    assert_not response.parsed_body.sole.key?("user_id")
+    assert_equal [ @cocktail.id ], response.parsed_body.fetch("data").map { |entry| entry["id"] }
+    assert_equal "Margarita", response.parsed_body.fetch("data").sole["name"]
+    assert_not response.parsed_body.fetch("data").sole.key?("user_id")
     recipes(:one, :two).each { |recipe| recipe.update!(visibility: "private") }
     get cocktails_url
     assert_select ".recipe-grid article", count: 0
@@ -283,9 +283,17 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_empty first_ids & css_select(".recipe-grid article").map { |card| card["id"] }
     assert_select "turbo-frame[src]", count: 0
 
+    get root_url(format: :json), params: filters
+    assert_response :success
+    assert_equal 24, response.parsed_body.fetch("data").size
+    assert_equal({ "current_page" => 1, "next_page" => 2, "total_count" => 26,
+      "total_pages" => 2, "per_page" => 24 }, response.parsed_body.fetch("metadata"))
+
     get root_url(format: :json), params: filters.merge(page: 2)
     assert_response :success
-    assert_equal 2, response.parsed_body.size
+    assert_equal 2, response.parsed_body.fetch("data").size
+    assert_equal({ "current_page" => 2, "next_page" => nil, "total_count" => 26,
+      "total_pages" => 2, "per_page" => 24 }, response.parsed_body.fetch("metadata"))
 
     get root_url, params: filters.merge(page: 3)
     assert_response :success
@@ -303,7 +311,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     recipes(:two).update!(visibility: "private")
     get root_url(format: :json), params: { q: "bright" }
     assert_response :success
-    group = response.parsed_body.sole
+    group = response.parsed_body.fetch("data").sole
     assert_equal @cocktail.id, group["cocktail_id"]
     assert_equal recipes(:one).id, group["id"]
     get cocktail_url(@cocktail, format: :json)
