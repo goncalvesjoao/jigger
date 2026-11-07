@@ -9,7 +9,7 @@
   </div>
 <% end %>
 <div id="marketplace-results" aria-live="polite">
-<div class="section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "cocktail") %></h2></div>
+<div class="d-flex justify-content-between section-heading marketplace-results"><h2><%= pluralize(@pagination.total_count, "cocktail") %></h2></div>
 <% if @pagination.empty? %><section class="empty-state"><h3>No cocktails found.</h3><p>Try another name to find a cocktail.</p><%= link_to "All cocktails", cocktails_path %></section><% end %>
 <%= turbo_frame_tag "cocktails_page_#{@pagination.current_page}", target: "_top" do %>
   <div id="cocktails_<%= @pagination.current_page %>" class="auto-grid recipe-grid">

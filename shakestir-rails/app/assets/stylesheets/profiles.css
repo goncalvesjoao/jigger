@@ -1,22 +1,22 @@
-.profile-heading { display: flex; align-items: center; gap: 2rem; margin-block: 1rem 2.5rem; }
-.profile-avatar { display: grid; place-items: center; flex: 0 0 auto; width: 7rem; height: 7rem; border-radius: 50%; background: #e4e7d8; color: #55673b; font-size: 2.25rem; font-weight: 600; letter-spacing: -.035em; overflow: hidden; }
+.profile-heading { align-items: center; gap: 2rem; margin-block: 1rem 2.5rem; }
+.profile-avatar { place-items: center; flex: 0 0 auto; width: 7rem; height: 7rem; background: #e4e7d8; color: #55673b; font-size: 2.25rem; font-weight: 600; letter-spacing: -.035em; }
 .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .profile-intro { flex: 1; min-width: 0; }
 .profile-intro h1 { margin-bottom: .75rem; }
 .profile-bio { max-width: 48ch; margin: 0 0 1rem; line-height: 1.65; color: var(--color-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
-.profile-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; font-size: .8rem; color: var(--color-muted); }
-.profile-sections { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); }
+.profile-meta { gap: .75rem 1.25rem; font-size: .8rem; color: var(--color-muted); }
+.profile-sections { gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); }
 .profile-sections a { display: inline-flex; gap: .6rem; align-items: center; padding-block: .75rem; min-height: 2.75rem; color: var(--color); text-decoration: none; font-size: .9rem; font-weight: 600; border-bottom: 2px solid transparent; }
 .profile-sections a:hover, .profile-sections a:focus-visible { border-bottom-color: var(--primary-color); }
 .profile-sections span { font-size: .75rem; color: var(--color-muted); font-weight: 400; }
 .profile-content { margin-bottom: 3.5rem; scroll-margin-top: 9rem; }
-.profile-section-action, .profile-manage { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; color: var(--primary-color); font-size: .85rem; font-weight: 600; text-decoration: none; }
+.profile-section-action, .profile-manage { gap: .4rem; min-height: 2.75rem; color: var(--primary-color); font-size: .85rem; font-weight: 600; text-decoration: none; }
 .profile-section-action:hover, .profile-manage:hover { text-decoration: underline; }
 .profile-section-action .library-icon, .profile-manage .library-icon { width: 1rem; height: 1rem; }
 .profile-manage { margin-top: -.5rem; }
-.profile-all-link { display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: 1.5rem; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.profile-all-link { min-height: 2.75rem; margin-top: 1.5rem; font-size: .85rem; font-weight: 600; text-decoration: none; }
 .profile-all-link:hover { text-decoration: underline; }
-.profile-empty { display: flex; gap: 1.25rem; align-items: center; padding: 1.75rem; border: 1px dashed #bdc4af; border-radius: 1rem; background: #fffef950; }
+.profile-empty { display: flex; gap: 1.25rem; padding: 1.75rem; border: 1px dashed #bdc4af; border-radius: 1rem; background: #fffef950; }
 .profile-empty > .library-icon { width: 1.5rem; height: 1.5rem; color: var(--primary-color); }
 .profile-empty > div { flex: 1; }
 .profile-empty h3 { font-size: 1.1rem; margin: 0 0 .4rem; }
@@ -40,7 +40,7 @@
 }
 
 .profile-photo-editor .profile-avatar { margin-block: .75rem 1rem; }
-.profile-photo-remove { display: flex; align-items: center; gap: .6rem; min-height: 2.9rem; margin-top: .75rem; }
+.profile-photo-remove { gap: .6rem; min-height: 2.9rem; margin-top: .75rem; }
 .profile-photo-remove input { margin: 0; flex: 0 0 auto; }
 
 .account-details { padding-block: 1rem; }

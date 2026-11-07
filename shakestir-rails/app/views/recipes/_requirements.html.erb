@@ -1,16 +1,16 @@
 <section id="<%= ingredients_id %>" class="card recipe-panel ingredients-panel mb-0" data-controller="ingredients">
 
-  <div class="ingredients-heading">
+  <div class="d-flex align-items-baseline justify-content-between flex-wrap ingredients-heading">
     <h2>Ingredients</h2>
     <% if recipe.servings.present? %><span class="recipe-servings"><%= pluralize(recipe.servings, "serving") %></span><% end %>
   </div>
   <progress class="checklist-progress visually-hidden" data-ingredients-target="progress" value="0" max="<%= [recipe.recipe_ingredients.size, 1].max %>" aria-label="Ingredients gathered" hidden></progress>
   <% if recipe.recipe_ingredients.any? %>
-    <ul class="checklist ingredient-list">
+    <ul class="p-0 checklist ingredient-list">
       <% recipe.recipe_ingredients.each do |line| %>
         <li><label>
           <input type="checkbox" data-ingredients-target="item" data-action="ingredients#update">
-          <span class="ingredient-copy">
+          <span class="d-grid ingredient-copy">
             <% if line.quantity.present? %><strong class="quantity"><%= number_with_precision(line.quantity, precision: 3, strip_insignificant_zeros: true) %> <%= line.measuring_unit %></strong><% end %>
             <span class="submitted-prose"><%= line.submitted_text %></span>
             <% if line.preparation_note.present? %><small><%= line.preparation_note %></small><% end %>
@@ -20,11 +20,11 @@
         </label></li>
       <% end %>
     </ul>
-    <div class="checklist-status" data-ingredients-target="controls" hidden><p class="visually-hidden" role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
+    <div class="align-items-center checklist-status" data-ingredients-target="controls" hidden><p class="visually-hidden" role="status" data-ingredients-target="status"></p><button type="button" class="checklist-reset" data-ingredients-target="reset" data-action="ingredients#reset" disabled>Reset ingredients</button></div>
   <% else %><p>No ingredients listed.</p><% end %>
   <% if recipe.recipe_utensils.any? %>
     <h3>Utensils</h3>
-    <ul class="utensil-list">
+    <ul class="m-0 p-0 utensil-list">
       <% recipe.recipe_utensils.each do |requirement| %>
         <li><span class="submitted-prose"><%= requirement.submitted_text %></span>
         </li>

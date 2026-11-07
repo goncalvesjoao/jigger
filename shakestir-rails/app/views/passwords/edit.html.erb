@@ -1,5 +1,5 @@
 <% content_for :title, "Update password · ShakeStir" %>
-<section class="card form-page auth-page" aria-labelledby="password-title">
+<section class="shadow-none card form-page auth-page" aria-labelledby="password-title">
   <h1 id="password-title">Choose a new password</h1>
   <p>Enter your new password twice to confirm it.</p>
   <%= form_with url: password_path(params[:token]), method: :put do |form| %>

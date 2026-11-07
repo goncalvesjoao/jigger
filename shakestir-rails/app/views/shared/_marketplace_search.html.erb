@@ -1,6 +1,6 @@
-<%= form_with url: root_path, method: :get, class: "marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
-  <div class="marketplace-search-bar" role="search" aria-label="Find recipes">
-    <div class="marketplace-query">
+<%= form_with url: root_path, method: :get, class: "position-relative marketplace-search", data: { controller: "marketplace-search", action: "keydown.esc->marketplace-search#close click@window->marketplace-search#dismiss submit->marketplace-search#submit" } do |form| %>
+  <div class="d-grid align-items-center p-0 marketplace-search-bar" role="search" aria-label="Find recipes">
+    <div class="position-relative marketplace-query">
       <%= form.label :q, "Search recipes", for: "marketplace-query" %>
       <%= form.search_field :q, id: "marketplace-query", value: params[:q], placeholder: "Try Negroni, sour, highball…", data: { action: "input->marketplace-search#search compositionend->marketplace-search#search" } %>
     </div>
@@ -10,15 +10,15 @@
       <%= hidden_field_tag mode_key, only_available ? "only" : "include" %>
       <% selected_count = Array(params[key]).reject(&:blank?).size %>
       <% items = model.usable.sort_by { |item| item.display_name.downcase } %>
-      <details class="marketplace-picker" data-marketplace-search-target="picker" data-mode-key="<%= mode_key %>" data-action="toggle->marketplace-search#sync">
+      <details class="position-relative marketplace-picker" data-marketplace-search-target="picker" data-mode-key="<%= mode_key %>" data-action="toggle->marketplace-search#sync">
         <summary aria-controls="picker-<%= key %>">
           <span><strong><%= label %></strong><small data-picker-count><%= selected_count.positive? ? (only_available ? "#{selected_count} available · Only these" : "#{selected_count} selected") : "Add #{label.downcase}" %></small></span>
         </summary>
         <div class="marketplace-popover" id="picker-<%= key %>">
           <div class="picker-header">
-            <div class="picker-heading-copy">
+            <div class="d-grid picker-heading-copy">
               <label for="search-<%= key %>"><%= label %></label>
-              <div class="picker-selection-status">
+              <div class="m-0 picker-selection-status">
                 <span data-picker-selection-count><%= Array(params[key]).reject(&:blank?).any? ? "#{Array(params[key]).reject(&:blank?).size} selected" : "Add #{label.downcase}" %></span>
                 <button type="button" class="picker-clear" aria-label="Clear selected <%= label.downcase %>" title="Clear selection" data-picker-clear data-action="marketplace-search#clearPicker" <%= "hidden" if Array(params[key]).reject(&:blank?).empty? %>><span aria-hidden="true">×</span></button>
               </div>
@@ -38,7 +38,7 @@
             </button>
             <p class="picker-mode-hint" data-mode-hint <%= "hidden" unless only_available %>>Select all <%= label.downcase %> you have<%= ", including ice" if key == :ingredient_ids %>. Until you select one, this filter allows all <%= label.downcase %>.</p>
           </div>
-          <div class="marketplace-options">
+          <div class="d-flex overflow-y-auto marketplace-options">
             <% items.each do |item| %>
               <label data-search-option>
                 <%= check_box_tag "#{key}[]", item.id, Array(params[key]).map(&:to_s).include?(item.id.to_s), id: "search-#{key}-#{item.id}", data: { action: "change->marketplace-search#changeSelections", marketplace_search_target: "choice", label: item.display_name } %>
@@ -50,15 +50,15 @@
         </div>
       </details>
     <% end %>
-    <div class="marketplace-submit-wrapper">
-      <button type="submit" class="marketplace-submit" aria-label="Search" title="Search">
+    <div class="d-flex marketplace-submit-wrapper">
+      <button type="submit" class="d-flex align-items-center justify-content-center p-0 marketplace-submit" aria-label="Search" title="Search">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
       </button>
     </div>
   </div>
   <p class="marketplace-feedback" role="status" data-marketplace-search-target="status" hidden></p>
-  <div class="marketplace-selection-row">
-    <div class="marketplace-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>
+  <div class="flex-wrap align-items-center marketplace-selection-row">
+    <div class="flex-wrap marketplace-chips" data-marketplace-search-target="chips" aria-label="Selected filters"></div>
     <%= link_to "Clear all", root_path, class: "marketplace-clear" %>
   </div>
 <% end %>

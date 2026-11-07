@@ -1,4 +1,4 @@
-<section id="cocktail-background" class="cocktail-background" aria-label="Cocktail background">
+<section id="cocktail-background" class="d-grid cocktail-background" aria-label="Cocktail background">
   <div class="background-story">
   <% if cocktail.history.present? %><section class="cocktail-history"><h2>History</h2><p class="submitted-prose"><%= cocktail.history %></p></section><% end %>
   <% if cocktail.source_reference.present? || cocktail.source_url.present? || cocktail.source_published_on.present? || cocktail.source_date_note.present? %>

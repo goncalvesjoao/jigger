@@ -1,9 +1,9 @@
-<div class="library-artwork <%= "library-artwork-empty" if recipes.empty? %>" aria-hidden="true">
+<div class="d-grid overflow-hidden library-artwork <%= "library-artwork-empty" if recipes.empty? %>" aria-hidden="true">
   <% if recipes.empty? %>
-    <span class="library-artwork-symbol"><%= render "collections/icon", name: collection.name == "Favorites" ? "heart" : "collection" %></span>
+    <span class="d-grid library-artwork-symbol"><%= render "collections/icon", name: collection.name == "Favorites" ? "heart" : "collection" %></span>
   <% else %>
     <% 4.times do |index| %>
-      <div class="library-artwork-tile">
+      <div class="overflow-hidden library-artwork-tile">
         <% if recipes[index]&.image&.attached? %>
           <%= image_tag recipe_image_path(recipes[index], size: :card), alt: "", loading: "lazy", width: 320, height: 320 %>
         <% else %><span>J.</span><% end %>

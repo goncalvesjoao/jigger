@@ -2,15 +2,15 @@
   <section class="recipe-techniques" aria-labelledby="recipe-techniques-title">
     <h3 id="recipe-techniques-title">Techniques in this recipe</h3>
     <p>New to a technique? Select it for a quick guide.</p>
-    <ul class="technique-links">
+    <ul class="d-flex flex-wrap m-0 p-0 technique-links">
       <% recipe.techniques.each do |technique| %>
         <% dialog_id = dom_id(technique, "recipe_#{recipe.id}_guide") %>
         <li data-controller="technique-help" data-action="turbo:before-cache@window->technique-help#close">
-          <%= link_to technique.display_name, technique_path(technique), class: "technique-link", data: { action: "technique-help#open", technique_help_target: "trigger" }, aria: { controls: dialog_id } %>
-          <dialog id="<%= dialog_id %>" class="collection-dialog technique-dialog" aria-labelledby="<%= dialog_id %>_title" data-technique-help-target="dialog" data-action="click->technique-help#backdrop close->technique-help#restoreFocus">
-            <div class="technique-dialog-heading">
+          <%= link_to technique.display_name, technique_path(technique), class: "d-inline-flex align-items-center technique-link", data: { action: "technique-help#open", technique_help_target: "trigger" }, aria: { controls: dialog_id } %>
+          <dialog id="<%= dialog_id %>" class="overflow-y-auto collection-dialog technique-dialog" aria-labelledby="<%= dialog_id %>_title" data-technique-help-target="dialog" data-action="click->technique-help#backdrop close->technique-help#restoreFocus">
+            <div class="align-items-start justify-content-between technique-dialog-heading">
               <h2 id="<%= dialog_id %>_title"><%= technique.display_name %></h2>
-              <button type="button" class="technique-close" data-action="technique-help#close" autofocus>Close</button>
+              <button type="button" class="m-0 technique-close" data-action="technique-help#close" autofocus>Close</button>
             </div>
             <%= render "techniques/content", technique: technique %>
           </dialog>

@@ -1,6 +1,6 @@
 <% content_for :title, "My account · ShakeStir" %>
 <div class="library-page library-editor account-page">
-  <header class="library-heading"><div><h1>My account</h1><p class="library-description">Your private account details.</p></div></header>
+  <header class="d-flex justify-content-between library-heading"><div><h1>My account</h1><p class="m-0 library-description">Your private account details.</p></div></header>
   <section class="account-details" aria-labelledby="account-details-heading">
     <h2 id="account-details-heading">Email address</h2>
     <p class="account-email"><%= @account.email_address %></p>
@@ -9,12 +9,12 @@
   <section class="account-deletion" aria-labelledby="delete-account-heading">
     <h2 id="delete-account-heading">Delete account</h2>
     <p>This permanently deletes your profile, uploaded photos, all your recipes (including published recipes), collections, Favorites, and sign-in sessions. Your recipes will also be removed from other people’s collections. This cannot be undone.</p>
-    <%= form_with url: my_account_path, method: :delete, class: "library-form", data: { turbo_confirm: "Permanently delete your account and all your recipes, collections, and photos? This cannot be undone." } do |form| %>
+    <%= form_with url: my_account_path, method: :delete, class: "shadow-none library-form", data: { turbo_confirm: "Permanently delete your account and all your recipes, collections, and photos? This cannot be undone." } do |form| %>
       <% if @account.errors.any? %><div class="library-errors" role="alert"><strong>Account was not deleted</strong><ul><% @account.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
       <%= form.label :password, "Confirm your current password" %>
       <%= form.password_field :password, required: true, autocomplete: "current-password", aria: { describedby: "delete-account-help" } %>
       <p id="delete-account-help">Enter your password to confirm that you want to delete this account.</p>
-      <div class="library-form-actions"><%= form.submit "Delete my account", class: "danger ghost", data: { turbo_submits_with: "Deleting…" } %></div>
+      <div class="d-flex align-items-center flex-wrap library-form-actions"><%= form.submit "Delete my account", class: "danger ghost", data: { turbo_submits_with: "Deleting…" } %></div>
     <% end %>
   </section>
 </div>

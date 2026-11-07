@@ -1,6 +1,6 @@
 <% content_for :title, "#{@technique.display_name} · Techniques · ShakeStir" %>
 <article class="technique-page">
-  <%= link_to "Explore recipes", recipes_path, class: "detail-text-link" %>
+  <%= link_to "Explore recipes", recipes_path, class: "d-inline-flex align-items-center detail-text-link" %>
   <h1><%= @technique.display_name %></h1>
   <%= render "techniques/content", technique: @technique %>
 </article>

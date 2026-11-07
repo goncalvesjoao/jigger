@@ -1,14 +1,14 @@
 <% ingredients_id = "ingredients" %>
 <% preparation_id = "preparation" %>
-<article id="<%= dom_id recipe %>" class="recipe mixing-recipe">
+<article id="<%= dom_id recipe %>" class="position-relative recipe mixing-recipe">
   <% photo = recipe_photo(recipe) %>
-  <header class="cocktail-cover recipe-cover<%= " cocktail-cover-with-photo" if photo.image.attached? %>">
-    <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{recipe.display_name}", class: "cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
-    <%= link_to root_path, class: "cocktail-cover-back" do %>
+  <header class="position-relative d-flex align-items-end overflow-hidden cocktail-cover recipe-cover<%= " cocktail-cover-with-photo" if photo.image.attached? %>">
+    <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{recipe.display_name}", class: "position-absolute w-100 h-100 object-fit-cover cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
+    <%= link_to root_path, class: "position-absolute align-items-center cocktail-cover-back" do %>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" /></svg>
       All recipes
     <% end %>
-    <div class="recipe-cover-save-actions mixing-save-actions">
+    <div class="position-absolute align-items-start recipe-cover-save-actions mixing-save-actions">
       <%= render "recipes/star", recipe: recipe %>
       <% if authenticated? %><%= render "collections/picker", recipe: recipe %><% end %>
     </div>
@@ -27,23 +27,23 @@
       <% if recipe.recipe_steps.any? %><progress class="checklist-progress visually-hidden" data-preparation-target="progress" value="0" max="<%= recipe.recipe_steps.size %>" aria-label="Preparation progress" hidden></progress><% end %>
       </div>
       <% if recipe.recipe_steps.any? %>
-        <ol class="steps-list preparation-steps" role="list">
+        <ol class="m-0 p-0 steps-list preparation-steps" role="list">
           <% recipe.recipe_steps.each_with_index do |step, index| %>
-            <li><label class="preparation-step">
+            <li><label class="position-relative d-grid m-0 preparation-step">
               <input class="visually-hidden" type="checkbox" aria-label="Complete step <%= index + 1 %>" data-preparation-target="step" data-action="preparation#update">
-              <span class="preparation-step-number" aria-hidden="true"><%= index + 1 %></span>
-              <span class="submitted-prose step-body"><%= step.body %></span>
+              <span class="d-grid rounded-circle preparation-step-number" aria-hidden="true"><%= index + 1 %></span>
+              <span class="d-block submitted-prose step-body"><%= step.body %></span>
             </label></li>
           <% end %>
         </ol>
       <% else %><p>No preparation steps listed.</p><% end %>
-      <% if recipe.recipe_steps.any? %><div class="checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
+      <% if recipe.recipe_steps.any? %><div class="align-items-center checklist-status" data-preparation-target="controls" hidden><p class="visually-hidden" role="status" data-preparation-target="status"></p><button type="button" class="checklist-reset" data-preparation-target="reset" data-action="preparation#reset" disabled>Reset steps</button></div><% end %>
     </section>
   </div>
   <% show_source = recipe.source_url.present? || recipe.source_reference.present? %>
   <% if show_source || recipe.techniques.any? || policy(recipe).edit? || policy(recipe).destroy? %>
-  <footer class="recipe-footer">
-    <div class="recipe-reference-grid">
+  <footer class="justify-content-between recipe-footer">
+    <div class="auto-grid recipe-reference-grid">
     <% if show_source %>
     <section class="recipe-source"><h2>Recipe source</h2>
       <% if recipe.source_url.present? %><p>Source: <%= link_to recipe.source_reference.presence || "Recipe source", recipe.source_url %></p><% elsif recipe.source_reference.present? %><p class="submitted-prose"><%= recipe.source_reference %></p><% end %>
@@ -51,7 +51,7 @@
     <% end %>
     <%= render "recipes/techniques", recipe: recipe %>
     </div>
-    <div class="recipe-actions">
+    <div class="flex-wrap align-items-start recipe-actions">
       <% if policy(recipe).edit? %><%= link_to "Edit this recipe", edit_recipe_path(recipe) %><% end %>
       <% if policy(recipe).destroy? %><%= button_to "Delete recipe", recipe, method: :delete, class: "ghost danger", data: { turbo_confirm: "Delete this recipe? This cannot be undone." } %><% end %>
     </div>

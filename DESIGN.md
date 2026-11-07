@@ -188,3 +188,7 @@ Pill actions and search controls contrast with softly rounded rectangular panels
 - Don't introduce decorative typography or a replacement visual identity.
 - Don't make secondary background stories compete with preparation.
 - Don't replace native checkbox and radio affordances with ambiguous decoration.
+
+## Semanticus implementation maintenance
+
+Rails uses vendored Semanticus 3.2.2 utilities for invariant layout and resets, and `.auto-grid` for collection, recipe-reference and technique-option grids. App selectors retain brand, composition and responsive/state rules. Keep utility `!important` precedence in mind: avoid zero-margin, full-width or display utilities where contextual, hidden or print styles must override them. The migration evidence and proposed framework additions are in `shakestir-rails/docs/semanticus-css-audit.md`.

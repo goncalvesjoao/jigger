@@ -1,14 +1,14 @@
 <% content_for :title, "My collections · ShakeStir" %>
 <div class="library-page">
-  <header class="library-heading">
-    <div><h1>My collections</h1><p class="library-description">Good recipes, kept together. Ready for your next pour.</p></div>
-    <%= link_to new_collection_path, class: "button library-primary" do %><%= render "icon", name: "plus" %>Create collection<% end %>
+  <header class="d-flex justify-content-between library-heading">
+    <div><h1>My collections</h1><p class="m-0 library-description">Good recipes, kept together. Ready for your next pour.</p></div>
+    <%= link_to new_collection_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-primary" do %><%= render "icon", name: "plus" %>Create collection<% end %>
   </header>
   <% if @collections.empty? %>
-    <section class="library-empty"><span class="library-empty-symbol"><%= render "icon", name: "collection" %></span><h2>A place for your next favorite.</h2><p>Keep the recipes you love in collections made for you.</p><%= link_to "Create your first collection", new_collection_path, class: "button library-primary" %></section>
+    <section class="flex-column align-items-center text-center library-empty"><span class="library-empty-symbol"><%= render "icon", name: "collection" %></span><h2>A place for your next favorite.</h2><p>Keep the recipes you love in collections made for you.</p><%= link_to "Create your first collection", new_collection_path, class: "d-inline-flex justify-content-center m-0 align-items-center button library-primary" %></section>
   <% else %>
-    <div class="library-section-label"><h2>All collections</h2><span><%= pluralize(@collections.size, "collection") %></span></div>
-    <div class="library-grid">
+    <div class="d-flex align-items-baseline justify-content-between flex-wrap library-section-label"><h2>All collections</h2><span><%= pluralize(@collections.size, "collection") %></span></div>
+    <div class="auto-grid library-grid">
       <% @collections.each do |collection| %>
         <%= render "collections/card", collection: collection %>
       <% end %>

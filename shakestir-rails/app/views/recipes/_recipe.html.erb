@@ -2,12 +2,12 @@
 <% photo_path = photo.is_a?(Cocktail) ? :cocktail_image_path : :recipe_image_path %>
 <% destination = recipe_path(recipe) %>
 <article id="<%= dom_id recipe %>">
-  <div class="card-media">
-  <%= link_to destination, class: "card-image", tabindex: "-1", aria: { hidden: true } do %>
+  <div class="position-relative card-media">
+  <%= link_to destination, class: "d-block overflow-hidden card-image", tabindex: "-1", aria: { hidden: true } do %>
     <% if photo.image.attached? %>
       <%= image_tag public_send(photo_path, photo, size: :card), alt: "", loading: "lazy", srcset: "#{public_send(photo_path, photo, size: :card)} 320w, #{public_send(photo_path, photo, size: :detail)} 1200w", sizes: "(max-width: 36rem) calc(100vw - 2rem), (max-width: 55rem) calc((100vw - 4.3rem) / 2), (max-width: 81rem) calc((100vw - 7rem) / 3), 25rem" %>
     <% else %>
-      <span class="photo-placeholder">J<span aria-hidden="true">.</span></span>
+      <span class="d-grid h-100 photo-placeholder">J<span aria-hidden="true">.</span></span>
     <% end %>
   <% end %>
   <%= render "recipes/star", recipe: recipe %>

@@ -1,15 +1,15 @@
 <% saved_collection_ids = Current.user.collections.joins(:collection_recipes).where(collection_recipes: { recipe_id: recipe.id }).pluck(:id) %>
 <div data-controller="collection-picker" data-collection-picker-recipe-id-value="<%= recipe.id %>" data-action="recipe-star:changed@window->collection-picker#syncStar" data-collection-picker-remove-url-value="<%= collection_collection_recipe_path(":collection_id", recipe) %>">
-  <button type="button" class="collection-trigger" aria-label="Manage collections" aria-haspopup="dialog" aria-controls="<%= dom_id(recipe, :collection_picker) %>" data-action="collection-picker#open" data-collection-picker-target="trigger"><span aria-hidden="true"><%= saved_collection_ids.any? ? "✓" : "+" %></span></button>
+  <button type="button" class="p-0 collection-trigger" aria-label="Manage collections" aria-haspopup="dialog" aria-controls="<%= dom_id(recipe, :collection_picker) %>" data-action="collection-picker#open" data-collection-picker-target="trigger"><span aria-hidden="true"><%= saved_collection_ids.any? ? "✓" : "+" %></span></button>
   <dialog id="<%= dom_id(recipe, :collection_picker) %>" class="collection-dialog" aria-labelledby="<%= dom_id(recipe, :collection_title) %>" data-collection-picker-target="dialog" data-action="click->collection-picker#backdrop">
-    <div class="collection-dialog-heading"><h2 id="<%= dom_id(recipe, :collection_title) %>">Save to collection</h2><button type="button" class="collection-close" aria-label="Close" data-action="collection-picker#close">×</button></div>
+    <div class="align-items-center justify-content-between collection-dialog-heading"><h2 id="<%= dom_id(recipe, :collection_title) %>">Save to collection</h2><button type="button" class="p-0 collection-close" aria-label="Close" data-action="collection-picker#close">×</button></div>
     <p class="collection-recipe-name"><%= recipe.display_name %></p>
     <p class="collection-picker-hint">Select a collection to save this recipe. Select it again to remove it.</p>
     <%= form_with url: collection_recipes_path, data: { action: "submit->collection-picker#save" } do |form| %>
       <%= form.hidden_field :recipe_id, value: recipe.id, id: dom_id(recipe, :save_collection_recipe) %>
-      <div class="collection-choices" data-collection-picker-target="choices">
+      <div class="d-grid overflow-y-auto collection-choices" data-collection-picker-target="choices">
         <% Current.user.collections.order(:created_at).each do |collection| %>
-          <button type="submit" name="collection_id" value="<%= collection.id %>" class="collection-choice" aria-pressed="<%= saved_collection_ids.include?(collection.id) %>"><span><%= collection.name %></span><small><%= collection.visibility.capitalize %></small><span class="collection-choice-indicator" aria-hidden="true"><%= saved_collection_ids.include?(collection.id) ? "✓" : "+" %></span></button>
+          <button type="submit" name="collection_id" value="<%= collection.id %>" class="d-flex align-items-center w-100 m-0 text-start collection-choice" aria-pressed="<%= saved_collection_ids.include?(collection.id) %>"><span><%= collection.name %></span><small><%= collection.visibility.capitalize %></small><span class="text-center collection-choice-indicator" aria-hidden="true"><%= saved_collection_ids.include?(collection.id) ? "✓" : "+" %></span></button>
         <% end %>
       </div>
     <% end %>
