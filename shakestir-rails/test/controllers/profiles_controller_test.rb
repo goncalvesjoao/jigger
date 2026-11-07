@@ -6,8 +6,8 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     @user.update!(display_name: "Jo’s bar", bio: "Usually mixing something citrusy.")
     @public_collection = @user.collections.create!(name: "Public picks", visibility: "public")
     @private_collection = @user.collections.create!(name: "Secret picks")
-    @draft = @user.recipes.create!(name: "Work in progress", language: "en", visibility: "public")
-    @private_recipe = @user.recipes.create!(name: "Personal pour", language: "en")
+    @draft = @user.recipes.create!(name: "Work in progress", visibility: "public")
+    @private_recipe = @user.recipes.create!(name: "Personal pour")
     @public_collection.recipes << recipes(:one)
     @public_collection.recipes << @private_recipe
   end

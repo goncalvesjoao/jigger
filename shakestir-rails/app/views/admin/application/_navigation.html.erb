@@ -3,11 +3,4 @@
   <% Administrate::Namespace.new(namespace).resources_with_index_route.each do |resource| %>
     <%= link_to display_resource_name(resource), resource_index_route(resource), class: "navigation__link navigation__link--#{nav_link_state(resource)}" %>
   <% end %>
-  <hr>
-  <%= form_with url: request.path, method: :get, local: true do |form| %>
-    <%= form.label :content_locale, "Content language" %>
-    <%= form.text_field :content_locale, value: content_locale, pattern: "[a-z]{2,3}(-[A-Za-z0-9]{2,8})*", required: true, aria: { describedby: "content-language-help" } %>
-    <p id="content-language-help">Language code, such as en or ja. Create English content first. Shared fields and photos apply to every language.</p>
-    <%= form.submit "Change language" %>
-  <% end %>
 </nav>

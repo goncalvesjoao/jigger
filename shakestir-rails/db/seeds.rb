@@ -33,17 +33,16 @@ module TheCocktailDbSeeder
   end
 
   def self.find_cocktail(name)
-    Cocktail::Translation.find_by(locale: "en", normalized_name: LookupName.normalize(name))&.globalized_model
+    Cocktail.find_by(normalized_name: LookupName.normalize(name))
   end
 
   def self.seed_canonical_content!
     load_json("canonical_cocktails.json").each do |name, content|
-      translation = Cocktail::Translation.find_by(locale: "en", normalized_name: LookupName.normalize(name))
-      next unless translation
+      cocktail = Cocktail.find_by(normalized_name: LookupName.normalize(name))
+      next unless cocktail
 
       Cocktail.transaction do
-        translation.update!(content.slice("description", "history").select { |field, _| translation[field].blank? })
-        cocktail = translation.globalized_model
+        cocktail.update!(content.slice("description", "history").select { |field, _| cocktail[field].blank? })
         sources = %w[source_reference source_url source_published_on source_date_note]
         # Keep citations together rather than mixing seeded and curated sources.
         cocktail.update!(content.slice(*sources)) if sources.all? { |field| cocktail[field].blank? }
@@ -67,15 +66,14 @@ module TheCocktailDbSeeder
       previous_published_at = recipe.published_at
       Recipe.transaction do
         recipe.publication_state = "draft"
-        recipe.language = "en"
-        Globalize.with_locale(:en) { recipe.name = name }
+        recipe.name = name
         recipe.source_reference = "TheCocktailDB"
         recipe.source_url = source_url
         attach_seed_image!(recipe, "cocktails", name)
         identity = recipe.cocktail
         if identity.nil?
-          identity = Cocktail.joins(:translations).find_by(cocktail_translations: { locale: "en", normalized_name: LookupName.normalize(name) })
-          identity ||= Globalize.with_locale(:en) { Cocktail.create!(name: name) }
+          identity = Cocktail.find_by(normalized_name: LookupName.normalize(name))
+          identity ||= Cocktail.create!(name: name)
           recipe.cocktail = identity
         end
         attach_seed_image!(identity, "cocktails", name)
@@ -86,12 +84,12 @@ module TheCocktailDbSeeder
           ingredient_name = drink["strIngredient#{position}"].to_s.strip
           next if ingredient_name.empty?
           ingredient = find_or_initialize_ingredient(ingredient_name)
-          Globalize.with_locale(:en) { ingredient.name = ingredient_name }
+          ingredient.name = ingredient_name
           attach_seed_image!(ingredient, "ingredients", ingredient_name)
           ingredient.save!
           measure = drink["strMeasure#{position}"].to_s.strip
           recipe.recipe_ingredients.create!(ingredient: ingredient, position: position,
-            submitted_text: [ measure.presence, ingredient_name ].compact.join(" "), language: "en")
+            submitted_text: [ measure.presence, ingredient_name ].compact.join(" "))
         end
         recipe.recipe_steps.destroy_all
         instructions = drink["strInstructions"].to_s.strip
@@ -119,7 +117,7 @@ module TheCocktailDbSeeder
       seen[name.downcase] = true
 
       ingredient = find_or_initialize_ingredient(name)
-      Globalize.with_locale(:en) { ingredient.name = name }
+      ingredient.name = name
       ingredient.category = normalize_category(ingredient_data["strType"])
       ingredient.alcohol_status = normalize_alcohol_status(ingredient_data)
       attach_seed_image!(ingredient, "ingredients", name)
@@ -136,7 +134,7 @@ module TheCocktailDbSeeder
 
   def self.find_or_initialize_ingredient(name)
     normalized = LookupName.normalize(name)
-    Ingredient::Translation.find_by(locale: "en", normalized_name: normalized)&.globalized_model || Ingredient.new
+    Ingredient.find_by(normalized_name: normalized) || Ingredient.new
   end
 
   def self.attach_seed_image!(record, collection_name, name)

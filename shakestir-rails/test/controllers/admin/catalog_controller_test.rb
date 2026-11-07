@@ -47,7 +47,7 @@ class Admin::CatalogControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "admins create catalog records with photos and English content is required first" do
+  test "admins create catalog records with photos and content in any language" do
     [ Ingredient, Utensil ].each do |type|
       path = "/admin/#{type.model_name.route_key}"
       assert_difference("#{type}.count") do
@@ -55,13 +55,13 @@ class Admin::CatalogControllerTest < ActionDispatch::IntegrationTest
       end
       assert_response :redirect
       assert type.last.image.attached?
-      assert_equal "New #{type}", type.last.translation_for(:en).name
+      assert_equal "New #{type}", type.last.name
     end
-    assert_no_difference("Ingredient.count") do
+    assert_difference("Ingredient.count") do
       post admin_ingredients_url, params: { content_locale: "ja", ingredient: { name: "日本語", image: photo_upload } }
     end
-    assert_response :unprocessable_content
-    assert_select "[role=alert]", text: /English translation/
+    assert_response :redirect
+    assert_equal "日本語", Ingredient.last.name
   end
 
   test "catalog access requires an admin for every resource" do
@@ -82,37 +82,30 @@ class Admin::CatalogControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "translations show exact locale values and preserve English and shared photos" do
-    get admin_cocktails_url(content_locale: "ja")
-    assert_select "td", text: "Margarita"
-    get edit_admin_cocktail_url(@cocktail, content_locale: "ja")
+  test "admin edits store content directly and search the current name" do
+    get edit_admin_cocktail_url(@cocktail)
     assert_response :success
-    assert_select "input[name='cocktail[name]'][value]", count: 0
-    assert_select "textarea[name='cocktail[description]']", text: ""
-    patch admin_cocktail_url(@cocktail, content_locale: "ja"), params: { cocktail: { name: "マルガリータ", description: "日本語の説明", image: "" } }
-    assert_redirected_to admin_cocktail_url(@cocktail, content_locale: "ja")
-    assert_equal "Margarita", @cocktail.reload.name
-    assert_equal "English description", @cocktail.description
-    assert_equal "日本語の説明", @cocktail.translation_for(:ja).description
+    assert_select "input[name='cocktail[name]'][value='Margarita']"
+    assert_select "input[name='content_locale']", count: 0
+    patch admin_cocktail_url(@cocktail), params: { cocktail: { name: "マルガリータ", description: "日本語の説明", image: "" } }
+    assert_redirected_to admin_cocktail_url(@cocktail)
+    assert_equal "マルガリータ", @cocktail.reload.name
+    assert_equal "日本語の説明", @cocktail.description
     get admin_cocktails_url, params: { search: "マルガリータ" }
     assert_select "a[href=?]", admin_cocktail_path(@cocktail), minimum: 1
     get admin_cocktails_url, params: { search: "absent-name" }
     assert_select "a[href=?]", admin_cocktail_path(@cocktail), count: 0
-    get edit_admin_cocktail_url(@cocktail, content_locale: "../invalid")
-    assert_response :bad_request
   end
 
-  test "translated ingredient and utensil forms preserve required English names" do
+  test "catalog forms accept any writing and require names" do
     [ ingredients(:one), utensils(:jigger) ].each do |record|
       path = "/admin/#{record.model_name.route_key}/#{record.id}"
-      english_name = record.name
-      patch path, params: { content_locale: "ja", record.model_name.param_key => { name: "日本語", description: "説明" } }
+      patch path, params: { record.model_name.param_key => { name: "日本語", description: "説明" } }
       assert_response :see_other
-      assert_equal english_name, record.reload.name
-      assert_equal "日本語", record.translation_for(:ja).name
+      assert_equal "日本語", record.reload.name
       patch path, params: { record.model_name.param_key => { name: "" } }
       assert_response :unprocessable_content
-      assert_equal english_name, record.reload.name
+      assert_equal "日本語", record.reload.name
     end
   end
 
@@ -152,7 +145,7 @@ class Admin::CatalogControllerTest < ActionDispatch::IntegrationTest
     patch admin_recipe_url(recipe), params: { recipe: { user_id: users(:one).id, name: "Admin edited" } }
     assert_redirected_to admin_recipe_url(recipe)
     assert_equal users(:one), recipe.reload.user
-    post admin_recipes_url, params: { recipe: { user_id: users(:one).id, name: "New draft", language: "en" } }
+    post admin_recipes_url, params: { recipe: { user_id: users(:one).id, name: "New draft" } }
     assert_response :redirect
     assert_equal users(:one), Recipe.last.user
   end

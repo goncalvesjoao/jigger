@@ -8,7 +8,7 @@ Run the complete seeds with `mise exec ruby@4.0.9 -- ruby bin/rails db:seed`, or
 mise exec ruby@4.0.9 -- ruby bin/rails runner 'require Rails.root.join("db/seeds/utensils"); UtensilsSeeder.seed!'
 ```
 
-The seeder matches normalized English names, creates each utensil with its own Active Storage photo, and fills missing descriptions/photos. Existing names, descriptions, categories, capacities, translations and photos are preserved. It preflights all image files before writing. Renaming a seeded English name changes its matching identity; keep seed names stable to avoid re-creating renamed records.
+The seeder matches normalized names, creates each utensil with its own Active Storage photo, and fills missing descriptions/photos. Existing names, descriptions, categories, capacities and photos are preserved. It preflights all image files before writing. Renaming a seeded name changes its matching identity; keep seed names stable to avoid re-creating renamed records.
 
 ## Editorial references
 

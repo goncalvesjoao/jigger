@@ -7,6 +7,6 @@ class RecipeUtensil < ApplicationRecord
   belongs_to :recipe
   belongs_to :utensil
 
-  validates :submitted_text, :language, presence: true
+  validates :submitted_text, presence: true
   validates :utensil_id, uniqueness: { scope: :recipe_id }
 end

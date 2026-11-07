@@ -12,7 +12,7 @@ class CollectionsController < ApplicationController
   def show
     resume_session
     @collection = Collection.readable_by(Current.user).find(params[:id])
-    @recipes = @collection.recipes.merge(Recipe.readable_by(Current.user)).with_attached_image.includes(:translations, :recipe_steps).reorder("collection_recipes.created_at DESC, collection_recipes.id DESC").to_a
+    @recipes = @collection.recipes.merge(Recipe.readable_by(Current.user)).with_attached_image.includes(:recipe_steps).reorder("collection_recipes.created_at DESC, collection_recipes.id DESC").to_a
   end
 
   def new

@@ -1,8 +1,7 @@
 <% photo = recipe_photo(recipe) %>
 <% photo_path = photo.is_a?(Cocktail) ? :cocktail_image_path : :recipe_image_path %>
 <% destination = recipe_path(recipe) %>
-<% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
-<article id="<%= dom_id recipe %>" lang="<%= recipe.language %>">
+<article id="<%= dom_id recipe %>">
   <div class="card-media">
   <%= link_to destination, class: "card-image", tabindex: "-1", aria: { hidden: true } do %>
     <% if photo.image.attached? %>
@@ -17,4 +16,3 @@
     <h3><%= link_to recipe_author(recipe), profile_path(recipe.user), class: "recipe-author-link" %> / <%= link_to recipe.display_name.presence || "Untitled recipe", destination %></h3>
   </div>
 </article>
-<% end %>

@@ -2,7 +2,6 @@ one:
   recipe: one
   ingredient: one
   submitted_text: Gin
-  language: en
   position: 0
   optional: false
   role: mixing
@@ -14,7 +13,6 @@ two:
   recipe: two
   ingredient: two
   submitted_text: Ice
-  language: en
   position: 0
   optional: false
   role: mixing

@@ -2,7 +2,7 @@ module Admin
   class TechniquesController < ApplicationController
     private
       def scoped_resource
-        resource_class.includes(:translations)
+        resource_class.all
       end
 
       def find_resource(param)

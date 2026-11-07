@@ -39,7 +39,7 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
 
   test "unnamed drafts remain discoverable and editable" do
     sign_in_as(users(:one))
-    draft = users(:one).recipes.create!(language: "en")
+    draft = users(:one).recipes.create!()
     get my_recipes_url, params: { state: "draft" }
     assert_response :success
     assert_select "#recipe_#{draft.id} h3 a", text: "Untitled recipe"

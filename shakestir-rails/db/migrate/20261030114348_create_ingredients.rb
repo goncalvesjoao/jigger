@@ -1,11 +1,15 @@
 class CreateIngredients < ActiveRecord::Migration[8.1]
   def change
     create_table :ingredients do |t|
+      t.string :name
+      t.text :description
+      t.string :normalized_name
       t.string :category, null: false, default: "other"
       t.string :alcohol_status, null: false, default: "unknown"
       t.decimal :alcohol_by_volume, precision: 5, scale: 2
       t.timestamps
     end
+    add_index :ingredients, :normalized_name
     add_check_constraint :ingredients,
       "category IN ('spirit', 'liqueur', 'wine', 'beer', 'mixer', 'juice', 'syrup', 'fruit', 'dairy', 'herb', 'spice', 'ice', 'other')",
       name: "ingredients_category"

@@ -30,7 +30,7 @@ The marketplace returns public, published recipe variations whose required ingre
 
 ## Preserve submitted text
 
-Each recipe preserves every ingredient's exact submitted text and its language, including native-language names and misspellings. Internally, that text maps to a canonical ingredient identity shared across recipes. Matching must not replace or correct what the user wrote.
+Each recipe preserves every ingredient's exact submitted text, including names in any writing system and misspellings. Internally, that text maps to a canonical ingredient identity shared across recipes. Matching must not replace or correct what the user wrote.
 
 Original recipes need no canonical cocktail. Admins curate canonical identities and assignments; publishing does not automatically create a cocktail. Cocktails hold an optional photo, description, history, their sources and historical publication dates. Admins upload cocktail photos; cached seeds populate missing cocktail photos independently of recipe photos and preserve existing uploads. Recipes retain optional source references and URLs crediting their quantities and instructions.
 
@@ -40,7 +40,7 @@ Canonical cocktail seed content includes researched English descriptions, histor
 
 ## Proposed entity matching
 
-Jev, identified by the user as the AI decision-making model developed by TypeSafe AI, is a proposed component for entity matching. Its task would be to associate submitted ingredient and utensil names with their unique canonical database representations, while preserving the original submitted text and language alongside the matches.
+Jev, identified by the user as the AI decision-making model developed by TypeSafe AI, is a proposed component for entity matching. Its task would be to associate submitted ingredient and utensil names with their unique canonical database representations, while preserving the original submitted text alongside the matches.
 
 Jev is optional. A sufficiently fast open-source alternative could serve the same purpose. No dependency has been chosen or integration implemented as part of this proposal. A proposed match does not guarantee the correct identity.
 
@@ -55,7 +55,7 @@ Marketplace search expands from the navbar into searchable ingredient and utensi
 
 Administrators can open `/admin` from the Admin navigation link to list, search, create, edit and delete cocktails, ingredients, utensils and recipes. Administrate uses the existing sign-in and admin flag; no separate admin account system is created. Recipe owners are selectable without exposing user-management screens.
 
-Use **Content language** (for example `en` or `ja`) to edit a record’s translated fields. Forms show only the selected language’s stored values, without copying English fallback text into missing translations. Create English catalog content first. Search matches translated names across languages; photos and other shared attributes apply to all translations.
+Content is saved exactly as entered, in any writing system. Each record has a single name and set of content fields; there are no translations or language codes. Search matches normalized stored names.
 
 Photo fields accept fresh JPEG, PNG or WebP uploads through the existing validation and protected image endpoints. A blank upload keeps the current photo, and invalid replacements preserve the saved file. Required catalog photos, referenced-record deletion rules, recipe ownership constraints still apply.
 

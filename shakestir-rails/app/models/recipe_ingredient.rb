@@ -10,7 +10,7 @@ class RecipeIngredient < ApplicationRecord
 
   before_validation :assign_position, on: :create
 
-  validates :submitted_text, :language, presence: true
+  validates :submitted_text, presence: true
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: { scope: :recipe_id }
   validates :quantity, numericality: { greater_than: 0 }, allow_nil: true
   validates :measuring_unit, presence: true, if: -> { quantity.present? }

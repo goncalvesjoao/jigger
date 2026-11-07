@@ -9,9 +9,6 @@ module ActiveSupport
     parallelize(workers: :number_of_processors)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    set_fixture_class cocktail_translations: "Cocktail::Translation", recipe_translations: "Recipe::Translation",
-      ingredient_translations: "Ingredient::Translation", utensil_translations: "Utensil::Translation",
-      technique_translations: "Technique::Translation"
     fixtures :all
 
     # Add more helper methods to be used by all tests here...

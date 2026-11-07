@@ -6,7 +6,6 @@
     <div class="recipe-section-intro"><h2 id="recipe-basics-title">The basics</h2><p>Give your drink a name and a little character.</p></div>
     <div class="recipe-section-fields">
       <div><%= form.label :name, "Recipe name" %><%= form.text_field :name, placeholder: "e.g. My Sunday Negroni" %></div>
-      <div><%= form.label :language %><%= form.text_field :language, aria: { describedby: "recipe-language-help" } %><small id="recipe-language-help">The language you’re writing in, such as en for English or ja for Japanese.</small></div>
 <div><%= form.label :servings %><%= form.number_field :servings, min: 1, step: 1 %></div>
     </div>
   </section>
@@ -19,7 +18,7 @@
       <fieldset class="technique-options" aria-describedby="recipe-techniques-help">
         <legend>Techniques used</legend>
         <p id="recipe-techniques-help">Choose all that appear in your steps. Readers can open a beginner guide for each one.</p>
-        <% techniques = Technique.includes(:translations).order(:slug) %>
+        <% techniques = Technique.order(:slug) %>
         <% if techniques.any? %>
           <div class="technique-options-list">
             <%= form.collection_check_boxes :technique_ids, techniques, :id, :display_name do |choice| %>
@@ -42,13 +41,13 @@
   <section class="recipe-editor-section" aria-labelledby="recipe-sharing-title">
     <div class="recipe-section-intro"><h2 id="recipe-sharing-title">Saving &amp; sharing</h2><p>Keep an idea to yourself or share the finished recipe.</p></div>
     <div class="recipe-section-fields">
-      <div><%= form.label :publication_state, "Recipe status" %><%= form.select :publication_state, [["Draft", "draft"], ["Published", "published"]], {}, aria: { describedby: "recipe-state-help" } %><small id="recipe-state-help">Drafts are only visible to you. Publishing requires a name, language, ingredients, and preparation steps.</small></div>
+      <div><%= form.label :publication_state, "Recipe status" %><%= form.select :publication_state, [["Draft", "draft"], ["Published", "published"]], {}, aria: { describedby: "recipe-state-help" } %><small id="recipe-state-help">Drafts are only visible to you. Publishing requires a name, ingredients, and preparation steps.</small></div>
       <div><%= form.label :visibility, "Visibility" %><%= form.select :visibility, [["Private — only you", "private"], ["Public — visible when published", "public"]], {}, aria: { describedby: "recipe-visibility-help" } %><small id="recipe-visibility-help">A recipe appears in Explore when it’s public and published.</small></div>
     </div>
   </section>
   <details class="recipe-editor-extra"><summary>Source &amp; inspiration <span>Optional</span></summary><div class="recipe-section-fields"><div><%= form.label :source_reference, "Source or credit" %><%= form.text_field :source_reference, placeholder: "A book, a bartender, an inspiration…" %></div><div><%= form.label :source_url, "Source link" %><%= form.url_field :source_url, placeholder: "https://" %></div></div></details>
   <% if Current.user&.admin? %>
-    <details class="recipe-editor-extra"><summary>Catalog settings</summary><div class="recipe-section-fields"><div><%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %><%= form.collection_select :cocktail_id, Cocktail.includes(:translations).to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %></div></div></details>
+    <details class="recipe-editor-extra"><summary>Catalog settings</summary><div class="recipe-section-fields"><div><%= form.label :cocktail_id, "Canonical cocktail (leave blank for an original)" %><%= form.collection_select :cocktail_id, Cocktail.all.to_a.sort_by { |cocktail| cocktail.display_name.to_s }, :id, :display_name, include_blank: "Unassigned" %></div></div></details>
   <% end %>
   <div class="recipe-editor-actions"><%= form.submit recipe.persisted? ? "Save changes" : "Create recipe", class: "library-primary", data: { turbo_submits_with: "Saving…" } %><%= link_to "Cancel", recipe.persisted? ? recipe_path(recipe) : my_recipes_path, class: "library-cancel" %></div>
 <% end %>

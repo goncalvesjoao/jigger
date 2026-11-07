@@ -22,6 +22,6 @@ module MarketplaceSearch
           ids.each { |id| recipes = recipes.where(id: model.where(column => id).select(:recipe_id)) }
         end
       end
-      recipes.search(params[:q]).with_attached_image.includes(:translations, :recipe_steps, :user, cocktail: [ :translations, { image_attachment: :blob } ])
+      recipes.search(params[:q]).with_attached_image.includes(:recipe_steps, :user, cocktail: { image_attachment: :blob })
     end
 end

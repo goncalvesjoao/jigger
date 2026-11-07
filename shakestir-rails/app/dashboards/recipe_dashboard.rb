@@ -3,12 +3,11 @@ require "administrate/base_dashboard"
 class RecipeDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    name: TranslatedField,
+    name: Field::String,
     image: PhotoField,
     cocktail: Field::BelongsTo,
     user: Field::BelongsTo,
     techniques: Field::HasMany,
-    language: Field::String,
     visibility: Field::Select.with_options(collection: %w[private public]),
     publication_state: Field::Select.with_options(collection: %w[draft published]),
     servings: Field::Number,
@@ -21,7 +20,7 @@ class RecipeDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[id name user publication_state].freeze
   SHOW_PAGE_ATTRIBUTES = ATTRIBUTE_TYPES.keys.freeze
-  FORM_ATTRIBUTES = %i[name image cocktail user language visibility publication_state servings steps techniques source_reference source_url].freeze
+  FORM_ATTRIBUTES = %i[name image cocktail user visibility publication_state servings steps techniques source_reference source_url].freeze
 
   def display_resource(resource)
     resource.display_name.presence || "Recipe #{resource.id}"

@@ -95,7 +95,7 @@ class CatalogImageTest < ActiveSupport::TestCase
       assert_not catalog.valid?
       assert catalog.errors[:image].any?
       assert_not_includes catalog.class.usable, catalog
-      assert_empty catalog.class.lookup(catalog.name, language: "en")
+      assert_empty catalog.class.lookup(catalog.name)
       assert_not recipe.reload.valid?
       assert_not recipe.marketplace?
       assert_not_includes Recipe.marketplace, recipe

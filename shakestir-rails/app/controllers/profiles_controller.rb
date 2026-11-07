@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
     @owned = @profile == Current.user
     @collections = @profile.collections.where(visibility: "public").order(created_at: :desc)
     @recipes = @profile.recipes.merge(Recipe.marketplace).with_attached_image
-      .includes(:translations, :recipe_steps, :user, cocktail: [ :translations, { image_attachment: :blob } ])
+      .includes(:recipe_steps, :user, cocktail: { image_attachment: :blob })
       .reorder(updated_at: :desc, id: :desc)
     load_collection_previews(@collections, viewer: nil)
   end

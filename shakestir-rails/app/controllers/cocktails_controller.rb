@@ -10,7 +10,7 @@ class CocktailsController < ApplicationController
     cocktails = Cocktail.all
     cocktails = cocktails.where(id: Recipe.marketplace.select(:cocktail_id)) unless Current.user&.admin?
     @pagination = cocktails.search(params[:q]).order(:id)
-      .with_attached_image.includes(:translations).page(params[:page]).per(24)
+      .with_attached_image.page(params[:page]).per(24)
   end
 
   def show
@@ -19,10 +19,10 @@ class CocktailsController < ApplicationController
     if @filtered
       @other_recipes = Recipe.marketplace.where(cocktail: @cocktail)
         .where.not(id: @recipes.except(:includes, :order).select(:id))
-        .with_attached_image.includes(:translations, :user, cocktail: [ :translations, { image_attachment: :blob } ])
+        .with_attached_image.includes(:user, cocktail: { image_attachment: :blob })
       if params.key?(:ingredient_ids) || params.key?(:utensil_ids)
-        @available_ingredients = Ingredient.usable.where(id: Array(params[:ingredient_ids]).reject(&:blank?)).includes(:translations)
-        @available_utensils = Utensil.usable.where(id: Array(params[:utensil_ids]).reject(&:blank?)).includes(:translations)
+        @available_ingredients = Ingredient.usable.where(id: Array(params[:ingredient_ids]).reject(&:blank?))
+        @available_utensils = Utensil.usable.where(id: Array(params[:utensil_ids]).reject(&:blank?))
       end
     end
   end

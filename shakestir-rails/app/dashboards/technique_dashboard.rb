@@ -4,10 +4,10 @@ class TechniqueDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     slug: Field::String,
-    name: TranslatedField,
-    description: TranslatedField.with_options(multiline: true),
-    instructions: TranslatedField.with_options(multiline: true),
-    tip: TranslatedField.with_options(multiline: true),
+    name: Field::String,
+    description: Field::Text,
+    instructions: Field::Text,
+    tip: Field::Text,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze

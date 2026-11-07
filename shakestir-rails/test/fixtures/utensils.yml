@@ -1,1 +1,3 @@
-jigger: {}
+jigger:
+  name: Jigger
+  normalized_name: jigger

@@ -3,8 +3,8 @@ require "administrate/base_dashboard"
 class UtensilDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    name: TranslatedField,
-    description: TranslatedField.with_options(multiline: true),
+    name: Field::String,
+    description: Field::Text,
     image: PhotoField,
     category: Field::Select,
     capacity_milliliters: Field::Number.with_options(decimals: 2),

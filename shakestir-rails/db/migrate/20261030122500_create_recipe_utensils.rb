@@ -4,7 +4,6 @@ class CreateRecipeUtensils < ActiveRecord::Migration[8.1]
       t.references :recipe, null: false, foreign_key: true, index: false
       t.references :utensil, null: false, foreign_key: true
       t.text :submitted_text, null: false
-      t.string :language, null: false
       t.string :role, null: false, default: "preparation"
       t.timestamps
     end

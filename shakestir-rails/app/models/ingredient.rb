@@ -24,17 +24,15 @@ class Ingredient < ApplicationRecord
 
   has_many :step_mentions, dependent: :restrict_with_error
 
-  include CanonicalTranslations
+  include CatalogContent
   include CanonicalPhoto
 
   validates :alcohol_by_volume, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
 
-  def self.lookup(text, language:)
+  def self.lookup(text)
     normalized = LookupName.normalize(text)
     return none if normalized.blank?
 
-    translated_ids = translation_class.where(locale: language.to_s, normalized_name: normalized).select(:ingredient_id)
-
-    usable.where(id: translated_ids)
+    usable.where(normalized_name: normalized)
   end
 end

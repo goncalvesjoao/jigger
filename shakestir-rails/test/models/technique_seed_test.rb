@@ -2,18 +2,16 @@ require "test_helper"
 require_relative "../../db/seeds/techniques"
 
 class TechniqueSeedTest < ActiveSupport::TestCase
-  test "catalog is repeatable and preserves curated English and translated content" do
+  test "catalog is repeatable and preserves curated content" do
     technique = techniques(:shake)
     technique.update!(description: "Curated description")
-    Globalize.with_locale(:ja) { technique.update!(name: "シェイク", description: "説明") }
-    Globalize.with_locale(:ja) { TechniquesSeeder.seed! }
+    TechniquesSeeder.seed!
     assert_equal 17, Technique.count
     assert Technique.all.all?(&:valid?)
-    counts = [ Technique.count, Technique::Translation.count, RecipeTechnique.count ]
+    counts = [ Technique.count, RecipeTechnique.count ]
     TechniquesSeeder.seed!
-    assert_equal counts, [ Technique.count, Technique::Translation.count, RecipeTechnique.count ]
+    assert_equal counts, [ Technique.count, RecipeTechnique.count ]
     assert_equal "Curated description", technique.reload.description
-    assert_equal "説明", technique.translation_for(:ja).description
     technique.update!(tip: nil)
     TechniquesSeeder.seed!
     assert_equal JSON.parse(TechniquesSeeder::ROOT.join("catalog.json").read).first.fetch("tip"), technique.reload.tip

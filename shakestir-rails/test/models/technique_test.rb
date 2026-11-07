@@ -1,10 +1,10 @@
 require "test_helper"
 
 class TechniqueTest < ActiveSupport::TestCase
-  test "English learning content and unique stable slugs are required without a photo" do
+  test "Learning content and unique stable slugs are required without a photo" do
     technique = Technique.new(slug: "new-technique")
     assert_not technique.valid?
-    assert_includes technique.errors[:instructions], "needs an English translation"
+    assert_includes technique.errors[:instructions], "can't be blank"
     technique.name = "New technique"
     technique.description = "What it does."
     technique.instructions = "How to do it."
@@ -15,15 +15,11 @@ class TechniqueTest < ActiveSupport::TestCase
     assert_not technique.valid?
   end
 
-  test "translations fall back to English and English content cannot be removed" do
+  test "content can be written as submitted and required fields cannot be removed" do
     technique = techniques(:shake)
-    Globalize.with_locale(:ja) do
-      assert_equal "Shake", technique.name
-      technique.update!(name: "シェイク")
-      assert_equal "シェイク", technique.name
-      assert_equal "Seal the shaker and shake with ice, then strain.", technique.instructions
-    end
-    assert_not technique.translation_for(:en).destroy
+    technique.update!(name: "シェイク")
+    assert_equal "シェイク", technique.reload.name
+    assert_equal "Seal the shaker and shake with ice, then strain.", technique.instructions
     assert_not technique.update(description: "")
     assert_equal "shake", technique.to_param
   end

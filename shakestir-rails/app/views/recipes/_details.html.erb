@@ -1,7 +1,6 @@
 <% ingredients_id = "ingredients" %>
 <% preparation_id = "preparation" %>
-<% Globalize.with_locale(recipe.language == "und" ? I18n.default_locale : recipe.language) do %>
-<article id="<%= dom_id recipe %>" class="recipe mixing-recipe" lang="<%= recipe.language %>">
+<article id="<%= dom_id recipe %>" class="recipe mixing-recipe">
   <% photo = recipe_photo(recipe) %>
   <header class="cocktail-cover recipe-cover<%= " cocktail-cover-with-photo" if photo.image.attached? %>">
     <% if photo.image.attached? %><%= image_tag public_send("#{photo.model_name.singular}_image_path", photo, size: :detail), alt: "Photo of #{recipe.display_name}", class: "cocktail-cover-photo", fetchpriority: "high", width: 1200, height: 1200 %><% end %>
@@ -59,4 +58,3 @@
   </footer>
   <% end %>
 </article>
-<% end %>

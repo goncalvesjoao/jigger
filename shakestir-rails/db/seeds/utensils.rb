@@ -16,19 +16,17 @@ module UtensilsSeeder
       raise "Missing utensil seed image: #{path}" unless path.file?
     end
 
-    Globalize.with_locale(:en) do
-      entries.each do |entry|
-        Utensil.transaction do
-          translation = Utensil::Translation.find_by(locale: "en", normalized_name: LookupName.normalize(entry.fetch("name")))
-          utensil = translation&.globalized_model || Utensil.new(category: entry.fetch("category"))
-          utensil.name = entry.fetch("name") unless translation
-          utensil.description = entry.fetch("description") if translation.nil? || translation.description.blank?
-          unless utensil.image.attached?
-            path = ROOT.join("images", "#{entry.fetch("slug")}.png")
-            utensil.image.attach(io: StringIO.new(File.binread(path)), filename: path.basename.to_s, content_type: "image/png")
-          end
-          utensil.save!
+    entries.each do |entry|
+      Utensil.transaction do
+        existing = Utensil.find_by(normalized_name: LookupName.normalize(entry.fetch("name")))
+        utensil = existing || Utensil.new(category: entry.fetch("category"))
+        utensil.name = entry.fetch("name") unless existing
+        utensil.description = entry.fetch("description") if existing.nil? || existing.description.blank?
+        unless utensil.image.attached?
+          path = ROOT.join("images", "#{entry.fetch("slug")}.png")
+          utensil.image.attach(io: StringIO.new(File.binread(path)), filename: path.basename.to_s, content_type: "image/png")
         end
+        utensil.save!
       end
     end
   end

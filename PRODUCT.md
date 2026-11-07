@@ -50,9 +50,9 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 - Recipes have separate visibility and publication state. Public discovery shows complete, published, public recipes; owners can also access their own drafts and private recipes.
 - Profile photos are optional uploads with avatar fallback, shown on the profile and the account menu. Owners can replace or remove them; profile photos are public. Fictional demo users have locally cached generated portraits, and seed reruns preserve uploaded photos.
 - All profiles are public and list only public collections and eligible published public recipes, including for owners. Collection counts and previews exclude private recipes and drafts for every viewer. Private content remains in My Recipes and My Collections. Owners can edit their profile; account email appears only on the owner-only My account page.
-- Recipes can link multiple reusable **Techniques** with translated descriptions, instructions and beginner tips. Authors select them in the recipe editor. Readers open technique guides below Preparation in a keyboard-accessible dialog, with a standalone public guide as fallback. Administrators manage the guide catalog.
+- Recipes can link multiple reusable **Techniques** with descriptions, instructions and beginner tips. Authors select them in the recipe editor. Readers open technique guides below Preparation in a keyboard-accessible dialog, with a standalone public guide as fallback. Administrators manage the guide catalog.
 - Ingredient and utensil records, ordered recipe steps, and step mentions provide structured foundations. Automatic extraction from prose and alternative recommendations are not established user-facing capabilities.
-- Cocktail and recipe names support translations. Preserve multilingual content and original preparation prose.
+- Store cocktail, recipe, ingredient, utensil and technique content exactly as entered, without translations or language tracking. Preserve original preparation prose.
 - Rails renders the app, with Turbo/Stimulus interactions and Vite-managed assets. React adoption was deferred. Existing Rails implementation details and operational commands live in `shakestir-rails/README.md`.
 
 ### Confirmed product direction; not yet shipped as complete workflows
@@ -63,7 +63,7 @@ Browsing and authoring can involve more detail; the active mixing experience sho
 - Smart recipe creation that analyzes preparation steps, infers ingredient and utensil references, and identifies them in the presented recipe.
 - Clickable ingredient and utensil references that explain the item and help users find alternatives. Matching rules and handling of uncertain inference remain open.
 
-- **My account** is a private, signed-in-only destination in the account menu. It shows the current user’s email and permits permanent account deletion after password confirmation. Deletion removes owned public and private recipes, recipe details and translations, collections and memberships, Favorites, legacy likes, profile and recipe photo attachments, and all sessions. Uploaded files use background purge jobs. Shared catalog records and other authors’ content remain; star counters update when Favorites memberships are removed. A failed dependent deletion rolls back the account’s database changes.
+- **My account** is a private, signed-in-only destination in the account menu. It shows the current user’s email and permits permanent account deletion after password confirmation. Deletion removes owned public and private recipes, recipe details, collections and memberships, Favorites, legacy likes, profile and recipe photo attachments, and all sessions. Uploaded files use background purge jobs. Shared catalog records and other authors’ content remain; star counters update when Favorites memberships are removed. A failed dependent deletion rolls back the account’s database changes.
 
 ## Brand Commitments
 

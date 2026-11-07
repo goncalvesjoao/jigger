@@ -12,7 +12,7 @@
           <input type="checkbox" data-ingredients-target="item" data-action="ingredients#update">
           <span class="ingredient-copy">
             <% if line.quantity.present? %><strong class="quantity"><%= number_with_precision(line.quantity, precision: 3, strip_insignificant_zeros: true) %> <%= line.measuring_unit %></strong><% end %>
-            <span class="submitted-prose" lang="<%= line.language %>"><%= line.submitted_text %></span>
+            <span class="submitted-prose"><%= line.submitted_text %></span>
             <% if line.preparation_note.present? %><small><%= line.preparation_note %></small><% end %>
             <% if line.optional? %><small>Optional</small><% end %>
             <% unless line.mixing? %><small><%= line.role.humanize %></small><% end %>
@@ -26,7 +26,7 @@
     <h3>Utensils</h3>
     <ul class="utensil-list">
       <% recipe.recipe_utensils.each do |requirement| %>
-        <li><span class="submitted-prose" lang="<%= requirement.language %>"><%= requirement.submitted_text %></span>
+        <li><span class="submitted-prose"><%= requirement.submitted_text %></span>
         </li>
       <% end %>
     </ul>

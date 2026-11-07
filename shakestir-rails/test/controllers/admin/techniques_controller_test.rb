@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Admin::TechniquesControllerTest < ActionDispatch::IntegrationTest
-  test "admins manage translated guides without photo fields" do
+  test "admins manage guides without photo fields" do
     users(:one).update!(admin: true)
     sign_in_as(users(:one))
     technique = techniques(:shake)
@@ -18,8 +18,7 @@ class Admin::TechniquesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated guide", technique.reload.description
     patch admin_technique_url(technique), params: { content_locale: "ja", technique: { name: "シェイク" } }
     assert_response :see_other
-    assert_equal "Shake", technique.reload.name
-    assert_equal "シェイク", technique.translation_for(:ja).name
+    assert_equal "シェイク", technique.reload.name
     assert_difference("Technique.count") do
       post admin_techniques_url, params: { technique: { slug: "new-guide", name: "New guide", description: "Purpose", instructions: "Instructions" } }
     end

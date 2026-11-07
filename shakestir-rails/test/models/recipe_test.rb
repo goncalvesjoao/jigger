@@ -5,7 +5,6 @@ class RecipeTest < ActiveSupport::TestCase
     recipe = Recipe.create!(user: users(:one), name: "My draft", steps: "  Mix gently.\n冷やす。 ")
     assert_equal "private", recipe.visibility
     assert_equal "draft", recipe.publication_state
-    assert_equal "und", recipe.language
     assert_equal "  Mix gently.\n冷やす。 ", recipe.reload.steps
     assert_not recipe.update(publication_state: "published")
     assert recipe.reload.update(steps: "Changed")
@@ -28,8 +27,8 @@ class RecipeTest < ActiveSupport::TestCase
     recipe = recipes(:one)
     ingredient = ingredients(:one)
     utensil = utensils(:jigger)
-    recipe.recipe_ingredients.create!(ingredient: ingredient, submitted_text: "gin garnish", language: "en")
-    recipe.recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "ice", language: "en", optional: true)
+    recipe.recipe_ingredients.create!(ingredient: ingredient, submitted_text: "gin garnish")
+    recipe.recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "ice", optional: true)
     assert_not_includes Recipe.makeable_with(ingredient_ids: [ ingredients(:two).id ], utensil_ids: [ utensil.id ]), recipe
     assert_not_includes Recipe.makeable_with(ingredient_ids: Ingredient.ids, utensil_ids: []), recipe
     assert_includes Recipe.makeable_with(ingredient_ids: [ ingredient.id ], utensil_ids: [ utensil.id ]), recipe
@@ -82,8 +81,8 @@ class RecipeTest < ActiveSupport::TestCase
     assert_equal newer, Recipe.marketplace.first
   end
   test "new complete variations publish with structured requirements and steps" do
-    recipe = Recipe.new(user: users(:one), name: "  マイ・マルガリータ ", language: "ja", visibility: "public", publication_state: "published")
-    recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "ジン", language: "ja")
+    recipe = Recipe.new(user: users(:one), name: "  マイ・マルガリータ ", visibility: "public", publication_state: "published")
+    recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "ジン")
     recipe.recipe_steps.build(position: 0, body: "  混ぜる。 ")
     assert recipe.save, recipe.errors.full_messages.join(", ")
     assert_equal "  マイ・マルガリータ ", recipe.reload.name
@@ -126,10 +125,9 @@ class UnifiedRecipeTest < ActiveSupport::TestCase
     recipes(:one).reload.update!(user: users(:one))
   end
 
-  test "localized recipes need no English name or cocktail assignment and search translations" do
+  test "recipes accept any writing without a cocktail assignment and search stored names" do
     recipe = recipes(:one)
-    Globalize.with_locale(:ja) { recipe.update!(name: "梅のカクテル") }
-    recipe.translations.where(locale: "en").delete_all
+    recipe.update!(name: "梅のカクテル")
     assert recipe.reload.marketplace?
     assert_equal "梅のカクテル", recipe.display_name
     assert_includes Recipe.marketplace.search("梅"), recipe

@@ -6,7 +6,6 @@ class RecipeIngredientTest < ActiveSupport::TestCase
     line = recipe.recipe_ingredients.create!(
       ingredient: ingredients(:one),
       submitted_text: "  ジンn ",
-      language: "ja",
       quantity: "0.125",
       measuring_unit: "oz",
       role: :garnish,
@@ -14,7 +13,6 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       preparation_note: "freshly squeezed"
     )
     assert_equal "  ジンn ", line.reload.submitted_text
-    assert_equal "ja", line.language
     assert_equal 1, line.position
     assert_equal "garnish", line.role
     assert line.optional

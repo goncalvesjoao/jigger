@@ -45,7 +45,7 @@ class TechniquesControllerTest < ActionDispatch::IntegrationTest
     patch recipe_url(recipe), params: { recipe: { technique_ids: [ "" ] } }
     assert_response :see_other
     assert_empty recipe.reload.techniques
-    post recipes_url, params: { recipe: { name: "New draft", language: "en", technique_ids: [ techniques(:shake).id ] } }
+    post recipes_url, params: { recipe: { name: "New draft", technique_ids: [ techniques(:shake).id ] } }
     assert_response :redirect
     assert_equal [ "shake" ], Recipe.last.techniques.pluck(:slug)
   end

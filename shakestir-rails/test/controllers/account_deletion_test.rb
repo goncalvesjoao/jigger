@@ -46,9 +46,8 @@ class AccountDeletionTest < ActionDispatch::IntegrationTest
     other = users(:two)
     owned_ids = user.recipe_ids
     step_ids = RecipeStep.where(recipe_id: owned_ids).ids
-    translation_ids = Recipe::Translation.where(recipe_id: owned_ids).ids
     collection_ids = user.collection_ids
-    user.recipes.create!(name: "Private draft", language: "en")
+    user.recipes.create!(name: "Private draft")
     user.favorites_collection.recipes << recipes(:two)
     other.favorites_collection.recipes << recipes(:one)
     user.liked_recipes << recipes(:two)
@@ -69,7 +68,6 @@ class AccountDeletionTest < ActionDispatch::IntegrationTest
     assert_empty RecipeIngredient.where(recipe_id: owned_ids)
     assert_empty RecipeUtensil.where(recipe_id: owned_ids)
     assert_empty RecipeStep.where(id: step_ids)
-    assert_empty Recipe::Translation.where(id: translation_ids)
     assert_not StepMention.exists?(mention.id)
     assert_empty CollectionRecipe.where(collection_id: collection_ids)
     assert_empty CollectionRecipe.where(recipe_id: owned_ids)
@@ -86,7 +84,7 @@ class AccountDeletionTest < ActionDispatch::IntegrationTest
 
   test "uploaded profile and recipe photos are purged after successful deletion" do
     user = User.create!(email_address: "delete-photos@example.com", password: "password", image: photo_upload)
-    recipe = user.recipes.create!(name: "Photo draft", language: "en", image: photo_upload)
+    recipe = user.recipes.create!(name: "Photo draft", image: photo_upload)
     blobs = [ user.image.blob, recipe.image.blob ]
     sign_in_as(user)
     perform_enqueued_jobs(only: ActiveStorage::PurgeJob) do

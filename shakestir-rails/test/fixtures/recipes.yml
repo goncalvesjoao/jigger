@@ -1,15 +1,20 @@
 margarita:
-  language: en
   user: one
 
+  name: Margarita
+  normalized_name: margarita
+
 one:
-  language: en
   visibility: public
   publication_state: published
   user: one
 
+  name: MyString
+  normalized_name: mystring
+
 two:
-  language: en
   visibility: public
   publication_state: published
   user: two
+  name: MyString
+  normalized_name: mystring

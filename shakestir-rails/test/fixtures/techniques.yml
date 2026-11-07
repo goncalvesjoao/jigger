@@ -1,4 +1,15 @@
 shake:
   slug: shake
+  name: Shake
+  normalized_name: shake
+  description: Mix and chill ingredients by shaking with ice.
+  instructions: Seal the shaker and shake with ice, then strain.
+  tip: Add sparkling ingredients after shaking.
+
 stir:
   slug: stir
+  name: Stir
+  normalized_name: stir
+  description: Gently mix and chill ingredients with ice.
+  instructions: Rotate the ice smoothly with a bar spoon, then strain if instructed.
+  tip: Keep the spoon against the glass.

@@ -6,7 +6,6 @@ class RecipesController < ApplicationController
 
   before_action :authorize_recipe
   after_action :verify_authorized
-  around_action :with_recipe_language, only: %i[ create edit update ]
 
   # GET /recipes or /recipes.json
   def index
@@ -18,20 +17,20 @@ class RecipesController < ApplicationController
   # GET /recipes/1 or /recipes/1.json
   def show
     ActiveRecord::Associations::Preloader.new(records: [ @recipe ], associations: {
-      recipe_ingredients: { ingredient: [ :translations, { image_attachment: :blob } ] },
-      recipe_utensils: { utensil: [ :translations, { image_attachment: :blob } ] },
-      techniques: :translations
+      recipe_ingredients: { ingredient: { image_attachment: :blob } },
+      recipe_utensils: { utensil: { image_attachment: :blob } },
+      techniques: {}
     }).call
     if @recipe.cocktail && policy(@recipe.cocktail).show?
       @cocktail = @recipe.cocktail
       @related_recipes = Recipe.marketplace.where(cocktail: @cocktail)
-        .where.not(id: @recipe.id).with_attached_image.includes(:translations, :user, cocktail: [ :translations, { image_attachment: :blob } ])
+        .where.not(id: @recipe.id).with_attached_image.includes(:user, cocktail: { image_attachment: :blob })
     end
   end
 
   # GET /recipes/new
   def new
-    @recipe = Recipe.new(language: I18n.locale.to_s)
+    @recipe = Recipe.new
   end
 
   # GET /recipes/1/edit
@@ -78,12 +77,6 @@ class RecipesController < ApplicationController
   end
 
   private
-    def with_recipe_language(&block)
-      language = params.dig(:recipe, :language).presence || @recipe&.language
-      locale = language.present? && language != "und" ? language : I18n.default_locale
-      Globalize.with_locale(locale, &block)
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params.expect(:id))
@@ -95,7 +88,7 @@ class RecipesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def recipe_params
-      fields = [ :name, :language, :steps, :servings, :source_reference, :source_url, :visibility, :publication_state, :image ]
+      fields = [ :name, :steps, :servings, :source_reference, :source_url, :visibility, :publication_state, :image ]
       fields += [ :cocktail_id ] if Current.user&.admin?
       fields += [ { technique_ids: [] } ]
       permitted = params.expect(recipe: fields)

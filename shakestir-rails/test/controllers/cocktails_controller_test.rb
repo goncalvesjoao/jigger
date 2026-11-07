@@ -43,7 +43,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     shaker = Utensil.new(name: "Shaker")
     shaker.image.attach(io: StringIO.new(File.binread(Rails.root.join("test/fixtures/files/photo.png"))), filename: "shaker.png", content_type: "image/png")
     shaker.save!
-    RecipeUtensil.create!(recipe: recipes(:one), utensil: shaker, submitted_text: "Shaker", language: "en", role: "preparation")
+    RecipeUtensil.create!(recipe: recipes(:one), utensil: shaker, submitted_text: "Shaker", role: "preparation")
     filters = { ingredient_ids: [ ingredients(:one).id ], utensil_ids: [ utensils(:jigger).id ], ingredient_mode: "only", utensil_mode: "include" }
     get root_url, params: filters
     assert_select ".recipe-grid article", count: 1
@@ -167,7 +167,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "contains filters require every selection but allow additional items" do
-    recipes(:one).recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "Ice", language: "en", position: 1)
+    recipes(:one).recipe_ingredients.create!(ingredient: ingredients(:two), submitted_text: "Ice", position: 1)
     filters = { ingredient_ids: [ ingredients(:one).id ] }
     get root_url, params: filters
     assert_select ".recipe-grid article", count: 1
@@ -206,10 +206,7 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index('class="cocktail-details"'), :<, response.body.index('id="matching-recipes"')
     assert_select ".search-context strong", text: "bright"
     assert_select ".search-context a[href=?]", cocktail_path(@cocktail), text: "Show all recipes"
-    assert_select "nav[aria-label='Breadcrumb']" do
-      assert_select "a.back-link[href=?]", cocktails_path(q: "bright"), text: "Cocktails"
-      assert_select "li[aria-current='page']", text: "Margarita"
-    end
+    assert_select "a.cocktail-cover-back[href=?]", cocktails_path(q: "bright"), text: /Back to cocktails/
     assert_select "#matching-recipes h2", text: "Recipes (1)"
     assert_select "#matching-recipes #recipe_#{recipes(:one).id}"
     assert_select "details#other-recipes:not([open])" do
@@ -243,8 +240,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "alternative recipes exclude private drafts and other cocktails even for admins" do
     [ { visibility: "private" }, { publication_state: "draft" }, { cocktail: nil } ].each do |state|
-      recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Hidden alternative", language: "en", steps: "Stir.")
-      recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
+      recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Hidden alternative", steps: "Stir.")
+      recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin")
       recipe.assign_attributes({ visibility: "public", publication_state: "published" }.merge(state))
       recipe.save!
     end
@@ -261,8 +258,8 @@ class CocktailsControllerTest < ActionDispatch::IntegrationTest
 
   test "marketplace paginates individual recipes with lazy frames and preserves filters" do
     24.times do |index|
-      recipe = Recipe.create!(user: users(:one), name: "Margarita variation #{index}", language: "en", steps: "Stir.")
-      recipe.recipe_ingredients.create!(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
+      recipe = Recipe.create!(user: users(:one), name: "Margarita variation #{index}", steps: "Stir.")
+      recipe.recipe_ingredients.create!(ingredient: ingredients(:one), submitted_text: "Gin")
       recipe.update!(visibility: "public", publication_state: "published")
     end
     recipes(:one).update!(published_at: 1.day.from_now)

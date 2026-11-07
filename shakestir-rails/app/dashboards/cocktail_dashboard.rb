@@ -3,9 +3,9 @@ require "administrate/base_dashboard"
 class CocktailDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    name: TranslatedField,
-    description: TranslatedField.with_options(multiline: true),
-    history: TranslatedField.with_options(multiline: true),
+    name: Field::String,
+    description: Field::Text,
+    history: Field::Text,
     image: PhotoField,
     recipes: Field::HasMany,
     parent_cocktail: Field::BelongsTo.with_options(class_name: "Cocktail"),

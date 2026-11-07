@@ -168,7 +168,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   test "JSON authoring creates only a user variation and uses the new route and request name" do
     canonical_count = Recipe.count
     assert_difference("Recipe.count") do
-      post recipes_url(format: :json), params: { recipe: { name: "My variation", language: "en", steps: "Stir." } }
+      post recipes_url(format: :json), params: { recipe: { name: "My variation", steps: "Stir." } }
       assert_response :created
     end
     assert_equal canonical_count + 1, Recipe.count
@@ -217,22 +217,21 @@ class UnifiedRecipesControllerTest < ActionDispatch::IntegrationTest
   end
 end
 
-class LocalizedRecipesControllerTest < ActionDispatch::IntegrationTest
-  test "authoring stores names in the submitted language" do
+class StoredRecipesControllerTest < ActionDispatch::IntegrationTest
+  test "authoring preserves names without language metadata" do
     sign_in_as(users(:one))
-    post recipes_url(format: :json), params: { recipe: { name: "梅酒カクテル", language: "ja" } }
+    post recipes_url(format: :json), params: { recipe: { name: "梅酒カクテル" } }
     assert_response :created
     recipe = Recipe.last
-    assert_equal "ja", recipe.language
-    assert_equal :ja, recipe.translations.sole.locale
     assert_equal "梅酒カクテル", response.parsed_body["name"]
+    assert_not response.parsed_body.key?("language")
     get recipe_url(recipe, format: :json)
     assert_not response.parsed_body.key?("description")
     get edit_recipe_url(recipe)
     assert_select "input[name='recipe[name]'][value='梅酒カクテル']"
-    patch recipe_url(recipe), params: { recipe: { name: "梅酒サワー", language: "ja" } }
+    assert_select "input[name='recipe[language]']", count: 0
+    patch recipe_url(recipe), params: { recipe: { name: "梅酒サワー" } }
     assert_redirected_to recipe_url(recipe)
     assert_equal "梅酒サワー", recipe.reload.display_name
-    assert_equal 1, recipe.translations.count
   end
 end

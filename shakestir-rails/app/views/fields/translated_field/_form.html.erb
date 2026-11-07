@@ -1,8 +1,0 @@
-<div class="field-unit__label"><%= f.label field.attribute %></div>
-<div class="field-unit__field">
-  <% if field.options[:multiline] %>
-    <%= f.text_area field.attribute, value: field.data, rows: 6 %>
-  <% else %>
-    <%= f.text_field field.attribute, value: field.data %>
-  <% end %>
-</div>

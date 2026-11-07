@@ -50,7 +50,7 @@ class RecipeRedesignTest < ActionDispatch::IntegrationTest
 
   test "owner can read an empty draft without broken preparation controls" do
     sign_in_as(users(:one))
-    recipe = Recipe.create!(user: users(:one), name: "Empty draft", language: "en")
+    recipe = Recipe.create!(user: users(:one), name: "Empty draft")
     get recipe_url(recipe)
     assert_response :success
     assert_select "p", text: "No ingredients listed."

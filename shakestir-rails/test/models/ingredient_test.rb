@@ -21,22 +21,13 @@ class IngredientTest < ActiveSupport::TestCase
     assert_includes ingredient.errors[:alcohol_by_volume], "must be greater than or equal to 0"
   end
 
-  test "lookup supports normalized translated names without changing prose" do
-    [ [ Ingredient, ingredients(:one) ], [ Utensil, utensils(:jigger) ], [ Recipe, recipes(:margarita) ] ].each do |type, identity|
-      original_name = identity.display_name
-      attributes = { image: photo_upload, name: "Other" }
-      attributes[:user] = users(:one) if type == Recipe
-      other = type.create!(attributes)
-      assert_equal [ identity.id ], type.lookup(original_name.upcase, language: "en").ids
-      assert_empty type.lookup("ジガー", language: "ja")
-      Globalize.with_locale(:ja) do
-        identity.update!(name: "  ジガー  ")
-        other.update!(name: "ジガー")
-      end
-      assert_equal [ identity.id, other.id ].sort, type.lookup("ジガー", language: "ja").ids.sort
-      assert_empty type.lookup("ジガー", language: "en")
-      assert_equal original_name, identity.reload.display_name
-      assert_equal "  ジガー  ", identity.translations.find_by!(locale: "ja").name
+  test "lookup normalizes names without changing stored prose" do
+    [ [ Ingredient, ingredients(:one) ], [ Utensil, utensils(:jigger) ], [ Recipe, recipes(:margarita) ] ].each do |type, record|
+      assert_equal [ record.id ], type.lookup(record.name.upcase).ids
+      record.update!(name: "  ジガー  ")
+      assert_includes type.lookup("ジガー"), record
+      assert_empty type.lookup(" ")
+      assert_equal "  ジガー  ", record.reload.name
     end
   end
 end

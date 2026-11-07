@@ -49,8 +49,8 @@ class DetailPagesTest < ActionDispatch::IntegrationTest
 
   test "recipe pages omit related recipes even for admins" do
     [ { visibility: "private" }, { publication_state: "draft" }, {} ].each do |state|
-      recipe = Recipe.new(user: users(:one), cocktail: @cocktail, language: "en", name: "Another variation", steps: "Shake.")
-      recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin", language: "en")
+      recipe = Recipe.new(user: users(:one), cocktail: @cocktail, name: "Another variation", steps: "Shake.")
+      recipe.recipe_ingredients.build(ingredient: ingredients(:one), submitted_text: "Gin")
       recipe.assign_attributes({ visibility: "public", publication_state: "published" }.merge(state))
       recipe.save!
     end

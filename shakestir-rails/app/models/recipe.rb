@@ -8,9 +8,7 @@ class Recipe < ApplicationRecord
   belongs_to :cocktail, optional: true
   belongs_to :user
 
-  translates :name, fallbacks_for_empty_translations: true
-  translation_class.before_validation { self.normalized_name = name.present? ? LookupName.normalize(name) : nil }
-  translation_class.validates :locale, presence: true, uniqueness: { scope: :recipe_id }
+  include StoredName
   has_many :recipe_ingredients, -> { order(:position, :id) }, dependent: :destroy
   has_many :ingredients, through: :recipe_ingredients
   has_many :recipe_utensils, dependent: :destroy
@@ -27,14 +25,12 @@ class Recipe < ApplicationRecord
 
   validates :visibility, inclusion: { in: %w[private public] }
   validates :publication_state, inclusion: { in: %w[draft published] }
-  validates :language, presence: true
   validates :servings, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validate :publication_requirements, if: -> { publication_state == "published" }
 
   scope :marketplace, -> {
     where(visibility: "public", publication_state: "published")
-      .where.not(language: [ "und", "" ])
-      .where(id: translation_class.where.not(normalized_name: nil).where("length(trim(name)) > 0").select(:recipe_id))
+      .where("length(trim(recipes.name)) > 0")
       .where(id: RecipeIngredient.select(:recipe_id))
       .where(id: RecipeStep.where("length(trim(body)) > 0").select(:recipe_id))
       .where.not(id: RecipeIngredient.where.not(ingredient_id: Ingredient.usable.select(:id)).select(:recipe_id))
@@ -73,21 +69,19 @@ class Recipe < ApplicationRecord
   validate { errors.add(:steps, "must be edited through recipe_steps for a multi-step recipe") if @multi_step_edit }
 
   def display_name
-    name.presence || translations.detect { |translation| translation.name.present? }&.name
+    name
   end
 
-  def self.lookup(text, language:)
+  def self.lookup(text)
     normalized = LookupName.normalize(text)
     return none if normalized.blank?
-    translated = translation_class.where(locale: language.to_s, normalized_name: normalized).select(:recipe_id)
-    where(id: translated)
+    where(normalized_name: normalized)
   end
 
   def self.search(text)
     return all if text.blank?
     pattern = "%#{sanitize_sql_like(LookupName.normalize(text))}%"
-    translated = translation_class.where("normalized_name LIKE ?", pattern).select(:recipe_id)
-    where(id: translated).or(where(cocktail_id: Cocktail.search(text).select(:id)))
+    where("recipes.normalized_name LIKE ?", pattern).or(where(cocktail_id: Cocktail.search(text).select(:id)))
   end
 
   private
@@ -98,12 +92,12 @@ class Recipe < ApplicationRecord
     end
 
     def complete?
-      (name.present? || translations.reject(&:marked_for_destruction?).any? { |translation| translation.name.present? }) && language.present? && language != "und" &&
+      name.present? &&
         recipe_ingredients.any? && recipe_ingredients.all? { |line| line.ingredient&.usable? } &&
         recipe_utensils.all? { |requirement| requirement.utensil&.usable? } && recipe_steps.reject(&:marked_for_destruction?).any? { |step| step.body.present? }
     end
 
     def publication_requirements
-      errors.add(:base, "published recipes need a name, language, ingredients and preparation steps") unless complete?
+      errors.add(:base, "published recipes need a name, ingredients and preparation steps") unless complete?
     end
 end

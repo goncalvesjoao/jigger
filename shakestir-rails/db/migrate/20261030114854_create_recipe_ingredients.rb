@@ -4,7 +4,6 @@ class CreateRecipeIngredients < ActiveRecord::Migration[8.1]
       t.references :recipe, null: false, foreign_key: true, index: false
       t.references :ingredient, null: false, foreign_key: true
       t.text :submitted_text, null: false
-      t.string :language, null: false
       t.integer :position, null: false
       t.boolean :optional, null: false, default: false
       t.string :role, null: false, default: "mixing"

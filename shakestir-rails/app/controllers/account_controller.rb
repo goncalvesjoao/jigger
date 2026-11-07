@@ -28,7 +28,7 @@ class AccountController < ApplicationController
     @publication_state = params[:state].presence_in(%w[draft published])
     @recipes = owned_recipes.search(params[:q])
     @recipes = @recipes.where(publication_state: @publication_state) if @publication_state
-    @recipes = @recipes.with_attached_image.includes(:translations, :recipe_steps).order(updated_at: :desc, id: :desc)
+    @recipes = @recipes.with_attached_image.includes(:recipe_steps).order(updated_at: :desc, id: :desc)
   end
 
   private

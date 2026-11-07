@@ -39,22 +39,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "cocktail_translations", force: :cascade do |t|
-    t.integer "cocktail_id", null: false
-    t.string "locale", null: false
-    t.string "name", null: false
+  create_table "cocktails", force: :cascade do |t|
+    t.string "name"
     t.text "description"
     t.text "history"
-    t.string "normalized_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cocktail_id", "locale"], name: "index_cocktail_translations_on_cocktail_id_and_locale", unique: true
-    t.index ["locale", "normalized_name"], name: "index_cocktail_translations_on_locale_and_normalized_name"
-    t.check_constraint "length(trim(locale)) > 0", name: "cocktail_translations_locale"
-    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "cocktail_translations_normalized_name"
-  end
-
-  create_table "cocktails", force: :cascade do |t|
+    t.string "normalized_name"
     t.string "source_reference"
     t.string "source_url"
     t.date "source_published_on"
@@ -62,6 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.integer "parent_cocktail_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["normalized_name"], name: "index_cocktails_on_normalized_name"
     t.index ["parent_cocktail_id"], name: "index_cocktails_on_parent_cocktail_id"
     t.check_constraint "parent_cocktail_id IS NULL OR parent_cocktail_id != id", name: "cocktails_not_own_parent"
   end
@@ -89,27 +79,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.check_constraint "visibility IN ('private', 'public')", name: "collections_visibility"
   end
 
-  create_table "ingredient_translations", force: :cascade do |t|
-    t.integer "ingredient_id", null: false
-    t.string "locale", null: false
+  create_table "ingredients", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.string "normalized_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ingredient_id", "locale"], name: "index_ingredient_translations_on_ingredient_id_and_locale", unique: true
-    t.index ["locale", "normalized_name"], name: "index_ingredient_translations_on_locale_and_normalized_name"
-    t.check_constraint "length(trim(locale)) > 0", name: "ingredient_translations_locale"
-    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "ingredient_translations_english_name"
-    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "ingredient_translations_normalized_name"
-  end
-
-  create_table "ingredients", force: :cascade do |t|
     t.string "category", default: "other", null: false
     t.string "alcohol_status", default: "unknown", null: false
     t.decimal "alcohol_by_volume", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["normalized_name"], name: "index_ingredients_on_normalized_name"
     t.check_constraint "alcohol_by_volume IS NULL OR (alcohol_by_volume >= 0 AND alcohol_by_volume <= 100)", name: "ingredients_alcohol_by_volume_range"
     t.check_constraint "alcohol_status IN ('alcoholic', 'non_alcoholic', 'unknown')", name: "ingredients_alcohol_status"
     t.check_constraint "category IN ('spirit', 'liqueur', 'wine', 'beer', 'mixer', 'juice', 'syrup', 'fruit', 'dairy', 'herb', 'spice', 'ice', 'other')", name: "ingredients_category"
@@ -119,7 +98,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.integer "recipe_id", null: false
     t.integer "ingredient_id", null: false
     t.text "submitted_text", null: false
-    t.string "language", null: false
     t.integer "position", null: false
     t.boolean "optional", default: false, null: false
     t.string "role", default: "mixing", null: false
@@ -155,24 +133,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.index ["technique_id"], name: "index_recipe_techniques_on_technique_id"
   end
 
-  create_table "recipe_translations", force: :cascade do |t|
-    t.integer "recipe_id", null: false
-    t.string "locale", null: false
-    t.string "name"
-    t.string "normalized_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["locale", "normalized_name"], name: "index_recipe_translations_on_locale_and_normalized_name"
-    t.index ["recipe_id", "locale"], name: "index_recipe_translations_on_recipe_id_and_locale", unique: true
-    t.check_constraint "length(trim(locale)) > 0", name: "recipe_translations_locale"
-    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "recipe_translations_normalized_name"
-  end
-
   create_table "recipe_utensils", force: :cascade do |t|
     t.integer "recipe_id", null: false
     t.integer "utensil_id", null: false
     t.text "submitted_text", null: false
-    t.string "language", null: false
     t.string "role", default: "preparation", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -182,9 +146,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
   end
 
   create_table "recipes", force: :cascade do |t|
+    t.string "name"
+    t.string "normalized_name"
     t.integer "cocktail_id"
     t.integer "user_id", null: false
-    t.string "language", default: "und", null: false
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
     t.integer "servings", default: 1
@@ -195,6 +160,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cocktail_id"], name: "index_recipes_on_cocktail_id"
+    t.index ["normalized_name"], name: "index_recipes_on_normalized_name"
     t.index ["published_at"], name: "index_recipes_on_published_at"
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_recipes_on_visibility_and_publication_state"
@@ -236,26 +202,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.check_constraint "start_offset >= 0 AND end_offset > start_offset", name: "step_mentions_offsets"
   end
 
-  create_table "technique_translations", force: :cascade do |t|
-    t.integer "technique_id", null: false
-    t.string "locale", null: false
+  create_table "techniques", force: :cascade do |t|
     t.string "name"
-    t.string "normalized_name"
     t.text "description"
     t.text "instructions"
     t.text "tip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["locale", "normalized_name"], name: "index_technique_translations_on_locale_and_normalized_name"
-    t.index ["technique_id", "locale"], name: "index_technique_translations_on_technique_id_and_locale", unique: true
-    t.check_constraint "length(trim(locale)) > 0", name: "technique_translations_locale"
-    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0 AND description IS NOT NULL AND length(trim(description)) > 0 AND instructions IS NOT NULL AND length(trim(instructions)) > 0)", name: "technique_translations_english_content"
-  end
-
-  create_table "techniques", force: :cascade do |t|
+    t.string "normalized_name"
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["normalized_name"], name: "index_techniques_on_normalized_name"
     t.index ["slug"], name: "index_techniques_on_slug", unique: true
     t.check_constraint "length(trim(slug)) > 0", name: "techniques_slug"
   end
@@ -275,44 +231,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.index ["system_key"], name: "index_users_on_system_key", unique: true
   end
 
-  create_table "utensil_translations", force: :cascade do |t|
-    t.integer "utensil_id", null: false
-    t.string "locale", null: false
+  create_table "utensils", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.string "normalized_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["locale", "normalized_name"], name: "index_utensil_translations_on_locale_and_normalized_name"
-    t.index ["utensil_id", "locale"], name: "index_utensil_translations_on_utensil_id_and_locale", unique: true
-    t.check_constraint "length(trim(locale)) > 0", name: "utensil_translations_locale"
-    t.check_constraint "locale != 'en' OR (name IS NOT NULL AND length(trim(name)) > 0 AND normalized_name IS NOT NULL AND length(trim(normalized_name)) > 0)", name: "utensil_translations_english_name"
-    t.check_constraint "normalized_name IS NULL OR length(trim(normalized_name)) > 0", name: "utensil_translations_normalized_name"
-  end
-
-  create_table "utensils", force: :cascade do |t|
     t.string "category", default: "other", null: false
     t.decimal "capacity_milliliters", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["normalized_name"], name: "index_utensils_on_normalized_name"
     t.check_constraint "capacity_milliliters IS NULL OR capacity_milliliters > 0", name: "utensils_positive_capacity_milliliters"
     t.check_constraint "category IN ('glassware', 'mixing', 'measuring', 'straining', 'other')", name: "utensils_category"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "cocktail_translations", "cocktails"
   add_foreign_key "cocktails", "cocktails", column: "parent_cocktail_id", on_delete: :nullify
   add_foreign_key "collection_recipes", "collections"
   add_foreign_key "collection_recipes", "recipes"
   add_foreign_key "collections", "users"
-  add_foreign_key "ingredient_translations", "ingredients"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
   add_foreign_key "recipe_steps", "recipes"
   add_foreign_key "recipe_techniques", "recipes"
   add_foreign_key "recipe_techniques", "techniques"
-  add_foreign_key "recipe_translations", "recipes"
   add_foreign_key "recipe_utensils", "recipes"
   add_foreign_key "recipe_utensils", "utensils"
   add_foreign_key "recipes", "cocktails"
@@ -321,6 +263,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
   add_foreign_key "step_mentions", "ingredients"
   add_foreign_key "step_mentions", "recipe_steps"
   add_foreign_key "step_mentions", "utensils"
-  add_foreign_key "technique_translations", "techniques"
-  add_foreign_key "utensil_translations", "utensils"
 end
