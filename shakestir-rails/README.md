@@ -107,3 +107,15 @@ Development/test seeds also create fictional demo accounts (never seeded in prod
 Demo seeds preserve existing accounts and recipes, including changed passwords, and fill missing collection memberships on repeat runs. Variant seeds use names rather than database IDs and preserve existing parent assignments.
 
 Public discovery at `/` lists individual marketplace recipes with search, availability filters, and pagination. `/cocktails` is the canonical cocktail catalog: one card per identity, canonical-name search, and links to cocktail details without recipe stars or author attribution. Visitors see only identities with marketplace recipes. Both indexes support JSON.
+
+## Seed taste expectations and folded migration history
+
+Nullable integer `sweetness`, `sourness` and `bitterness` live in the original `CreateRecipes` migration, with SQL checks enforcing NULL or 0–5. The separate additive taste migration was removed at the product owner's explicit request for a fresh database rebuild; the schema version is `20261106000000`, the newest remaining migration. This history rewrite is not an automatic incremental upgrade for an old database. No developer database is dropped by the seed loader.
+
+The [editorial taste mapping](../db/seeds/taste/README.md) covers all 30 cached imported preparations and five fictional demo preparations. Each exact spec has deterministic values, a rationale and a fingerprint. These are **untested editorial sensory expectations**, not TheCocktailDB-provided scores or tasting results. NULL means unknown; 0 means an expected absence. The seed loader fills only NULL fields on matching unchanged specs belonging to the system/demo owner; existing zeroes and other populated values, changed specs, reassigned recipes, source credits and original prose are preserved. Unmatched recipes receive no default scores.
+
+### Seed photo recovery
+
+Fresh seed runs preserve pending image uploads until the outer seed transaction commits. Reruns fill missing system/demo recipe and matching canonical attachments without rewriting recipe content; existing uploaded images are preserved. If a seed blob exists but its file is missing, the cached original is restored in place only when checksum and byte size match, preserving the blob identity. A missing custom upload with different bytes is left alone rather than replaced by an unrelated cached image. All five demo photos use their relevant cached canonical drink photograph; Snowfall Sidecar uses `sidecar.jpg`, which is present in the repository. The image regression test verifies committed files in isolated storage, not just `image.attached?` inside a rollback-only test.
+
+Recipe JSON includes an authorized `fallback_image_url` for a readable linked canonical photo. React tries that URL if the preferred image request fails, then shows its accessible placeholder; no raw blob/storage identity is exposed and private canonical permissions remain enforced.

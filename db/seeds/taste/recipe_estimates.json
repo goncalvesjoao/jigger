@@ -1,0 +1,286 @@
+{
+  "provenance": "ShakeStir editorial expectations; untested, not source-provided or sensory tasting results",
+  "scale": "0 none, 1 very low, 2 low, 3 moderate, 4 high, 5 very high; null unknown",
+  "recipes": {
+    "https://www.thecocktaildb.com/drink/11007": {
+      "name": "Margarita",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "The 1 oz lime exceeds 1/2 oz triple sec; expect a tart, lightly sweet sour, with no bittering ingredient.",
+      "spec_fingerprint": "997023764c678437161ec9ff7f59fee038379fa1dbfc8ead6a2f0fbe7d6970b4"
+    },
+    "https://www.thecocktaildb.com/drink/11118": {
+      "name": "Blue Margarita",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "1 oz blue curacao supplies more sweetness than the base Margarita; 1 oz lime still gives high acidity.",
+      "spec_fingerprint": "971cbbbf188ad367c952f1a2d262b243e8ffdc5afeb2be26eb6401e1298e4a64"
+    },
+    "https://www.thecocktaildb.com/drink/17216": {
+      "name": "Tommy's Margarita",
+      "sweetness": 3,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "Two spoons agave syrup balance 1.5 cl lime against 4.5 cl tequila; spoon size and syrup strength vary.",
+      "spec_fingerprint": "d2db9adfd3490de122b7eb4ddde9a455a8efc2eaea7dadbb7e7ea3843c6f86e5"
+    },
+    "https://www.thecocktaildb.com/drink/16158": {
+      "name": "Whitecap Margarita",
+      "sweetness": 4,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "A quarter cup cream of coconut is a substantial sweetener against three tablespoons lime; ice dilutes the frozen serve.",
+      "spec_fingerprint": "7add53725a0ae88c14a8cf7f855a7f8da094f1d1ca1b768bb1a1065893c5d1f1"
+    },
+    "https://www.thecocktaildb.com/drink/12322": {
+      "name": "Strawberry Margarita",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "Strawberry schnapps and triple sec sweeten the fruit, while 1 oz lemon gives a pronounced sour edge.",
+      "spec_fingerprint": "3f3a28845d739a510745f3af195e3a309d244526cc356820dccdcfa2c7a0087f"
+    },
+    "https://www.thecocktaildb.com/drink/178332": {
+      "name": "Smashed Watermelon Margarita",
+      "sweetness": 2,
+      "sourness": 3,
+      "bitterness": 2,
+      "rationale": "Watermelon lends modest sweetness, grapefruit and half a lime provide acidity, and grapefruit contributes a bitter edge; no syrup is listed.",
+      "spec_fingerprint": "eecca20043c811b9ca62c7c4c15cddfa3223232c198f4da7f5edb0d650d35835"
+    },
+    "https://www.thecocktaildb.com/drink/11001": {
+      "name": "Old Fashioned",
+      "sweetness": 2,
+      "sourness": 0,
+      "bitterness": 2,
+      "rationale": "One sugar cube softens 4.5 cl bourbon; two dashes aromatic bitters provide noticeable bitterness without citrus juice.",
+      "spec_fingerprint": "76b3c491a71d70c1aa0f564c60ad553eedc4f48c3860f90df8402ef923855218"
+    },
+    "https://www.thecocktaildb.com/drink/11000": {
+      "name": "Mojito",
+      "sweetness": 2,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "Two teaspoons sugar temper the juice of one lime, lengthened with soda; lime size and soda volume are unspecified.",
+      "spec_fingerprint": "b7ff0fc3df5ee94c4ebc2bb2b95126a8949b9eefad2e19860b0ba543082affe0"
+    },
+    "https://www.thecocktaildb.com/drink/15841": {
+      "name": "Mojito Extra",
+      "sweetness": 1,
+      "sourness": 3,
+      "bitterness": 2,
+      "rationale": "3 cl lemon and eight drops aromatic bitters accompany a large rum/soda pour, with no added sugar listed.",
+      "spec_fingerprint": "6cc15621b0fe29d6cb0a93ebe059ded179c607d7dd0b9a9d26c8b1ec8d94b76b"
+    },
+    "https://www.thecocktaildb.com/drink/178358": {
+      "name": "Mango Mojito",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "Three limes against one mango suggest high sourness tempered by ripe fruit, rum and soda; no syrup is specified.",
+      "spec_fingerprint": "c3b9653a007aefcb7f36e4c822ebb96f63cf0b6df3cc32ce592df954e6b4dc33"
+    },
+    "https://www.thecocktaildb.com/drink/178336": {
+      "name": "Blueberry Mojito",
+      "sweetness": 3,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "Lemon-lime soda and a dash of sugar sweeten blueberries, with one shot lime juice supplying clear acidity.",
+      "spec_fingerprint": "b90008446990f53b23c0345dcf63dca43b5ebaf94c3571099f49a889d1bc8ac1"
+    },
+    "https://www.thecocktaildb.com/drink/11006": {
+      "name": "Daiquiri",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "Only one teaspoon powdered sugar balances half a lime in 1.5 oz rum; expect a tart classic sour.",
+      "spec_fingerprint": "2fb4e598c0f6cc2ace728e44eddbd54b06f9feca45e3e84275f3aecb0d5fd8c4"
+    },
+    "https://www.thecocktaildb.com/drink/11064": {
+      "name": "Banana Daiquiri",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "A banana, triple sec and a teaspoon sugar add sweetness/body, opposed by a substantial 1.5 oz lime.",
+      "spec_fingerprint": "eac85abdedece63b20c2ee69cfc9768eaf3ec0906106cbde5488f50c4ffabd85"
+    },
+    "https://www.thecocktaildb.com/drink/11387": {
+      "name": "Frozen Daiquiri",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "1.5 oz lime against a tablespoon triple sec and a teaspoon sugar should stay strongly tart after ice dilution.",
+      "spec_fingerprint": "53399e4fa37b3f9c452451b511828b61024e6e92248a62850c8272bbb3605746"
+    },
+    "https://www.thecocktaildb.com/drink/12316": {
+      "name": "Strawberry Daiquiri",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "Schnapps, fruit and powdered sugar supply sweetness, with 1 oz lime keeping the frozen mixture tart.",
+      "spec_fingerprint": "1c412eb4f237452186c2a7dca89d17491a5df8e62a9cf3d861beb14d68fae640"
+    },
+    "https://www.thecocktaildb.com/drink/11390": {
+      "name": "Frozen Mint Daiquiri",
+      "sweetness": 2,
+      "sourness": 2,
+      "bitterness": 0,
+      "rationale": "A tablespoon lime and teaspoon sugar in 2 oz rum gives a relatively restrained sweet-sour profile; mint is aromatic, not a bittering dose.",
+      "spec_fingerprint": "47dc07fd03f256454669e7ec1beafa2476aea024ca50db7f90b9dae5e0e73f79"
+    },
+    "https://www.thecocktaildb.com/drink/11391": {
+      "name": "Frozen Pineapple Daiquiri",
+      "sweetness": 3,
+      "sourness": 2,
+      "bitterness": 0,
+      "rationale": "Four pineapple chunks and half a teaspoon sugar provide fruit sweetness with only a tablespoon lime; fruit ripeness remains uncertain.",
+      "spec_fingerprint": "766a24b15c3530c36bf5c6044f540f616927b9b0df5c2ecb20e710dc502288e1"
+    },
+    "https://www.thecocktaildb.com/drink/12658": {
+      "name": "Banana Strawberry Shake Daiquiri",
+      "sweetness": 4,
+      "sourness": 2,
+      "bitterness": 0,
+      "rationale": "Two cups apple juice and a banana sweeten frozen strawberries; no spirit, citrus juice or bittering ingredient is listed.",
+      "spec_fingerprint": "9260b673c4463f97edb6669aadfeb321c0b6ef885ee44b6b22c0936cb4a55332"
+    },
+    "https://www.thecocktaildb.com/drink/11003": {
+      "name": "Negroni",
+      "sweetness": 3,
+      "sourness": 0,
+      "bitterness": 5,
+      "rationale": "Equal parts Campari and sweet vermouth supply sugar, but the full 1 oz Campari makes bitterness dominant; no citrus juice is listed.",
+      "spec_fingerprint": "3dbd3b3612de27d252684f138a262fde93b9550e6f2ee00a1013c556925d9151"
+    },
+    "https://www.thecocktaildb.com/drink/17248": {
+      "name": "French Negroni",
+      "sweetness": 3,
+      "sourness": 1,
+      "bitterness": 1,
+      "rationale": "Equal parts Lillet and sweet vermouth create a wine-sweet profile with modest wine acidity; orange peel is aromatic and Campari is absent.",
+      "spec_fingerprint": "087810e77227cf8c8db3af71b920cb513807227e2c1f2c5528da7df1f365eae7"
+    },
+    "https://www.thecocktaildb.com/drink/178340": {
+      "name": "Garibaldi Negroni",
+      "sweetness": 3,
+      "sourness": 2,
+      "bitterness": 4,
+      "rationale": "30 ml Campari supplies strong bitterness, softened by 90 ml orange juice and its sugar/acidity; gin adds no sweetener.",
+      "spec_fingerprint": "95e1765c2b906ba41e2f3305562a8f703bcdc0bf379b0c3699106d1f7a3870a8"
+    },
+    "https://www.thecocktaildb.com/drink/11008": {
+      "name": "Manhattan",
+      "sweetness": 2,
+      "sourness": 0,
+      "bitterness": 2,
+      "rationale": "Three-quarter oz sweet vermouth and a cherry soften a bourbon-led pour; a dash aromatic bitters adds a modest bitter finish.",
+      "spec_fingerprint": "115077da3e7af38aab08b748c5788d557e61cd3006f7a9dcde6457f364e361fe"
+    },
+    "https://www.thecocktaildb.com/drink/17212": {
+      "name": "Espresso Martini",
+      "sweetness": 2,
+      "sourness": 0,
+      "bitterness": 1,
+      "rationale": "The actual spec lists vodka, only 1 cl Kahlua and a dash syrup, with no espresso: expect modest liqueur sweetness and slight coffee bitterness only.",
+      "spec_fingerprint": "2e8382f0c44b6f0bd756bb44024d3d5d705190f29d199e5dce32c484552eb75b"
+    },
+    "https://www.thecocktaildb.com/drink/11009": {
+      "name": "Moscow Mule",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "8 oz ginger ale supplies sugar and dilution, but 2 oz lime is a substantial acidic dose; ginger heat is not rated as bitterness.",
+      "spec_fingerprint": "2acd77670a83ac9d25f249ff775799f06d37a2bad09b875479f422cb198caeee"
+    },
+    "https://www.thecocktaildb.com/drink/11004": {
+      "name": "Whiskey Sour",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "Half a lemon balanced by only half a teaspoon powdered sugar suggests a tart whiskey sour; garnish contributes little sweetness.",
+      "spec_fingerprint": "82b1542ce9c51fc28390d5e3f8f33a2e9df25ea4cab160484f1be4788c8d39a8"
+    },
+    "https://www.thecocktaildb.com/drink/17207": {
+      "name": "Pina Colada",
+      "sweetness": 2,
+      "sourness": 2,
+      "bitterness": 0,
+      "rationale": "This specific spec uses coconut milk rather than sweetened cream of coconut and only three tablespoons pineapple, so sweetness is restrained.",
+      "spec_fingerprint": "ac7588e563de521dc8fab8ad1feafb6b2a0481c6d59aa87482c882158fc748ad"
+    },
+    "https://www.thecocktaildb.com/drink/17255": {
+      "name": "Gimlet",
+      "sweetness": 3,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "Equal half-ounce lime and sugar syrup create a balanced sweet-sour accent to 2.5 oz gin; syrup concentration is unspecified.",
+      "spec_fingerprint": "b3d604915eb48fa90ec102a39acb37ebd01f1b2d176d6371f7f010a1ae8312bb"
+    },
+    "https://www.thecocktaildb.com/drink/12196": {
+      "name": "Sidecar",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "1 oz lemon against 1/2 oz Cointreau gives this cognac-led Sidecar a tart balance; no sugar rim is listed.",
+      "spec_fingerprint": "061286e51ce29fd35a5accdc8df382c5eff67efa8efe15e010f0cb7ccb78ae44"
+    },
+    "https://www.thecocktaildb.com/drink/11128": {
+      "name": "Boston Sidecar",
+      "sweetness": 3,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "Three-quarter oz triple sec balances half a lime alongside rum and brandy; lime yield is variable.",
+      "spec_fingerprint": "825c21bf9cca3d302980e609dc719776fcdd481b48957367bee16e9df1428d5e"
+    },
+    "https://www.thecocktaildb.com/drink/12198": {
+      "name": "Sidecar Cocktail",
+      "sweetness": 3,
+      "sourness": 2,
+      "bitterness": 0,
+      "rationale": "Half-ounce triple sec against juice of only a quarter lemon gives this smaller brandy Sidecar a sweeter, less tart balance.",
+      "spec_fingerprint": "61e42d9125065ba1a10f60f3c347c2f4e3a9abc6f873f05d7ccba4b826ecb8f0"
+    },
+    "demo:leo@shakestir.example:Midnight Velvet": {
+      "name": "Midnight Velvet",
+      "sweetness": 3,
+      "sourness": 0,
+      "bitterness": 1,
+      "rationale": "20 ml Kahlua plus 5 ml syrup in 40 ml vodka predicts moderate sweetness and slight coffee-liqueur bitterness; no espresso or citrus juice is listed.",
+      "spec_fingerprint": "96f494b7ee088ff514d72663dcbf1c10a825b75e86929dffa0b7a900878196e8"
+    },
+    "demo:leo@shakestir.example:Ruby Masquerade": {
+      "name": "Ruby Masquerade",
+      "sweetness": 3,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "20 ml triple sec and two ripe strawberries soften 25 ml lime alongside 45 ml tequila, retaining a pronounced sour edge.",
+      "spec_fingerprint": "afa5197866ce817ed96d14baddbad21a3f8b85176e3c43342a303f4eb3e5273e"
+    },
+    "demo:leo@shakestir.example:Snowfall Sidecar": {
+      "name": "Snowfall Sidecar",
+      "sweetness": 3,
+      "sourness": 3,
+      "bitterness": 0,
+      "rationale": "20 ml triple sec balances 20 ml lemon with 45 ml cognac; a half sugar rim raises perceived sweetness for rimmed sips.",
+      "spec_fingerprint": "9e63f56807ce5645ce040d74a03d53bcf8ffb8d5becac637ccc3563a400690d7"
+    },
+    "demo:alex@shakestir.example:My Weekend Margarita": {
+      "name": "My Weekend Margarita",
+      "sweetness": 2,
+      "sourness": 4,
+      "bitterness": 0,
+      "rationale": "25 ml lime against 15 ml triple sec in 40 ml tequila is a relatively tart trial spec, consistent with the note to try less lime.",
+      "spec_fingerprint": "8472098e0cd6b42170fab209eb27d5ab86ac8072ff9437f72bfedef1f354514d"
+    },
+    "demo:alex@shakestir.example:After Dinner Experiment": {
+      "name": "After Dinner Experiment",
+      "sweetness": 4,
+      "sourness": 0,
+      "bitterness": 1,
+      "rationale": "20 ml Kahlua plus 5 ml syrup against only 30 ml vodka is sweeter than Midnight Velvet; no fresh coffee or citrus is listed.",
+      "spec_fingerprint": "43abdef78248a96bd4c40b93bbc95c07b334e6666507299bf806c69eb065ab7f"
+    }
+  }
+}

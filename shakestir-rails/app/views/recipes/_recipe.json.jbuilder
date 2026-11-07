@@ -4,6 +4,7 @@ json.techniques recipe.techniques do |technique|
   json.extract! technique, :id, :slug, :name, :description, :instructions, :tip
   json.url technique_url(technique)
 end
+json.extract! recipe, :sweetness, :sourness, :bitterness
 json.author recipe_author(recipe)
 json.author_profile do
   json.extract! recipe.user, :id, :handle
@@ -19,6 +20,7 @@ json.can_delete policy(recipe).destroy?
 photo = recipe_photo(recipe)
 json.image_url(photo.image.attached? ? public_send("#{photo.model_name.singular}_image_url", photo, size: :detail) : nil)
 json.own_image_url(recipe.image.attached? ? recipe_image_url(recipe, size: :detail) : nil)
+json.fallback_image_url(recipe.cocktail && policy(recipe.cocktail).show? && recipe.cocktail.image.attached? ? cocktail_image_url(recipe.cocktail, size: :detail) : nil)
 
 if local_assigns[:detail]
   json.saved_collection_ids(authenticated? ? Current.user.collections.joins(:collection_recipes)

@@ -9,7 +9,8 @@ class PasswordsController < ApplicationController
 
   def create
     if user = User.find_by(email_address: params[:email_address])
-      PasswordsMailer.reset(user).deliver_later
+      mailer = request.format.json? && ENV["SHAKESTIR_FRONTEND_URL"].present? ? PasswordsMailer.with(frontend: true) : PasswordsMailer
+      mailer.reset(user).deliver_later
     end
 
     message = "Password reset instructions sent (if user with that email address exists)."

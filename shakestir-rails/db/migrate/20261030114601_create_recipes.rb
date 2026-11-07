@@ -8,11 +8,17 @@ class CreateRecipes < ActiveRecord::Migration[8.1]
       t.string :visibility, null: false, default: "private"
       t.string :publication_state, null: false, default: "draft"
       t.integer :servings, default: 1
+      t.integer :sweetness
+      t.integer :sourness
+      t.integer :bitterness
       t.string :source_reference
       t.string :source_url
       t.integer :stars_count, null: false, default: 0
       t.datetime :published_at
       t.timestamps
+    end
+    %i[sweetness sourness bitterness].each do |taste|
+      add_check_constraint :recipes, "#{taste} IS NULL OR #{taste} BETWEEN 0 AND 5", name: "recipes_#{taste}_range"
     end
     add_index :recipes, :normalized_name
     add_index :recipes, [ :visibility, :publication_state ]

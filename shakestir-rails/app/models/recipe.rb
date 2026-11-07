@@ -17,6 +17,11 @@ class Recipe < ApplicationRecord
   has_many :techniques, -> { order(:slug) }, through: :recipe_techniques
   has_many :recipe_steps, -> { order(:position) }, dependent: :destroy, autosave: true
 
+  accepts_nested_attributes_for :recipe_ingredients, allow_destroy: true
+  accepts_nested_attributes_for :recipe_utensils, allow_destroy: true
+  accepts_nested_attributes_for :recipe_steps, allow_destroy: true
+  validates :sweetness, :sourness, :bitterness, numericality: { only_integer: true, in: 0..5 }, allow_nil: true
+
   include PhotoAttachment
 
   before_validation :refresh_published_at
@@ -93,8 +98,8 @@ class Recipe < ApplicationRecord
 
     def complete?
       name.present? &&
-        recipe_ingredients.any? && recipe_ingredients.all? { |line| line.ingredient&.usable? } &&
-        recipe_utensils.all? { |requirement| requirement.utensil&.usable? } && recipe_steps.reject(&:marked_for_destruction?).any? { |step| step.body.present? }
+        recipe_ingredients.reject(&:marked_for_destruction?).any? && recipe_ingredients.reject(&:marked_for_destruction?).all? { |line| line.ingredient&.usable? } &&
+        recipe_utensils.reject(&:marked_for_destruction?).all? { |requirement| requirement.utensil&.usable? } && recipe_steps.reject(&:marked_for_destruction?).any? { |step| step.body.present? }
     end
 
     def publication_requirements

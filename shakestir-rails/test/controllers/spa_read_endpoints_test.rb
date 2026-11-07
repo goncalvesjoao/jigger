@@ -7,7 +7,7 @@ class SpaReadEndpointsTest < ActionDispatch::IntegrationTest
       assert_not_empty expected
       get url
       assert_response :success
-      assert_equal expected.map { |item| { "id" => item.id, "name" => item.display_name } }, response.parsed_body.fetch("data")
+      assert_equal expected.map { |item| { "id" => item.id, "name" => item.display_name } }, response.parsed_body.fetch("data").map { |item| item.slice("id", "name") }
       assert_equal expected.size, response.parsed_body.fetch("metadata").fetch("total_count")
       # A record with no catalog photo is not offered as a usable filter option.
       expected.first.image.purge

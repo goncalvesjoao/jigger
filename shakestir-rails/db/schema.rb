@@ -153,6 +153,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.string "visibility", default: "private", null: false
     t.string "publication_state", default: "draft", null: false
     t.integer "servings", default: 1
+    t.integer "sweetness"
+    t.integer "sourness"
+    t.integer "bitterness"
     t.string "source_reference"
     t.string "source_url"
     t.integer "stars_count", default: 0, null: false
@@ -164,9 +167,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_000000) do
     t.index ["published_at"], name: "index_recipes_on_published_at"
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.index ["visibility", "publication_state"], name: "index_recipes_on_visibility_and_publication_state"
+    t.check_constraint "bitterness IS NULL OR bitterness BETWEEN 0 AND 5", name: "recipes_bitterness_range"
     t.check_constraint "publication_state IN ('draft', 'published')", name: "recipes_publication_state"
     t.check_constraint "servings IS NULL OR servings > 0", name: "recipes_positive_servings"
+    t.check_constraint "sourness IS NULL OR sourness BETWEEN 0 AND 5", name: "recipes_sourness_range"
     t.check_constraint "stars_count >= 0", name: "recipes_nonnegative_stars_count"
+    t.check_constraint "sweetness IS NULL OR sweetness BETWEEN 0 AND 5", name: "recipes_sweetness_range"
     t.check_constraint "visibility IN ('private', 'public')", name: "recipes_visibility"
   end
 

@@ -92,8 +92,11 @@ class RecipesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def recipe_params
       fields = [ :name, :steps, :servings, :source_reference, :source_url, :visibility, :publication_state, :image ]
-      fields += [ { technique_ids: [] } ]
-      permitted = params.expect(recipe: fields)
+      fields += [ :sweetness, :sourness, :bitterness, { technique_ids: [],
+        recipe_ingredients_attributes: [ :id, :ingredient_id, :submitted_text, :quantity, :measuring_unit, :position, :optional, :role, :preparation_note, :_destroy ],
+        recipe_utensils_attributes: [ :id, :utensil_id, :submitted_text, :role, :_destroy ],
+        recipe_steps_attributes: [ :id, :position, :body, :_destroy ] } ]
+      permitted = params.require(:recipe).permit(*fields)
       if permitted[:image].blank?
         permitted.delete(:image)
       elsif !permitted[:image].is_a?(ActionDispatch::Http::UploadedFile)

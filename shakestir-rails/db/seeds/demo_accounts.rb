@@ -42,7 +42,12 @@ module DemoAccountsSeeder
 
   def self.recipe(user, name, cocktail_name, visibility, state, ingredients, steps)
     existing = user.recipes.find_by(id: Recipe.lookup(name).select(:id))
-    return existing if existing
+    key = "demo:#{user.email_address}:#{name}"
+    if existing
+      TheCocktailDbSeeder.attach_seed_image!(existing, "cocktails", cocktail_name)
+      TasteEstimatesSeeder.fill_missing!(existing, key: key, owner: user)
+      return existing
+    end
 
     recipe = user.recipes.create!(name: name, cocktail: TheCocktailDbSeeder.find_cocktail(cocktail_name),
       visibility: visibility)
@@ -53,6 +58,7 @@ module DemoAccountsSeeder
     recipe.recipe_steps.create!(body: steps, position: 0)
     TheCocktailDbSeeder.attach_seed_image!(recipe, "cocktails", cocktail_name)
     recipe.update!(publication_state: state)
+    TasteEstimatesSeeder.fill_missing!(recipe, key: key, owner: user)
     recipe
   end
 

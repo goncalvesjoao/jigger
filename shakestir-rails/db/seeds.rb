@@ -1,5 +1,8 @@
 require "json"
 require "pathname"
+require "stringio"
+require "digest"
+require_relative "seeds/taste_estimates"
 
 module TheCocktailDbSeeder
   ROOT = Rails.root.parent.join("db", "seeds", "thecocktaildb")
@@ -60,7 +63,16 @@ module TheCocktailDbSeeder
       source_url = "https://www.thecocktaildb.com/drink/#{drink.fetch("idDrink")}"
       recipe = Recipe.find_by(source_url: source_url)
       # Preserve existing imports, curation, and recipes reassigned to another author.
-      next if recipe
+      if recipe
+        if recipe.user == User.shakestir_account && recipe.source_reference == "TheCocktailDB"
+          attach_seed_image!(recipe, "cocktails", name)
+          if recipe.cocktail&.normalized_name == LookupName.normalize(name)
+            attach_seed_image!(recipe.cocktail, "cocktails", name)
+          end
+        end
+        TasteEstimatesSeeder.fill_missing!(recipe, key: source_url, owner: User.shakestir_account)
+        next
+      end
       recipe = Recipe.new(user: User.shakestir_account)
 
       previous_published_at = recipe.published_at
@@ -102,6 +114,7 @@ module TheCocktailDbSeeder
         end
         recipe.update_columns(published_at: previous_published_at) if previous_published_at
       end
+      TasteEstimatesSeeder.fill_missing!(recipe, key: source_url, owner: User.shakestir_account)
     end
   end
 
@@ -138,19 +151,30 @@ module TheCocktailDbSeeder
   end
 
   def self.attach_seed_image!(record, collection_name, name)
-    return true if record.image.attached?
+    # Already-pending attachments must finish uploading at outer commit.
+    return true if record.attachment_changes["image"]
+    return true if record.image.attached? && record.image.blob.service.exist?(record.image.blob.key)
 
     extension = local_image_extension(collection_name, name)
-    return true if extension.nil?
-
+    unless extension
+      Rails.logger.warn("Missing cached seed image for #{collection_name}/#{name}")
+      return false
+    end
     path = ROOT.join("images", collection_name, "#{slugify(name)}#{extension}")
-    return true unless path.exist?
+    bytes = path.binread
 
-    record.image.attach(
-      io: File.open(path, "rb"),
-      filename: path.basename.to_s,
-      content_type: mime_type_for(path)
-    )
+    if record.image.attached?
+      blob = record.image.blob
+      # Restore missing original bytes only when the cache is byte-identical.
+      # Never replace an upload with a different seed picture, even if lost.
+      unless blob.checksum == Digest::MD5.base64digest(bytes) && blob.byte_size == bytes.bytesize
+        Rails.logger.warn("Preserving nonmatching missing upload for #{record.class} #{record.id}")
+        return false
+      end
+      blob.service.upload(blob.key, StringIO.new(bytes), checksum: blob.checksum)
+    else
+      record.image.attach(io: StringIO.new(bytes), filename: path.basename.to_s, content_type: mime_type_for(path))
+    end
     true
   rescue StandardError => e
     Rails.logger.warn("Could not attach cached image for #{name}: #{e.class}: #{e.message}")

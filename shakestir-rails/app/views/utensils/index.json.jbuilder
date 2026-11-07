@@ -1,4 +1,6 @@
 json.data @utensils do |utensil|
+  json.description utensil.description
+  json.image_url(utensil.image.attached? ? utensil_image_url(utensil, size: :card) : nil)
   json.id utensil.id
   json.name utensil.display_name
 end

@@ -9,6 +9,11 @@ module MarketplaceSearch
 
     def matching_recipes
       recipes = Recipe.marketplace
+      %w[sweetness sourness bitterness].each do |taste|
+        value = params[taste].to_s
+        recipes = recipes.where(taste => value.to_i) if value.present? && value.match?(/\A[0-5]\z/)
+        recipes = recipes.where(taste => nil) if value == "unknown"
+      end
       legacy_makeable = makeable_filter?
       { ingredient_ids: [ RecipeIngredient, :ingredient_id, :ingredient_mode ],
         utensil_ids: [ RecipeUtensil, :utensil_id, :utensil_mode ] }.each do |key, (model, column, mode)|

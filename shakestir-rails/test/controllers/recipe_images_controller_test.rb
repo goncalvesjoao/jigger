@@ -196,4 +196,17 @@ class RecipeImagesControllerTest < ActionDispatch::IntegrationTest
     service.singleton_class.remove_method(:url)
     service.singleton_class.remove_method(:download)
   end
+  test "JSON provides only a readable canonical image as a failed-photo fallback" do
+    cocktail = Cocktail.create!(name: "Canonical drink", image: photo_upload)
+    @recipe.update!(cocktail: cocktail)
+    get recipe_url(@recipe, format: :json)
+    assert_response :success
+    assert_equal cocktail_image_url(cocktail, size: :detail), response.parsed_body.fetch("fallback_image_url")
+    assert_includes response.parsed_body.fetch("image_url"), recipe_image_path(@recipe)
+    @recipe.update!(visibility: "private")
+    get recipe_url(@recipe, format: :json)
+    assert_response :success
+    assert_nil response.parsed_body.fetch("fallback_image_url")
+  end
+
 end
