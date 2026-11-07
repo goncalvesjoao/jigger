@@ -21,13 +21,6 @@
     "image_subject": "nested set of stainless steel measuring spoons"
   },
   {
-    "slug": "digital-scale",
-    "name": "Digital scale",
-    "category": "measuring",
-    "description": "Weighs ingredients for repeatable syrups, infusions and cocktail batches. Especially useful for ratios specified by mass.",
-    "image_subject": "compact digital kitchen scale with stainless steel weighing platform and blank display"
-  },
-  {
     "slug": "boston-shaker",
     "name": "Boston shaker",
     "category": "mixing",
@@ -40,13 +33,6 @@
     "category": "mixing",
     "description": "A three-piece shaker with a body, built-in strainer and cap. Useful for shaking individual cocktails; fine-strain separately when needed.",
     "image_subject": "three-piece stainless steel cobbler cocktail shaker assembled with domed strainer top and small cap"
-  },
-  {
-    "slug": "parisian-shaker",
-    "name": "Parisian shaker",
-    "category": "mixing",
-    "description": "A two-piece shaker with a fitted metal top and no built-in strainer. Also called a French shaker; use a separate strainer after shaking.",
-    "image_subject": "elegant two-piece stainless steel Parisian French cocktail shaker with rounded fitted top and no small cap"
   },
   {
     "slug": "mixing-glass",
@@ -70,25 +56,11 @@
     "image_subject": "wooden cocktail muddler with broad flat blunt base"
   },
   {
-    "slug": "swizzle-stick",
-    "name": "Swizzle stick",
-    "category": "mixing",
-    "description": "A branched mixing tool rotated between the palms to mix and chill drinks with crushed ice. A traditional wooden example is called a bois lele.",
-    "image_subject": "traditional wooden bois lele swizzle stick with star shaped branched end"
-  },
-  {
     "slug": "hawthorne-strainer",
     "name": "Hawthorne strainer",
     "category": "straining",
     "description": "A spring-edged strainer that holds back ice when pouring from a shaker or mixing vessel. Pair with a fine strainer to catch smaller particles.",
     "image_subject": "stainless steel Hawthorne cocktail strainer with coiled spring around round perforated plate and short handle"
-  },
-  {
-    "slug": "julep-strainer",
-    "name": "Julep strainer",
-    "category": "straining",
-    "description": "A perforated bowl-shaped strainer commonly used with a mixing glass to retain stirring ice while pouring.",
-    "image_subject": "stainless steel julep strainer with shallow oval perforated bowl and handle"
   },
   {
     "slug": "fine-mesh-strainer",
@@ -98,20 +70,6 @@
     "image_subject": "small stainless steel conical fine mesh cocktail strainer with long handle"
   },
   {
-    "slug": "funnel",
-    "name": "Funnel",
-    "category": "straining",
-    "description": "Transfers syrups, juices and batched drinks into narrow-necked bottles. A plain funnel does not filter solids.",
-    "image_subject": "small stainless steel funnel with narrow stem"
-  },
-  {
-    "slug": "filter-bag",
-    "name": "Filter bag",
-    "category": "straining",
-    "description": "A reusable fine cloth bag for filtering infusions and prepared ingredients. Choose a food-safe mesh suited to the desired texture.",
-    "image_subject": "white fine mesh food filtering bag with drawstring opening"
-  },
-  {
     "slug": "citrus-press",
     "name": "Citrus press",
     "category": "other",
@@ -119,32 +77,11 @@
     "image_subject": "stainless steel hinged handheld citrus squeezer with two long handles"
   },
   {
-    "slug": "citrus-reamer",
-    "name": "Citrus reamer",
-    "category": "other",
-    "description": "A ridged handheld tool twisted into halved citrus to extract juice. Strain the juice to remove seeds and unwanted pulp.",
-    "image_subject": "wooden handheld citrus reamer with ridged pointed head and short handle"
-  },
-  {
     "slug": "y-peeler",
     "name": "Y-peeler",
     "category": "other",
     "description": "Cuts broad strips of citrus peel for twists and expressed oils. Avoid taking too much bitter white pith.",
     "image_subject": "stainless steel Y-shaped vegetable and citrus peeler"
-  },
-  {
-    "slug": "channel-knife",
-    "name": "Channel knife",
-    "category": "other",
-    "description": "Cuts narrow strips of citrus zest for decorative twists and spirals.",
-    "image_subject": "cocktail channel knife with small hooked metal cutting head and black handle"
-  },
-  {
-    "slug": "microplane",
-    "name": "Fine grater",
-    "category": "other",
-    "description": "Finely grates citrus zest, nutmeg and other aromatic garnishes. Grate only the colored outer layer when zesting citrus.",
-    "image_subject": "long narrow stainless steel rasp style fine grater with black handle"
   },
   {
     "slug": "paring-knife",
@@ -161,13 +98,6 @@
     "image_subject": "small rectangular wooden cutting board"
   },
   {
-    "slug": "garnish-tweezers",
-    "name": "Garnish tweezers",
-    "category": "other",
-    "description": "Positions delicate herbs, flowers and other small garnishes accurately without crushing them.",
-    "image_subject": "long stainless steel culinary garnish tweezers with fine tips"
-  },
-  {
     "slug": "cocktail-pick",
     "name": "Cocktail pick",
     "category": "other",
@@ -175,32 +105,11 @@
     "image_subject": "single stainless steel cocktail pick with ring end and pointed shaft"
   },
   {
-    "slug": "glass-rimmer",
-    "name": "Glass rimmer",
-    "category": "other",
-    "description": "Shallow trays for moistening and coating glass rims with salt, sugar or spice mixtures.",
-    "image_subject": "black three-tier folding cocktail glass rimmer with empty round shallow trays"
-  },
-  {
     "slug": "ice-scoop",
     "name": "Ice scoop",
     "category": "other",
     "description": "Transfers ice hygienically from a bin to a shaker or glass. Use a dedicated scoop rather than a drinking glass.",
     "image_subject": "stainless steel ice scoop with deep bowl and short handle"
-  },
-  {
-    "slug": "ice-tongs",
-    "name": "Ice tongs",
-    "category": "other",
-    "description": "Grips individual ice cubes for controlled and hygienic placement in a drink.",
-    "image_subject": "stainless steel ice tongs with serrated curved gripping tips"
-  },
-  {
-    "slug": "ice-pick",
-    "name": "Ice pick",
-    "category": "other",
-    "description": "Splits or shapes large ice blocks for cocktail service. Use a stable surface and keep the supporting hand clear of the point.",
-    "image_subject": "single pointed stainless steel ice pick with wooden handle"
   },
   {
     "slug": "lewis-bag",
@@ -231,88 +140,11 @@
     "image_subject": "flat stainless steel bar blade bottle opener"
   },
   {
-    "slug": "waiters-corkscrew",
-    "name": "Waiter's corkscrew",
-    "category": "other",
-    "description": "A folding tool with a worm, lever and foil knife for opening cork-sealed wine and fortified wine bottles.",
-    "image_subject": "folding waiters corkscrew with worm and two stage lever extended and dark handle"
-  },
-  {
-    "slug": "speed-pourer",
-    "name": "Speed pourer",
-    "category": "other",
-    "description": "Fits a bottle neck to provide a controlled stream while pouring. Verify quantities with a measure when accuracy is required.",
-    "image_subject": "single stainless steel liquor speed pourer with black rubber bottle stopper"
-  },
-  {
-    "slug": "dasher-bottle",
-    "name": "Dasher bottle",
-    "category": "other",
-    "description": "Dispenses bitters and tinctures in small dashes. Dash volume depends on the bottle, fill level and pouring technique.",
-    "image_subject": "small empty cut glass bitters bottle with stainless steel dasher top"
-  },
-  {
-    "slug": "atomizer",
-    "name": "Atomizer",
-    "category": "other",
-    "description": "Applies a fine mist of aromatic liquid, such as an absinthe rinse, over a glass or finished drink.",
-    "image_subject": "small clear glass cocktail atomizer bottle with silver spray pump"
-  },
-  {
-    "slug": "dropper",
-    "name": "Dropper",
-    "category": "measuring",
-    "description": "Adds small quantities of saline, tinctures or extracts. Drop size varies; use a calibrated pipette for precise volume measurements.",
-    "image_subject": "clear glass dropper pipette with black rubber bulb"
-  },
-  {
-    "slug": "squeeze-bottle",
-    "name": "Squeeze bottle",
-    "category": "other",
-    "description": "Stores and dispenses prepared syrups, juices and sauces during service. Label contents and preparation dates separately.",
-    "image_subject": "empty translucent food-safe squeeze bottle with narrow nozzle cap"
-  },
-  {
     "slug": "blender",
     "name": "Blender",
     "category": "mixing",
     "description": "Blends ingredients and ice into frozen cocktails. Use equipment rated for ice and follow the manufacturer filling limits.",
     "image_subject": "countertop blender with clear empty jug lid and brushed steel base"
-  },
-  {
-    "slug": "milkshake-mixer",
-    "name": "Drink mixer",
-    "category": "mixing",
-    "description": "A spindle mixer for flash blending cocktails with crushed ice. Useful for quickly aerating tropical drinks.",
-    "image_subject": "single spindle countertop drink mixer with tall stainless steel mixing cup"
-  },
-  {
-    "slug": "soda-siphon",
-    "name": "Soda siphon",
-    "category": "other",
-    "description": "Dispenses carbonated water to lengthen cocktails. Use only compatible chargers and liquids allowed by the manufacturer.",
-    "image_subject": "stainless steel soda siphon bottle with black dispensing lever and spout"
-  },
-  {
-    "slug": "cream-whipper",
-    "name": "Cream whipper",
-    "category": "other",
-    "description": "A pressure-rated culinary siphon for compatible foams and whipped toppings. Follow the manufacturer instructions for contents, chargers and temperature.",
-    "image_subject": "stainless steel culinary cream whipper siphon with dispensing nozzle and charger holder"
-  },
-  {
-    "slug": "smoking-gun",
-    "name": "Smoking gun",
-    "category": "other",
-    "description": "Adds aromatic smoke to a glass or covered serving vessel. Use culinary smoking materials and follow the equipment ventilation guidance.",
-    "image_subject": "compact handheld culinary smoking gun with metal burn chamber and flexible black hose"
-  },
-  {
-    "slug": "absinthe-spoon",
-    "name": "Absinthe spoon",
-    "category": "other",
-    "description": "A flat perforated spoon that rests across a glass to support sugar during traditional absinthe service.",
-    "image_subject": "ornate flat stainless steel perforated absinthe spoon"
   },
   {
     "slug": "rocks-glass",
@@ -350,25 +182,11 @@
     "image_subject": "empty clear classic V-shaped stemmed martini glass"
   },
   {
-    "slug": "nick-and-nora-glass",
-    "name": "Nick & Nora glass",
-    "category": "glassware",
-    "description": "A small stemmed glass with a curved bowl for compact cocktails served up.",
-    "image_subject": "empty clear small stemmed Nick and Nora cocktail glass with curved tulip bowl"
-  },
-  {
     "slug": "flute-glass",
     "name": "Champagne flute",
     "category": "glassware",
     "description": "A narrow stemmed glass for sparkling wine and sparkling cocktails such as a French 75.",
     "image_subject": "empty clear narrow stemmed champagne flute"
-  },
-  {
-    "slug": "wine-glass",
-    "name": "Wine glass",
-    "category": "glassware",
-    "description": "A stemmed bowl for wine-based cocktails and spritzes, with room for ice and aromatic garnishes when required.",
-    "image_subject": "empty clear stemmed white wine glass"
   },
   {
     "slug": "margarita-glass",
@@ -378,38 +196,10 @@
     "image_subject": "empty clear stemmed margarita glass with wide stepped double bowl"
   },
   {
-    "slug": "hurricane-glass",
-    "name": "Hurricane glass",
-    "category": "glassware",
-    "description": "A tall curved footed glass for tropical cocktails and long drinks served over ice.",
-    "image_subject": "empty clear hurricane cocktail glass with curved tall bowl and short foot"
-  },
-  {
     "slug": "copper-mug",
     "name": "Copper mug",
     "category": "glassware",
     "description": "A handled mug associated with Mule cocktails. Use a food-safe lined mug for acidic drinks.",
     "image_subject": "empty copper Moscow Mule mug with visible stainless steel lining and curved handle"
-  },
-  {
-    "slug": "julep-cup",
-    "name": "Julep cup",
-    "category": "glassware",
-    "description": "A metal cup for Mint Juleps and other crushed-ice drinks. The chilled surface can develop a characteristic frost.",
-    "image_subject": "empty silver stainless steel mint julep cup with beaded rim"
-  },
-  {
-    "slug": "irish-coffee-glass",
-    "name": "Irish coffee glass",
-    "category": "glassware",
-    "description": "A handled heat-resistant glass for Irish Coffee and other warm drinks. Use glassware rated for hot liquids.",
-    "image_subject": "empty clear footed Irish coffee glass with handle"
-  },
-  {
-    "slug": "shot-glass",
-    "name": "Shot glass",
-    "category": "glassware",
-    "description": "A small glass for serving shots and miniature drinks. Serving glasses are not necessarily calibrated measuring tools.",
-    "image_subject": "empty clear small shot glass with thick base"
   }
 ]
